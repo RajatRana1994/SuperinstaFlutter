@@ -17,7 +17,7 @@ class MyBookingsPage extends StatefulWidget {
 }
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
-  int selectedIndex = 0;
+  int selectedIndex = 0 ;
 
   ProfileController controller = Get.put(ProfileController());
 @override
