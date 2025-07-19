@@ -41,6 +41,14 @@ class AppStyles {
     );
   }
 
+  static TextStyle fontInkika13() {
+    return GoogleFonts.inika(
+      color: AppColors.black,
+      fontWeight: FontWeight.w700,
+      fontSize: 13,
+    );
+  }
+
   static TextStyle font400_18() {
     return GoogleFonts.inter(
       color: AppColors.white,

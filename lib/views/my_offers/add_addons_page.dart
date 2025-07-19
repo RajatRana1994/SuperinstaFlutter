@@ -9,9 +9,13 @@ import '../../widgets/form_input_with_hint_on_top.dart';
 import '../../widgets/rounded_edged_button.dart';
 
 class AddAddonsPage extends StatefulWidget {
-  final Function onTap ;
+  final Function onTap;
   final Map<String, dynamic> addOnList;
-  const AddAddonsPage( {super.key,required this.addOnList, required this.onTap});
+  const AddAddonsPage({
+    super.key,
+    required this.addOnList,
+    required this.onTap,
+  });
 
   @override
   State<AddAddonsPage> createState() => _AddAddonsPageState();
@@ -27,12 +31,11 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.addOnList.isNotEmpty){
-      nameController.text =widget.addOnList['title'];
-      priceController.text =widget.addOnList['price'];
-      _selectedNumber =widget.addOnList['workingDays'];
+    if (widget.addOnList.isNotEmpty) {
+      nameController.text = widget.addOnList['title'];
+      priceController.text = widget.addOnList['price'];
+      _selectedNumber = widget.addOnList['workingDays'];
     }
-
   }
 
   @override
@@ -56,6 +59,7 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
             FormInputWithHint(
               label: 'Name',
               hintText: 'Title fof your project',
+              borderColor: AppColors.borderColor,
               controller: nameController,
             ),
             SizedBox(height: 16),
@@ -69,7 +73,7 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
                       Text(
                         'Delivery',
                         textAlign: TextAlign.left,
-                        style: AppStyles.font400_14().copyWith(
+                        style: AppStyles.fontInkika13().copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
                         ),
@@ -79,6 +83,8 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
                         items: _numbers,
                         height: 48,
                         hint: 'Select Time',
+                        borderColor: AppColors.borderColor,
+                        borderWidth: 1,
                         selectedValue: _selectedNumber,
                         onChanged: (value) async {
                           setState(() {
@@ -96,9 +102,9 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
                     label: 'Price',
                     hintText: 'Price',
                     keyboardType: TextInputType.number,
-
+                    borderColor: AppColors.borderColor,
                     controller: priceController,
-                    prefixIcon: GetCurrencyWidget(),
+                    prefixIcon: GetCurrencyWidget(fontSize: 20,),
                     isDigitsOnly: true,
                   ),
                 ),
@@ -109,19 +115,19 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
             RoundedEdgedButton(
               buttonText: 'Add',
               onButtonClick: () {
-                String name  =  nameController.text.trim();
-                String price  =  priceController.text.trim();
-                if(name.isEmpty){
+                String name = nameController.text.trim();
+                String price = priceController.text.trim();
+                if (name.isEmpty) {
                   showError(title: 'Name', message: 'Please add name');
-                }
-                else if(price.isEmpty){
+                } else if (price.isEmpty) {
                   showError(title: 'Price', message: 'Please add price');
-                }
-                else if(_selectedNumber==null){
-                  showError(title: 'Delivery', message: 'Please choose delivery time');
-                }
-                else{
-                  widget.onTap(name ,  price, _selectedNumber);
+                } else if (_selectedNumber == null) {
+                  showError(
+                    title: 'Delivery',
+                    message: 'Please choose delivery time',
+                  );
+                } else {
+                  widget.onTap(name, price, _selectedNumber);
                   popToPreviousScreen(context: context);
                 }
               },

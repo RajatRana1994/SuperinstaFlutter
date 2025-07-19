@@ -41,7 +41,8 @@ class PostJobController extends GetxController with BaseClass {
   TextEditingController countryController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-
+  double? lat;
+  double? lng;
   ///--
   List<CategoriesModelDataCategories?>? categoriesData;
   List<TagsModelDataData?>? tagsData;
@@ -131,8 +132,8 @@ class PostJobController extends GetxController with BaseClass {
       'state': stateController.text.trim(),
       'subCategoryId': selectedSubCategory?.id ?? '',
       'isAnyWhere': '0',
-      'longitude': 54.44,
-      'latitude': 80.2222,
+      'longitude': lng,
+      'latitude': lat,
       'country': countryController.text.trim(),
 
       'priceTo': priceToController.text.trim(),
@@ -140,6 +141,7 @@ class PostJobController extends GetxController with BaseClass {
       'skills': selectedTags,
       'experience': selectedExperience,
     };
+    print(map);
     final response = await postJObRepository.postJobApi(params: map);
 
     Get.back();
@@ -200,8 +202,8 @@ class PostJobController extends GetxController with BaseClass {
       'state': stateController.text.trim(),
       'subCategoryId': selectedSubCategory?.id ?? '',
       'isAnyWhere': '0',
-      'longitude': 54.44,
-      'latitude': 80.2222,
+      'longitude': lat,
+      'latitude': lng,
       'country': countryController.text.trim(),
 
       'priceTo': priceToController.text.trim(),

@@ -39,6 +39,15 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.bgColor,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: false,
+        title: Text(
+          '',
+          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+        ),
+      ),
       backgroundColor: AppColors.bgColor,
       body: GetBuilder<ProfileController>(
         init: _profileController,
@@ -56,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                SizedBox(height: 50),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Container(
@@ -91,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                                 child: Image(
                                   height: 80,
                                   width: 80,
+                                  fit: BoxFit.cover,
                                   image: NetworkImage(
                                     _profileController
                                             .profileDetailsModel
@@ -140,8 +150,19 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           },
                           icon: Icon(Icons.notifications),
                         ),
-
-                        Icon(Icons.info, color: Colors.amber),
+                        IconButton(
+                          onPressed: () {
+                            pushToNextScreen(
+                              context: context,
+                              destination: SettingsPage(),
+                            );
+                          },
+                          icon: Image.asset(
+                            AppImages.icSetting,
+                            height: 24,
+                            width: 24,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -162,9 +183,9 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             ),
                           ),
                           Text(
-                            'Completed\nInstaJobs',
+                            'Posted\nInstaJobs',
                             textAlign: TextAlign.center,
-                            style: AppStyles.font400_16().copyWith(
+                            style: AppStyles.font400_14().copyWith(
                               color: Colors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -184,9 +205,9 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             ),
                           ),
                           Text(
-                            'Offers\nSell',
+                            'Offers\nPurchased',
                             textAlign: TextAlign.center,
-                            style: AppStyles.font400_16().copyWith(
+                            style: AppStyles.font400_14().copyWith(
                               color: Colors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -206,9 +227,9 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             ),
                           ),
                           Text(
-                            'Total\nEarnings',
+                            'Total\nSpendings',
                             textAlign: TextAlign.center,
-                            style: AppStyles.font400_16().copyWith(
+                            style: AppStyles.font400_14().copyWith(
                               color: Colors.black,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -228,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                     child: Column(
                       children: [
                         ProfileWidget(
-                          image: '',
+                          image: AppImages.icProfile,
                           title: 'My Profile',
                           onTap: () {
                             pushToNextScreen(
@@ -237,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             );
                           },
                         ),
-                        ProfileWidget(image: '', title: 'Messages', onTap: () {}),
+                        ProfileWidget(image: AppImages.my_offer, title: 'Messages', onTap: () {}),
                       (StorageService().getUserData().isCustomer??true)?SizedBox():  ProfileWidget(
                           image: '',
                           title: 'My Working Timings',
@@ -249,7 +270,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           },
                         ),
                         ProfileWidget(
-                          image: '',
+                          image: AppImages.icInstajob,
                           title: 'My InstaJobs',
                           onTap: () {
                             pushToNextScreen(
@@ -259,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           },
                         ),
                         ProfileWidget(
-                          image: '',
+                          image: AppImages.portfolio,
                           title: 'My Bookings',
                           onTap: () {
                             pushToNextScreen(
@@ -290,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           },
                         ),
                         (StorageService().getUserData().isCustomer??true)?ProfileWidget(
-                          image: '',
+                          image: AppImages.my_offer,
                           title: 'My Purchased Offers',
                           onTap: () {},
                         ):   ProfileWidget(
@@ -299,8 +320,8 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           onTap: () {},
                         ),
                         ProfileWidget(
-                          image: AppImages.fav_clients,
-                          title: 'My Favourites',
+                          image: AppImages.myFavorites,
+                          title: 'Favourites',
                           onTap: () {
                             pushToNextScreen(
                               context: context,
@@ -310,7 +331,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                         ),
                         ProfileWidget(
                           image: AppImages.wallet,
-                          title: 'My Wallet',
+                          title: 'Wallet',
                           onTap: () {
                             pushToNextScreen(
                               context: context,
@@ -319,12 +340,12 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           },
                         ),
                         ProfileWidget(
-                          image: '',
-                          title: 'My Blacklisted Clients',
+                          image: AppImages.black_listed,
+                          title: 'Blacklisted Clients',
                           onTap: () {},
                         ),
                         ProfileWidget(
-                          image: '',
+                          image: AppImages.icSetting,
                           title: 'Settings',
                           onTap: () {
                             pushToNextScreen(

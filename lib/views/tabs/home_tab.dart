@@ -52,13 +52,15 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                 children: [
                 (StorageService().getUserData().isCustomer??false)?  RoundedEdgedButton(
                     buttonText: '+ Post a job',
+                    height: 45,
+                    topMargin: 0,
                     onButtonClick: () {
                       pushToNextScreen(context: context, destination: PostCustomerJobPage());
                     },
                     backgroundColor: Colors.white,
-                    borderColor: Colors.orange,
+                    borderColor: Color(0xFFFF5200),
                     bottomMargin: 16,
-                    textColor: Colors.orange,
+                    textColor: Color(0xFFFF5200),
                   ):SizedBox(),
 
                   snapshot.customerHomeModel?.boostProfile?.isNotEmpty ?? false

@@ -21,6 +21,8 @@ class CustomDropdown<T> extends StatelessWidget {
   final double? height;
   final void Function(T?) onChanged;
   final String Function(T) labelBuilder;
+  final double borderWidth;
+  final Color borderColor;
 
   const CustomDropdown({
     super.key,
@@ -33,6 +35,8 @@ class CustomDropdown<T> extends StatelessWidget {
     this.textColor = Colors.black,
     this.height,
     required this.labelBuilder,
+    this.borderWidth = 2.0,
+    this.borderColor = AppColors.greenShade,
   });
 
   @override
@@ -52,24 +56,24 @@ class CustomDropdown<T> extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
+          horizontal: 6,
           vertical: 14,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.greenShade, width: 2.0),
+          borderSide:  BorderSide(color: borderColor, width: borderWidth),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primaryColor, width: 2.0),
+          borderSide:  BorderSide(color: AppColors.primaryColor, width: borderWidth),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primaryColor, width: 2.0),
+          borderSide:  BorderSide(color: AppColors.primaryColor, width: borderWidth),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primaryColor, width: 2.0),
+          borderSide:  BorderSide(color: AppColors.primaryColor, width: borderWidth),
         ),
       ),
       isExpanded: true,

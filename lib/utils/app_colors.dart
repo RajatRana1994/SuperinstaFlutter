@@ -16,4 +16,8 @@ class AppColors {
   static const Color greyBackground = Color(0x0ffF6F7F6);
   static const Color bankItemBackground = Color(0x0fff0f5f3);
   static const Color bankSpendType = Color(0x0ff475A4E);
+  static const Color btncolor = Color(0xFFFD5F05);
+  static const Color borderColor = Color(0xFFEBEBEB);
+  static const Color labelColor = Color(0xFF202F32);
+  static const Color labelLightColor = Color(0xFF2D2B2B);
 }

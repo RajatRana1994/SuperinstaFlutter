@@ -60,19 +60,15 @@ class _OffersFavPageState extends State<OffersFavPage> with BaseClass {
                     );
                   },
                   child: OffersWidget(
-                    image:
-                        (snapshot.favOffersList
-                                    ?.elementAt(index)
-                                    ?.usersOffers?.offerImages
-                                    ?.isEmpty ??
-                                true)
-                            ? ''
-                            : snapshot.favOffersList
-                                    ?.elementAt(index)
-                                    ?.usersOffers?.offerImages
-                                    ?.elementAt(0)
-                                    ?.attachments ??
-                                '',
+                    image: '',
+                    offerImages: (snapshot.favOffersList
+                        ?.elementAt(index)
+                        ?.usersOffers?.offerImages
+                        ?.isEmpty ??
+                        true)
+                        ? []
+                        : (snapshot.favOffersList?.elementAt(index)?.usersOffers?.offerImages ?? [])
+                    ,
                     rating:
                         snapshot.favOffersList?.elementAt(index)?.rating ?? '0',
                     totalSold:

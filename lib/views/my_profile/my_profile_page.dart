@@ -41,7 +41,7 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
 
   ///---
   ProfileController profileController = Get.put(ProfileController());
-
+  int userType = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -51,6 +51,7 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
     );
     firstNameController.text = name1.first;
     lastNameController.text = name1.last;
+    userType = widget.profileDetailsModelData?.userInfo?.userTypes ?? 0;
     emailController.text =
         widget.profileDetailsModelData?.userInfo?.email ?? '';
     phoneController.text =
@@ -92,6 +93,9 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
       setState(() {
         _image = File(pickedFile.path);
       });
+
+      // Close the bottom sheet after picking the image
+      Navigator.of(context).pop(); // 👈 add this line
     }
   }
 
@@ -115,83 +119,63 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                // ── Avatar (image or plain circle) ───────────────────────────
-                GestureDetector(
-                  onTap: () {
-                    ChooseImageBottomSheet.show(
-                      context: context,
-                      onCancel: () {
-                        popToPreviousScreen(context: context);
-                      },
-                      onCamera: () {
-                        _pickImage(ImageSource.camera);
-                      },
-                      onGallery: () {
-                        _pickImage(ImageSource.gallery);
-                      },
-                    );
-                  },
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black, // fallback bg
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black,
+                  ),
+                  child: _image == null
+                      ? (_profileController.profileDetailsModel?.userInfo?.profile == null ||
+                      (_profileController.profileDetailsModel?.userInfo?.profile?.isEmpty ?? true))
+                      ? const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 48,
+                  )
+                      : ClipOval(
+                    child: Image.network(
+                      _profileController.profileDetailsModel?.userInfo?.profile ?? '',
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
                     ),
-                    child:
-                        _image == null
-                            // If no local File image was chosen, fall back to profile picture or default icon
-                            ? (_profileController
-                                            .profileDetailsModel
-                                            ?.userInfo
-                                            ?.profile ==
-                                        null ||
-                                    (_profileController
-                                            .profileDetailsModel
-                                            ?.userInfo
-                                            ?.profile
-                                            ?.isEmpty ??
-                                        true))
-                                ? const Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: 48,
-                                )
-                                : ClipOval(
-                                  child: Image.network(
-                                    _profileController
-                                            .profileDetailsModel
-                                            ?.userInfo
-                                            ?.profile ??
-                                        '',
-                                    height: 100,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                            // If the user has picked a local File (_image), show it with a circular clip
-                            : ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image(
-                                image: FileImage(_image!),
-                                fit: BoxFit.cover,
-                                height: 100,
-                                width: 100,
-                              ),
-                            ),
+                  )
+                      : ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image(
+                      image: FileImage(_image!),
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 100,
+                    ),
                   ),
                 ),
 
-                // ── Edit icon ────────────────────────────────────────────────
+                // Edit Icon – now opens the image picker
                 Positioned(
-                  top: -4, // pull it slightly outside the avatar
+                  top: -4,
                   right: -4,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      ChooseImageBottomSheet.show(
+                        context: context,
+                        onCancel: () {
+                          popToPreviousScreen(context: context);
+                        },
+                        onCamera: () {
+                          _pickImage(ImageSource.camera);
+                        },
+                        onGallery: () {
+                          _pickImage(ImageSource.gallery);
+                        },
+                      );
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.white, // white circle behind icon
+                        color: Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -210,66 +194,6 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
                 ),
               ],
             ),
-            /*Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-              ),
-              child:
-                  (_profileController.profileDetailsModel?.userInfo?.profile ==
-                              null ||
-                          (_profileController
-                                  .profileDetailsModel
-                                  ?.userInfo
-                                  ?.profile
-                                  ?.isEmpty ??
-                              true))
-                      ? Stack(
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: Icon(Icons.edit, color: AppColors.orange),
-                          ),
-                        ],
-                      )
-                      : ClipRRect(
-                        borderRadius: BorderRadius.circular(80),
-                        child: Stack(
-                          children: [
-                            Image(
-                              height: 100,
-                              width: 100,
-                              image: NetworkImage(
-                                _profileController
-                                        .profileDetailsModel
-                                        ?.userInfo
-                                        ?.profile ??
-                                    '',
-                              ),
-                            ),
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: Icon(
-                                Icons.edit,
-                                color: AppColors.orange,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-            ),*/
             SizedBox(height: 20),
             Row(
               children: [
@@ -313,24 +237,26 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
               maxLine: 4,
             ),
             SizedBox(height: 16),
-            FormInputWithHint(
-              label: 'Hourly Price',
-              hintText: 'Hourly Price',
-              controller: hourlyPriceController,
-              keyboardType: TextInputType.number,
-              prefixIcon: GetCurrencyWidget(fontSize: 16),
-              isDigitsOnly: true,
-            ),
-            SizedBox(height: 16),
-            FormInputWithHint(
-              label: 'Daily Price',
-              hintText: 'Daily Price',
-              keyboardType: TextInputType.number,
-              prefixIcon: GetCurrencyWidget(fontSize: 16),
-              isDigitsOnly: true,
-              controller: dailyPriceController,
-            ),
-            SizedBox(height: 16),
+            if (userType != 0) ...[
+              FormInputWithHint(
+                label: 'Hourly Price',
+                hintText: 'Hourly Price',
+                controller: hourlyPriceController,
+                keyboardType: TextInputType.number,
+                prefixIcon: GetCurrencyWidget(fontSize: 16),
+                isDigitsOnly: true,
+              ),
+              SizedBox(height: 16),
+              FormInputWithHint(
+                label: 'Daily Price',
+                hintText: 'Daily Price',
+                keyboardType: TextInputType.number,
+                prefixIcon: GetCurrencyWidget(fontSize: 16),
+                isDigitsOnly: true,
+                controller: dailyPriceController,
+              ),
+              SizedBox(height: 16),
+            ],
             FormInputWithHint(
               label: 'City',
               hintText: 'City',
@@ -414,25 +340,15 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
                       email: emailController.text,
                       phone: phoneController.text,
                       description: descriptionController.text,
-                      hourlyPrice:
-                          double.tryParse(hourlyPriceController.text) ?? 0.0,
-                      dailyPrice:
-                          double.tryParse(dailyPriceController.text) ?? 0.0,
+                      hourlyPrice: double.tryParse(hourlyPriceController.text) ?? 0.0,
+                      dailyPrice: double.tryParse(dailyPriceController.text) ?? 0.0,
                       city: cityController.text,
                       state: stateController.text,
                       country: countryController.text,
-                      latitude:
-                          widget.profileDetailsModelData?.userInfo?.latitude
-                              .toString() ??
-                          '',
-                      longitude:
-                          widget.profileDetailsModelData?.userInfo?.longitude
-                              .toString() ??
-                          '',
-                      street:
-                          widget.profileDetailsModelData?.userInfo?.street
-                              .toString() ??
-                          '',
+                      latitude: widget.profileDetailsModelData?.userInfo?.latitude.toString() ?? '',
+                      longitude: widget.profileDetailsModelData?.userInfo?.longitude.toString() ?? '',
+                      street: widget.profileDetailsModelData?.userInfo?.street.toString() ?? '',
+                      profile: _image,
                     );
                     Get.back();
                     showSuccess(
@@ -450,4 +366,5 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
       ),
     );
   }
+
 }

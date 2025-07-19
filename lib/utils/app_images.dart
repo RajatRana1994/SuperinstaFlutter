@@ -27,4 +27,14 @@ class AppImages {
   static const String black_listed = "${assetsPath}black_listed.png";
   static const String fav_clients = "${assetsPath}fav_clients.png";
   static const String my_offer = "${assetsPath}my_offer.png";
+
+  static const String myBlockList =  "${assetsPath}ic_blocklist.png";
+  static const String myFavorites = "${assetsPath}ic_myFavorite.png";
+  static const String icSetting = "${assetsPath}ic_setting.png";
+  static const String icProfile = "${assetsPath}ic_profile.png";
+  static const String icOffer = "${assetsPath}ic_offer.png";
+  static const String icInstajob = "${assetsPath}ic_instaJob.png";
+  static const String icHelp =  "${assetsPath}ic_help.png";
+  static const String icAbout = "${assetsPath}ic_about.png";
+  static const String icLogout = "${assetsPath}ic_logout.png";
 }

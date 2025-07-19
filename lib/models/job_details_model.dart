@@ -125,7 +125,7 @@ class JobDetailsModelDataJobProposals {
   int? jobId;
   String? description;
   int? requestBudget;
-  String? attachments;
+  List<JobAttachment>? attachments;
   String? videoThumbnail;
   int? isAccept;
   int? type;
@@ -155,7 +155,11 @@ class JobDetailsModelDataJobProposals {
     jobId = json['jobId']?.toInt();
     description = json['description']?.toString();
     requestBudget = json['requestBudget']?.toInt();
-    attachments = json['attachments']?.toString();
+    if (json['attachments'] != null && json['attachments'] is List) {
+      attachments = (json['attachments'] as List)
+          .map((e) => JobAttachment.fromJson(e))
+          .toList();
+    }
     videoThumbnail = json['videoThumbnail']?.toString();
     isAccept = json['isAccept']?.toInt();
     type = json['type']?.toInt();
@@ -171,7 +175,9 @@ class JobDetailsModelDataJobProposals {
     data['jobId'] = jobId;
     data['description'] = description;
     data['requestBudget'] = requestBudget;
-    data['attachments'] = attachments;
+    if (attachments != null) {
+      data['attachments'] = attachments!.map((e) => e.toJson()).toList();
+    }
     data['videoThumbnail'] = videoThumbnail;
     data['isAccept'] = isAccept;
     data['type'] = type;
@@ -182,6 +188,25 @@ class JobDetailsModelDataJobProposals {
       data['users'] = users!.toJson();
     }
     return data;
+  }
+}
+
+class JobAttachment {
+  String? name;
+  int? mediaType;
+
+  JobAttachment({this.name, this.mediaType});
+
+  JobAttachment.fromJson(Map<String, dynamic> json) {
+    name = json['name']?.toString();
+    mediaType = json['mediaType']?.toInt();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'mediaType': mediaType,
+    };
   }
 }
 

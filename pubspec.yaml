@@ -53,6 +53,9 @@ dependencies:
   video_player: ^2.7.0
   carousel_slider: ^5.0.0
   chewie: ^1.11.3
+  url_launcher: ^6.3.1
+  place_picker_google: ^0.0.18
+  google_maps_flutter: ^2.6.0
 
 dev_dependencies:
   flutter_test:

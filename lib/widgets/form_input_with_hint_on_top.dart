@@ -65,7 +65,7 @@ class FormInputWithHint extends StatelessWidget {
             ? Text(
               label,
               textAlign: TextAlign.left,
-              style: AppStyles.font400_14().copyWith(
+              style: AppStyles.fontInkika13().copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.w700,
               ),

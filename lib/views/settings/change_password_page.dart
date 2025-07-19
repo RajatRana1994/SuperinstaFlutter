@@ -34,7 +34,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
         surfaceTintColor: Colors.transparent,
         centerTitle: false,
         title: Text(
-          'Change password',
+          'Change Password',
           style: AppStyles.fontInkika().copyWith(fontSize: 24),
         ),
       ),
@@ -54,13 +54,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                 },
                 child:
                     isOldPassVisible
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
               ),
               controller: oldPassController,
               obscureText: isOldPassVisible,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
             FormInputWithHint(
               label: 'New Password',
               prefixIcon: Icon(Icons.lock, color: Colors.orange),
@@ -72,14 +72,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                 },
                 child:
                     isNewPassVisible
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
               ),
               hintText: 'Enter new password',
               obscureText: isNewPassVisible,
               controller: newPassController,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
             FormInputWithHint(
               label: 'Confirm Password',
               prefixIcon: Icon(Icons.lock, color: Colors.orange),
@@ -92,16 +92,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                 },
                 child:
                     isConfirmPassVisible
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
               ),
               obscureText: isConfirmPassVisible,
               controller: confirmPassController,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
             RoundedEdgedButton(
               buttonText: 'Save Changes',
-              onButtonClick: () async{
+              onButtonClick: () async {
                 removeFocusFromEditText(context: context);
                 String oldPass = oldPassController.text.trim();
                 String newPass = newPassController.text.trim();
@@ -112,14 +112,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                     title: 'Old Password',
                     message: 'Please add old password',
                   );
-                }
-                else if (oldPass.isEmpty) {
+                } else if (oldPass.isEmpty) {
                   showError(
                     title: 'Old Password',
                     message: 'Please add old password',
                   );
-                }
-                else if (newPass.isEmpty) {
+                } else if (newPass.isEmpty) {
                   showError(
                     title: 'New Password',
                     message: 'Please add new password',
@@ -136,14 +134,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                   );
                 } else {
                   try {
-                    showGetXCircularDialog();
+                    //    showGetXCircularDialog();
                     await _profileController.changePasswordApi(
-                       oldPass,
-                       newPass,
+                      oldPass,
+                      newPass,
                     );
-                    Get.back();
-                    showSuccess(title: 'Password Changed', message: 'Password Changed successfully');
-                  }  catch (e) {
+                    //   Get.back();
+                    // showSuccess(title: 'Password Changed', message: 'Password Changed successfully');
+                  } catch (e) {
                     showError(title: 'Change password', message: e.toString());
                   }
                 }

@@ -17,6 +17,7 @@ import '../../widgets/currency_widget.dart';
 import '../../widgets/custom_drop_down.dart';
 import '../../widgets/form_input_with_hint_on_top.dart';
 import '../../widgets/rounded_edged_button.dart';
+import 'dart:convert';
 
 class EditOffer extends StatefulWidget {
   final OfferDetailsModelData? offerDetailsModelData;
@@ -59,8 +60,8 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
 
   final List<int> _numbers = List.generate(90, (i) => i + 1);
   int? _selectedNumber;
-  Map<String, dynamic> addOnList = {};
-
+ // Map<String, dynamic> addOnList = {};
+  List<Map<String, dynamic>> addOnList = [];
   Future<void> _uploadImages() async {
     final localFiles =
         _images
@@ -271,7 +272,7 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                           );
                           setState(() {});
                         },
-                        addOnList: addOnList,
+                        addOnList: {},
                       ),
                     );
                   },
@@ -460,6 +461,8 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                 int deliveryTime = _selectedNumber ?? 0;
                 if (name.isEmpty) {
                   showError(title: 'Name', message: 'Please add name');
+                } else if (name.length < 3) {
+                  showError(title: 'Name', message: 'Name should be 3 character long');
                 } else if (price.isEmpty) {
                   showError(title: 'Price', message: 'Please add price');
                 } else if (description.isEmpty) {
@@ -485,9 +488,15 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                       'price': price,
                       'deliveryTime': deliveryTime,
                     });
-                    if (addOnList.isNotEmpty) {
-                      queryParams.putIfAbsent('adOn', () => addOnList);
-                    }
+                    if (widget.offerDetailsModelData?.adOn != null && widget.offerDetailsModelData!.adOn!.isNotEmpty) {
+                      final adOnList = widget.offerDetailsModelData!.adOn!
+                          .whereType<OfferDetailsModelDataAdOn>()
+                          .map((e) => e.toJson()
+                          .map((key, value) => MapEntry(key.toString(), value.toString())))
+                          .toList();
+
+                      queryParams['adOn'] = jsonEncode(adOnList);;
+                      }
                     if (removedId.isNotEmpty) {
                       queryParams.putIfAbsent(
                         'removeImageIds',
@@ -501,6 +510,7 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                     await _uploadImages();
                   } else {
                     try {
+                      print(widget.offerDetailsModelData?.adOn?.length);
                       showGetXCircularDialog();
                       await profileController.editOffer(
                         description: description,
@@ -510,6 +520,12 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                         removedImageId: removedId,
                         offerId:
                             widget.offerDetailsModelData?.id.toString() ?? '',
+                        adOn: (widget.offerDetailsModelData?.adOn != null && widget.offerDetailsModelData!.adOn!.isNotEmpty)
+                            ? widget.offerDetailsModelData!.adOn!
+                            .whereType<OfferDetailsModelDataAdOn>() // filters out nulls
+                            .map((e) => e.toJson()) // ensure `toJson()` exists in your model
+                            .toList()
+                            : null,
                       );
                       Get.back();
                       showSuccess(

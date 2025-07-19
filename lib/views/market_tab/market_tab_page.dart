@@ -56,19 +56,17 @@ class _MarketTabPageState extends State<MarketTabPage> with BaseClass{
                               .toString() ?? '0'));
                           },
                           child: OffersWidget(
-                            image:
+                            image: '',
+                            offerImages:
                                 (snapshot.offersList
                                             ?.elementAt(index)
                                             ?.offerImages
                                             ?.isEmpty ??
                                         true)
-                                    ? ''
+                                    ? []
                                     : snapshot.offersList
                                             ?.elementAt(index)
-                                            ?.offerImages
-                                            ?.elementAt(0)
-                                            ?.attachments ??
-                                        '',
+                                            ?.offerImages ?? [],
                             rating:
                                 snapshot.offersList?.elementAt(index)?.rating ??
                                 '0',

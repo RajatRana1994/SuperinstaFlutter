@@ -8,6 +8,10 @@ import 'package:instajobs/widgets/currency_widget.dart';
 import 'package:instajobs/widgets/form_input_with_hint_on_top.dart';
 import 'package:instajobs/widgets/rounded_edged_button.dart';
 import 'package:get/get.dart';
+import 'package:instajobs/views/post_customer_job/placePicker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:place_picker_google/place_picker_google.dart';
+
 import '../../dialogs/ask_dialog.dart';
 import '../../models/categoris.dart';
 import '../../models/subCategory_model.dart';
@@ -26,6 +30,8 @@ class PostCustomerJobPage extends StatefulWidget {
 class _PostCustomerJobPageState extends State<PostCustomerJobPage>
     with BaseClass {
   PostJobController postJobController = Get.put(PostJobController());
+  static const kGoogleApiKey =
+      "AIzaSyBAm6xBQn3Gu6hpjDGtcNY9Od6SMJU6Wnw"; // replace with your key
 
   @override
   void initState() {
@@ -78,7 +84,7 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                 SizedBox(height: 12),
                 Text(
                   'Get your project Done!\nPost a project for free and start receiving proposals',
-                  style: AppStyles.font700_12().copyWith(color: Colors.black),
+                  style: AppStyles.font500_14().copyWith(color: Colors.black),
                 ),
                 SizedBox(height: 16),
                 FormInputWithHint(
@@ -103,6 +109,8 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                     CustomDropdown<CategoriesModelDataCategories?>(
                       items: snapshot.categoriesData ?? [],
                       hint: 'Category',
+                      borderColor: AppColors.borderColor,
+                      borderWidth: 1,
                       selectedValue: snapshot.selectedCategory,
                       onChanged: (value) {
                         setState(() {
@@ -143,6 +151,8 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                     CustomDropdown<SubCategoryModelDataSubCategories?>(
                       items: snapshot.subCategoriesData ?? [],
                       hint: 'Sub Category',
+                      borderColor: AppColors.borderColor,
+                      borderWidth: 1,
                       selectedValue: snapshot.selectedSubCategory,
                       onChanged: (value) {
                         setState(() {
@@ -171,6 +181,8 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
 
                     const SizedBox(height: 6),
                     CustomDropdown<String?>(
+                      borderWidth: 1,
+                      borderColor: AppColors.borderColor,
                       items: snapshot.experienceList ?? [],
                       hint: 'Experience',
                       selectedValue: snapshot.selectedExperience,
@@ -193,10 +205,11 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                       child: FormInputWithHint(
                         label: 'Price',
                         hintText: 'Price From',
+                        borderColor: AppColors.borderColor,
                         isDigitsOnly: true,
                         keyboardType: TextInputType.number,
                         controller: snapshot.priceFromController,
-                        prefixIcon: GetCurrencyWidget(),
+                        prefixIcon: GetCurrencyWidget(fontSize: 20),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -205,9 +218,10 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                         label: '',
                         hintText: 'Price To',
                         isDigitsOnly: true,
+                        borderColor: AppColors.borderColor,
                         keyboardType: TextInputType.number,
                         controller: snapshot.priceToController,
-                        prefixIcon: GetCurrencyWidget(),
+                        prefixIcon: GetCurrencyWidget(fontSize: 20),
                       ),
                     ),
                   ],
@@ -230,6 +244,8 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                           ),
                           SizedBox(height: 6),
                           CustomDropdown<int?>(
+                            borderColor: AppColors.borderColor,
+                            borderWidth: 1,
                             items: _numbers,
                             height: 48,
                             hint: 'Select Time',
@@ -247,10 +263,11 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                       child: FormInputWithHint(
                         label: '',
                         hintText: 'Budget',
+                        borderColor: AppColors.borderColor,
                         keyboardType: TextInputType.number,
                         isDigitsOnly: true,
                         controller: snapshot.budgetController,
-                        prefixIcon: GetCurrencyWidget(),
+                        prefixIcon: GetCurrencyWidget(fontSize: 20),
                       ),
                     ),
                   ],
@@ -259,16 +276,43 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                 Row(
                   children: [
                     Expanded(
-                      child: FormInputWithHint(
-                        label: 'Select Location',
-                        hintText: 'Country',
-                        controller: snapshot.countryController,
+                      child: GestureDetector(
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PlacePickerPage(),
+                            ),
+                          );
+
+                          if (result is Map) {
+
+                            snapshot.countryController.text =
+                                result['country'] ?? '';
+                            snapshot.stateController.text =
+                                result['state'] ?? '';
+                            snapshot.lat = result['lat'];
+                            snapshot.lng = result['lng'];
+                          }
+                        },
+
+                        child: AbsorbPointer(
+                          // prevents keyboard from appearing
+                          child: FormInputWithHint(
+                            label: 'Select Location',
+                            hintText: 'Country',
+                            borderColor: AppColors.borderColor,
+                            controller: snapshot.countryController,
+                          ),
+                        ),
                       ),
                     ),
+
                     SizedBox(width: 8),
                     Expanded(
                       child: FormInputWithHint(
                         label: '',
+                        borderColor: AppColors.borderColor,
                         hintText: 'State',
                         controller: snapshot.stateController,
                       ),
@@ -280,6 +324,7 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                   label: 'Describe your project in more detail!',
                   hintText: 'Enter text here',
                   maxLine: 3,
+                  borderColor: AppColors.borderColor,
                   keyboardAction: TextInputAction.done,
                   controller: snapshot.descriptionController,
                 ),
@@ -377,15 +422,15 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 7),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.orange),
-                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.btncolor),
+                      borderRadius: BorderRadius.circular(13),
                     ),
                     child: Text(
                       '+ Upload files',
-                      style: AppStyles.font500_14().copyWith(
-                        color: AppColors.primaryColor,
+                      style: AppStyles.font700_12().copyWith(
+                        color: AppColors.btncolor,
                       ),
                     ),
                   ),
@@ -454,6 +499,7 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                     String toPrice = snapshot.priceToController.text.trim();
                     String budget = snapshot.budgetController.text.trim();
                     if (title.isEmpty) {
+                      print(snapshot.countryController.text);
                       showError(title: 'Title', message: 'Please add title');
                     } else if (snapshot.selectedCategory == null) {
                       showError(
@@ -477,49 +523,38 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                         title: 'From Price',
                         message: 'Please add From Price',
                       );
-                    }
-                    else if (double.parse(fromPrice)<=0) {
+                    } else if (double.parse(fromPrice) <= 0) {
                       showError(
                         title: 'From Price',
                         message: 'From price cannot be 0',
                       );
-                    }
-
-                    else if (snapshot.priceToController.text.trim().isEmpty) {
+                    } else if (snapshot.priceToController.text.trim().isEmpty) {
                       showError(
                         title: 'To Price',
                         message: 'Please add To Price',
                       );
-                    }
-                    else if (double.parse(toPrice)<=0) {
+                    } else if (double.parse(toPrice) <= 0) {
                       showError(
                         title: 'To Price',
                         message: 'To price cannot be 0',
                       );
-                    }
-                    else if (double.parse(fromPrice)>double.parse(toPrice)) {
+                    } else if (double.parse(fromPrice) >
+                        double.parse(toPrice)) {
                       showError(
                         title: 'From Price',
                         message: 'From price cannot be more than To Price',
                       );
-                    }
-
-                    else if (snapshot.selectedDelivery == null) {
+                    } else if (snapshot.selectedDelivery == null) {
                       showError(
                         title: 'Delivery',
                         message: 'Please select Delivery',
                       );
-                    } else if (snapshot.priceToController.text.trim().isEmpty) {
+                    } else if (snapshot.budgetController.text.trim().isEmpty) {
+                      print('priceToController');
                       showError(title: 'Budget', message: 'Please add budget');
-                    }
-                    else if (double.parse(budget)<=0) {
-                      showError(
-                        title: 'Budget',
-                        message: 'Budget cannot be 0',
-                      );
-                    }
-
-                    else if (snapshot.countryController.text.trim().isEmpty) {
+                    } else if (double.parse(budget) <= 0) {
+                      showError(title: 'Budget', message: 'Budget cannot be 0');
+                    } else if (snapshot.countryController.text.trim().isEmpty) {
                       showError(
                         title: 'Country',
                         message: 'Please add country',
@@ -539,7 +574,6 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                         message: 'Please add description',
                       );
                     } else {
-
                       final result = await showCupertinoConfirmDialog(
                         context: context,
                         title: 'Post Job',

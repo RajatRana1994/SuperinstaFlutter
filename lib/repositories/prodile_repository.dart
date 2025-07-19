@@ -7,6 +7,7 @@ import 'package:instajobs/models/my_booking_model.dart';
 import 'package:instajobs/models/my_insta_jobs_model.dart';
 import 'package:instajobs/models/my_portfolio_model.dart';
 import 'package:dio/dio.dart' as diox;
+import 'package:dio/dio.dart' as dio;
 import 'package:instajobs/models/popular_service_details_model/popular_services_details_model.dart';
 import 'package:instajobs/models/profile_details_model.dart';
 import 'package:instajobs/storage_services/local_stoage_service.dart';
@@ -15,6 +16,9 @@ import '../models/feed_tab_model.dart';
 import '../models/offer_tab_model.dart';
 import '../network/api_url.dart';
 import '../network/network_service.dart';
+
+import 'package:dio/dio.dart';
+import 'package:mime/mime.dart';
 
 class ProfileRepository {
   final NetworkService _networkService = NetworkService();
@@ -85,6 +89,28 @@ class ProfileRepository {
     );
   }
 
+  Future<ApiResponse<ChangePasswordModel>> logoutApi() async {
+    return await _networkService.post<ChangePasswordModel>(
+      path: 'logout',
+      data: {},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return ChangePasswordModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<ChangePasswordModel>> deleteAccountApi() async {
+    return await _networkService.delete<ChangePasswordModel>(
+      path: 'delete-account',
+      data: {},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return ChangePasswordModel.fromJson(data);
+      },
+    );
+  }
+
   Future<ApiResponse<ProfileDetailsModel>> getUserProfileDetails() async {
     return await _networkService.get<ProfileDetailsModel>(
       path: 'vendor-details/${StorageService().getUserId()}',
@@ -93,12 +119,28 @@ class ProfileRepository {
         return ProfileDetailsModel.fromJson(data);
       },
     );
-  } Future<ApiResponse<ProfileDetailsModel>> updateProfile(Map<String, String> map) async {
+  }
+
+  //getMultipartImage
+  static Future<MultipartFile> getMultipartImage({required String path}) async {
+    String fileName = path.split('/').last;
+    String mimeType = lookupMimeType(fileName) ?? 'image/jpeg';
+    String mimee = mimeType.split('/')[0];
+    String type = mimeType.split('/')[1];
+    return await MultipartFile.fromFile(path, filename: fileName);
+  }
+
+  Future<ApiResponse<ProfileDetailsModel>> updateProfile(
+      dio.FormData formData,
+      ) async {
     return await _networkService.put<ProfileDetailsModel>(
-      data: map,
+      data: formData,
       path: 'edit-profile',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': StorageService().getUserData().authToken ?? '',
+      },
       converter: (data) {
-        // The converter is only called for successful responses now
         return ProfileDetailsModel.fromJson(data);
       },
     );
@@ -134,6 +176,7 @@ class ProfileRepository {
       },
     );
   }
+
   Future<ApiResponse<FavOffersModel>> getFavOffersApi() async {
     return await _networkService.get<FavOffersModel>(
       path: 'fav-offers?limit=100',
@@ -143,6 +186,7 @@ class ProfileRepository {
       },
     );
   }
+
   Future<ApiResponse<FavFreelancersModel>> getFavFreelancersApi() async {
     return await _networkService.get<FavFreelancersModel>(
       path: 'fav-vendors',
@@ -151,8 +195,8 @@ class ProfileRepository {
         return FavFreelancersModel.fromJson(data);
       },
     );
-
   }
+
   Future<ApiResponse<FeedTabModel>> geFavtFeedData() async {
     return await _networkService.get<FeedTabModel>(
       path: ApiUrlConstants.feedTabData,
@@ -162,7 +206,10 @@ class ProfileRepository {
       },
     );
   }
-  Future<ApiResponse<OfferTabModel>> addOffersApi({required Map<String, dynamic> map}) async {
+
+  Future<ApiResponse<OfferTabModel>> addOffersApi({
+    required Map<String, dynamic> map,
+  }) async {
     return await _networkService.post<OfferTabModel>(
       path: 'offers',
       data: map,
@@ -173,7 +220,10 @@ class ProfileRepository {
     );
   }
 
-  Future<ApiResponse<OfferTabModel>> editOffersApi({required Map<String, dynamic> map, required String offerId}) async {
+  Future<ApiResponse<OfferTabModel>> editOffersApi({
+    required Map<String, dynamic> map,
+    required String offerId,
+  }) async {
     return await _networkService.put<OfferTabModel>(
       path: 'offers/$offerId',
       data: map,

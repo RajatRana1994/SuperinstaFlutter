@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Insta Jobs',
       theme: ThemeData(),
+      debugShowCheckedModeBanner: false,
       home: SplashPage(),
     );
   }

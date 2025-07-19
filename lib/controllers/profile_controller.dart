@@ -1,41 +1,36 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart'; //  👈 add this line
+import 'package:http_parser/http_parser.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:path/path.dart' as p;
+
 import 'package:instajobs/models/fav_offers_model.dart';
 import 'package:instajobs/models/my_booking_model.dart';
 import 'package:instajobs/models/profile_details_model.dart';
 import 'package:instajobs/storage_services/local_stoage_service.dart';
 import 'package:instajobs/utils/baseClass.dart';
-import 'package:path/path.dart' as p;
-import 'dart:io';
-
-import 'package:path/path.dart' as p;
-import 'package:get/get.dart';
 import 'package:instajobs/models/my_insta_jobs_model.dart';
 import 'package:instajobs/models/my_portfolio_model.dart';
 import 'package:instajobs/repositories/prodile_repository.dart';
-
 import '../models/fav_freelancers_model.dart';
 import '../models/feed_tab_model.dart';
 import '../models/offer_tab_model.dart';
+import 'dart:convert';
 import '../models/popular_service_details_model/popular_services_details_model.dart';
 
 class ProfileController extends GetxController with BaseClass {
-  ///
   int pendingTotal = -1;
   int inProgressTotal = -1;
   int cancelledTotal = -1;
   int completedTotal = -1;
 
-  ///
   final ProfileRepository _profileRepository = ProfileRepository();
+
   List<MyPortfolioModelDataData?>? myPortfolioData;
-
   List<MyInstaJobsModelDataData?>? pendingInstaJobsData;
-
   List<MyInstaJobsModelDataData?>? inProgressInstaJobsData;
-
   List<MyInstaJobsModelDataData?>? historyInstaJobsData;
 
   List<MyBookingModelDataData?>? pendingBookingsList;
@@ -45,14 +40,12 @@ class ProfileController extends GetxController with BaseClass {
   List<OfferTabModelDataData?>? offersList;
   List<FavOffersModelDataData?>? favOffersList;
 
+  ProfileDetailsModelData? profileDetailsModel;
+
   Future<void> getMyPortfolio() async {
     myPortfolioData = null;
     final response = await _profileRepository.getMyPortfolio();
-    if (response.isSuccess) {
-      myPortfolioData = response.data?.data?.data ?? [];
-    } else {
-      myPortfolioData = [];
-    }
+    myPortfolioData = response.isSuccess ? response.data?.data?.data ?? [] : [];
     update();
   }
 
@@ -66,7 +59,7 @@ class ProfileController extends GetxController with BaseClass {
     if (response.isSuccess) {
       getMyPortfolio();
       showSuccess(title: 'Added', message: 'Portfolio Added Successfully');
-    } else {}
+    }
     update();
   }
 
@@ -77,20 +70,16 @@ class ProfileController extends GetxController with BaseClass {
     if (response.isSuccess) {
       showSuccess(title: 'Delete', message: 'Portfolio deleted Successfully');
       myPortfolioData?.removeAt(index);
-    } else {}
+    }
     update();
   }
 
-  Future<void> editPortfolio(
-    String id,
-    String title,
-    String description,
-  ) async {
+  Future<void> editPortfolio(String id, String title, String description) async {
     showGetXCircularDialog();
     final response = await _profileRepository.editPortfolio(
       id: id,
-      title: '',
-      description: '',
+      title: title,
+      description: description,
     );
     Get.back();
     if (response.isSuccess) {
@@ -98,7 +87,7 @@ class ProfileController extends GetxController with BaseClass {
       getMyPortfolio();
       Get.back();
       Get.back();
-    } else {}
+    }
     update();
   }
 
@@ -110,37 +99,34 @@ class ProfileController extends GetxController with BaseClass {
     String? itemId,
   }) async {
     showGetXCircularDialog();
-    final request =
-        http.MultipartRequest(
-            isEditPortfolio ? 'PUT' : 'POST',
-            isEditPortfolio
-                ? Uri.parse(
-                  'https://app.superinstajobs.com/api/v1/edit-portfolio/$itemId',
-                )
-                : Uri.parse(
-                  'https://app.superinstajobs.com/api/v1/add-portfolio',
-                ),
-          )
-          ..headers['Authorization'] =
-              StorageService().getUserData().authToken ?? ''
-          ..fields['description'] = description
-          ..fields['title'] = title
-          ..fields['type'] = '0'
-          ..files.add(
-            await http.MultipartFile.fromPath(
-              'image',
-              imageFile.path,
-              filename: p.basename(imageFile.path),
-              contentType: MediaType('image', 'jpeg'), // ← now recognised
-            ),
-          );
+
+    final request = http.MultipartRequest(
+      isEditPortfolio ? 'PUT' : 'POST',
+      Uri.parse(
+        isEditPortfolio
+            ? 'https://app.superinstajobs.com/api/v1/edit-portfolio/$itemId'
+            : 'https://app.superinstajobs.com/api/v1/add-portfolio',
+      ),
+    )
+      ..headers['Authorization'] = StorageService().getUserData().authToken ?? ''
+      ..fields['description'] = description
+      ..fields['title'] = title
+      ..fields['type'] = '0'
+      ..files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          imageFile.path,
+          filename: p.basename(imageFile.path),
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
 
     final streamed = await request.send();
     final response = await http.Response.fromStream(streamed);
     Get.back();
+
     if (response.statusCode < 200 || response.statusCode >= 300) {
       print(response.body);
-
       throw Exception('Upload failed: ${response.statusCode}');
     } else {
       if (isEditPortfolio) {
@@ -163,100 +149,49 @@ class ProfileController extends GetxController with BaseClass {
     } else if (status == 2) {
       historyInstaJobsData = null;
     }
-    myPortfolioData = null;
+
     final response = await _profileRepository.getMyInstaJobs(status);
     if (response.isSuccess) {
-      if (status == 3) {
-        pendingInstaJobsData = response.data?.data?.data ?? [];
-      } else if (status == 1) {
-        inProgressInstaJobsData = response.data?.data?.data ?? [];
-      } else if (status == 2) {
-        historyInstaJobsData = response.data?.data?.data ?? [];
-      }
+      final data = response.data?.data?.data ?? [];
+      if (status == 3) pendingInstaJobsData = data;
+      if (status == 1) inProgressInstaJobsData = data;
+      if (status == 2) historyInstaJobsData = data;
     } else {
-      if (response.isSuccess) {
-        if (status == 3) {
-          pendingInstaJobsData = [];
-        } else if (status == 1) {
-          inProgressInstaJobsData = [];
-        } else if (status == 2) {
-          historyInstaJobsData = [];
-        }
-      }
+      if (status == 3) pendingInstaJobsData = [];
+      if (status == 1) inProgressInstaJobsData = [];
+      if (status == 2) historyInstaJobsData = [];
     }
     update();
   }
 
-  /// BOOKINGS
   Future<void> getMyBookings({required int status}) async {
-    if (status == 0) {
-      pendingBookingsList = null;
-    } else if (status == 1) {
-      inProgressBookingsList = null;
-    } else if (status == 2) {
-      cancelledBookingsList = null;
-    } else if (status == 4) {
-      completedBookingsList = null;
+    switch (status) {
+      case 0: pendingBookingsList = null; break;
+      case 1: inProgressBookingsList = null; break;
+      case 2: cancelledBookingsList = null; break;
+      case 4: completedBookingsList = null; break;
     }
 
     final response = await _profileRepository.getMyBookings(status);
     if (response.isSuccess) {
-      if (status == 0) {
-        pendingBookingsList = response.data?.data?.data ?? [];
-        pendingTotal = pendingBookingsList?.length ?? 0;
-        completedTotal = -1;
-        cancelledTotal = -1;
-        inProgressTotal = -1;
-      } else if (status == 1) {
-        inProgressBookingsList = response.data?.data?.data ?? [];
-        inProgressTotal = inProgressBookingsList?.length ?? 0;
-        completedTotal = -1;
-        cancelledTotal = -1;
-        pendingTotal = -1;
-      } else if (status == 2) {
-        cancelledBookingsList = response.data?.data?.data ?? [];
-        cancelledTotal = cancelledBookingsList?.length ?? 0;
-        completedTotal = -1;
-        inProgressTotal = -1;
-        pendingTotal = -1;
-      } else if (status == 4) {
-        completedBookingsList = response.data?.data?.data ?? [];
-        completedTotal = completedBookingsList?.length ?? 0;
-        cancelledTotal = -1;
-        inProgressTotal = -1;
-        pendingTotal = -1;
+      final data = response.data?.data?.data ?? [];
+      switch (status) {
+        case 0: pendingBookingsList = data; pendingTotal = data.length; break;
+        case 1: inProgressBookingsList = data; inProgressTotal = data.length; break;
+        case 2: cancelledBookingsList = data; cancelledTotal = data.length; break;
+        case 4: completedBookingsList = data; completedTotal = data.length; break;
       }
     } else {
-      if (status == 0) {
-        pendingBookingsList = [];
-        pendingTotal = 0;
-        completedTotal = -1;
-        cancelledTotal = -1;
-        inProgressTotal = -1;
-      } else if (status == 1) {
-        inProgressBookingsList = [];
-        inProgressTotal = 0;
-        completedTotal = -1;
-        cancelledTotal = -1;
-        pendingTotal = -1;
-      } else if (status == 2) {
-        cancelledBookingsList = [];
-        cancelledTotal = 0;
-        completedTotal = -1;
-        inProgressTotal = -1;
-        pendingTotal = -1;
-      } else if (status == 4) {
-        completedBookingsList = [];
-        completedTotal = 0;
-        cancelledTotal = -1;
-        inProgressTotal = -1;
-        pendingTotal = -1;
+      switch (status) {
+        case 0: pendingBookingsList = []; pendingTotal = 0; break;
+        case 1: inProgressBookingsList = []; inProgressTotal = 0; break;
+        case 2: cancelledBookingsList = []; cancelledTotal = 0; break;
+        case 4: completedBookingsList = []; completedTotal = 0; break;
       }
     }
     update();
   }
 
-  ///----
   Future<void> changePasswordApi(String oldPassword, String newPassword) async {
     showGetXCircularDialog();
     final response = await _profileRepository.changePasswordApi(
@@ -266,19 +201,30 @@ class ProfileController extends GetxController with BaseClass {
     Get.back();
     if (response.isSuccess) {
       showSuccess(title: 'Changed', message: 'Password changed Successfully');
-    } else {}
+    } else {
+      showError(title: 'Error', message: 'Old password is wrong');
+    }
     update();
   }
 
-  ProfileDetailsModelData? profileDetailsModel;
+  Future<void> logoutApi() async {
+    showGetXCircularDialog();
+    await _profileRepository.logoutApi();
+    Get.back();
+  }
+
+  Future<void> deleteAccountApi() async {
+    showGetXCircularDialog();
+    await _profileRepository.deleteAccountApi();
+    Get.back();
+  }
 
   Future<void> getProfileDetails() async {
     profileDetailsModel = null;
     final response = await _profileRepository.getUserProfileDetails();
-
     if (response.isSuccess) {
       profileDetailsModel = response.data?.data;
-    } else {}
+    }
     update();
   }
 
@@ -296,36 +242,46 @@ class ProfileController extends GetxController with BaseClass {
     required String latitude,
     required String longitude,
     required String street,
+    File? profile,
   }) async {
-    final response = await _profileRepository.updateProfile({
+    final map = <String, dynamic>{
       'name': '$firstName $lastName',
-      'address': '',
+      'email': email,
+      'phone': phone,
+      'descriptions': description,
+      'hourly_price': hourlyPrice.toString(),
+      'daily_price': dailyPrice.toString(),
+      'city': city,
       'state': state,
       'country': country,
-      'phone': phone,
-      'street': street,
       'latitude': latitude,
       'longitude': longitude,
-    });
+      'street': street,
+    };
+
+    if (profile != null) {
+      print('no image havssse');
+      map['profile'] = await dio.MultipartFile.fromFile(
+        profile.path,
+        filename: profile.path.split('/').last,
+      );
+    //  map['profile'] = await dio.MultipartFile.fromFile(profile.path);
+    } else {
+      print('no image');
+    }
+    final formData = dio.FormData.fromMap(map);
+    final response = await _profileRepository.updateProfile(formData);
     if (response.isSuccess) {
       getProfileDetails();
-      //profileDetailsModel = response.data?.data;
-    } else {}
+    }
     update();
   }
 
-  /// MY Offers
   Future<void> getOffersApi() async {
     try {
       offersList = null;
       final response = await _profileRepository.getOffersApi();
-
-      if (response.isSuccess) {
-        offersList = response.data?.data?.data ?? [];
-      } else {
-        offersList = [];
-        throw response.message.toString();
-      }
+      offersList = response.isSuccess ? response.data?.data?.data ?? [] : [];
       update();
     } catch (e) {
       throw e.toString();
@@ -336,29 +292,19 @@ class ProfileController extends GetxController with BaseClass {
     try {
       favOffersList = null;
       final response = await _profileRepository.getFavOffersApi();
-
-      if (response.isSuccess) {
-        favOffersList = response.data?.data?.data??[];
-      } else {
-        favOffersList = [];
-        throw response.message.toString();
-      }
+      favOffersList = response.isSuccess ? response.data?.data?.data ?? [] : [];
       update();
     } catch (e) {
       throw e.toString();
     }
   }
+
   List<FavFreelancersModelDataData?>? favFreelancers;
   Future<void> getFavFreelancers() async {
     try {
       favFreelancers = null;
       final response = await _profileRepository.getFavFreelancersApi();
-      if (response.isSuccess) {
-        favFreelancers = response.data?.data?.data??[];
-      } else {
-        favFreelancers = [];
-        throw response.message.toString();
-      }
+      favFreelancers = response.isSuccess ? response.data?.data?.data ?? [] : [];
       update();
     } catch (e) {
       throw e.toString();
@@ -369,42 +315,43 @@ class ProfileController extends GetxController with BaseClass {
   Future<void> getFavFeedData() async {
     favFeedList = null;
     final response = await _profileRepository.geFavtFeedData();
-    if (response.isSuccess) {
-      favFeedList = response.data?.data?.data ?? [];
-    } else {
-      favFeedList = [];
-    }
+    favFeedList = response.isSuccess ? response.data?.data?.data ?? [] : [];
     update();
   }
-  ///
 
   Future<void> addOfferApi({
     required String description,
     required String name,
     required String price,
     required int deliveryTime,
+    List<Map<String, dynamic>>? adOn,
   }) async {
     try {
       showGetXCircularDialog();
-      final response = await _profileRepository.addOffersApi(
-        map: {
-          'description': description,
-          'name': name,
-          'price': price,
-          'deliveryTime': deliveryTime,
-        },
-      );
+      final Map<String, dynamic> map = {
+        'description': description,
+        'name': name,
+        'price': price,
+        'deliveryTime': deliveryTime,
+      };
 
+      // Include adOn only if it's not empty
+      if (adOn != null && adOn.isNotEmpty) {
+        map['adOn'] = jsonEncode(adOn.map((item) {
+          return item.map((key, value) => MapEntry(key.toString(), value.toString()));
+        }).toList());
+       // map['adOn'] = adOn;
+      }
+      print(map);
+      final response = await _profileRepository.addOffersApi(
+        map: map
+      );
+      Get.back();
       if (response.isSuccess) {
-        Get.back();
         await getOffersApi();
         Get.back();
         showSuccess(title: 'Offer', message: 'Offer added successfully');
-
-
-
       } else {
-
         throw response.message.toString();
       }
       update();
@@ -421,6 +368,7 @@ class ProfileController extends GetxController with BaseClass {
     required int deliveryTime,
     required List<int> removedImageId,
     required String offerId,
+    List<Map<String, dynamic>>? adOn,
   }) async {
     try {
       Map<String, dynamic> map = {
@@ -428,9 +376,18 @@ class ProfileController extends GetxController with BaseClass {
         'name': name,
         'price': price,
         'deliveryTime': deliveryTime,
+
       };
+      print(adOn?.length);
+      if (adOn != null && adOn.isNotEmpty) {
+        print('objectsss');
+        map['adOn'] = jsonEncode(adOn.map((item) {
+          return item.map((key, value) => MapEntry(key.toString(), value.toString()));
+        }).toList());
+        // map['adOn'] = adOn;
+      }
       if (removedImageId.isNotEmpty) {
-        map.putIfAbsent('removeImageIds', () => removedImageId.join(','));
+        map['removeImageIds'] = removedImageId.join(',');
       }
 
       final response = await _profileRepository.editOffersApi(
@@ -438,8 +395,7 @@ class ProfileController extends GetxController with BaseClass {
         offerId: offerId,
       );
 
-      if (response.isSuccess) {
-      } else {
+      if (!response.isSuccess) {
         throw response.message.toString();
       }
       update();

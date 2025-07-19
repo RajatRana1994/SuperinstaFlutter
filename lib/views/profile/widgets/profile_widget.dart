@@ -33,7 +33,7 @@ class ProfileWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: AppStyles.font700_18().copyWith(color: Colors.black),
+                style: AppStyles.font500_14().copyWith(color: Color(0xFF0A0A0A)),
               ),
             ),
           ],

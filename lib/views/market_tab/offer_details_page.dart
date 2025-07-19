@@ -42,19 +42,25 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
       appBar: AppBar(
         backgroundColor: AppColors.bgColor,
         surfaceTintColor: Colors.transparent,
-        title: Text('Offer Details', style: AppStyles.fontInkika().copyWith(fontSize: 24),),
+        title: Text(
+          'Offer Details',
+          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+        ),
         actions: [
-          widget.isEdit?  IconButton(
-            onPressed: () {
-              pushAndReplace(
-                context: context,
-                destination: EditOffer(
-                  offerDetailsModelData: jobTabController.offerDetailsModelData,
-                ),
-              );
-            },
-            icon: Icon(Icons.edit_note),
-          ):SizedBox(),
+          widget.isEdit
+              ? IconButton(
+                onPressed: () {
+                  pushAndReplace(
+                    context: context,
+                    destination: EditOffer(
+                      offerDetailsModelData:
+                          jobTabController.offerDetailsModelData,
+                    ),
+                  );
+                },
+                icon: Icon(Icons.edit_note),
+              )
+              : SizedBox(),
         ],
       ),
       body: GetBuilder<JobTabController>(
@@ -74,17 +80,16 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     OffersWidget(
-                      image:
+                      image: '',
+                      offerImages:
                           (snapShot
                                       .offerDetailsModelData
                                       ?.offerImages
                                       ?.isEmpty ??
                                   true)
-                              ? ''
-                              : snapShot.offerDetailsModelData?.offerImages
-                                      ?.elementAt(0)
-                                      ?.attachments ??
-                                  '',
+                              ? []
+                              : snapShot.offerDetailsModelData?.offerImages ?? []
+                                      ,
                       rating: snapShot.offerDetailsModelData?.rating ?? '0',
                       totalSold:
                           snapShot.offerDetailsModelData?.totalSold
@@ -95,48 +100,52 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                           '0',
                       name: snapShot.offerDetailsModelData?.name ?? '',
                     ),
-                    SizedBox(height: 16),
-                    Divider(),
-                    SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        (snapShot.offerDetailsModelData?.users?.profile ==
-                                    null ||
-                                (snapShot
-                                        .offerDetailsModelData
-                                        ?.users
-                                        ?.profile
-                                        ?.isEmpty ??
-                                    true))
-                            ? SizedBox()
-                            : ClipRRect(
-                              borderRadius: BorderRadius.circular(40),
-                              child: Image(
-                                image: NetworkImage(
-                                  snapShot
-                                          .offerDetailsModelData
-                                          ?.users
-                                          ?.profile ??
-                                      '',
-                                ),
-                                fit: BoxFit.cover,
-                                height: 40,
-                                width: 40,
-                              ),
-                            ),
-                        SizedBox(width: 10),
-
-                        Text(
-                          snapShot.offerDetailsModelData?.users?.name ?? '',
-                          style: AppStyles.font500_14().copyWith(
-                            color: AppColors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 0),
+                   // Divider(),
+                   //  Text(snapShot.offerDetailsModelData?.description ?? '', style: AppStyles.font500_14().copyWith(
+                   //    color: AppColors.black,
+                   //  ),),
+                 //   SizedBox(height: 20),
+                 //   SizedBox(height: 16),
+                 //    Row(
+                 //      crossAxisAlignment: CrossAxisAlignment.start,
+                 //      mainAxisAlignment: MainAxisAlignment.start,
+                 //      children: [
+                 //        (snapShot.offerDetailsModelData?.users?.profile ==
+                 //                    null ||
+                 //                (snapShot
+                 //                        .offerDetailsModelData
+                 //                        ?.users
+                 //                        ?.profile
+                 //                        ?.isEmpty ??
+                 //                    true))
+                 //            ? SizedBox()
+                 //            : ClipRRect(
+                 //              borderRadius: BorderRadius.circular(40),
+                 //              child: Image(
+                 //                image: NetworkImage(
+                 //                  snapShot
+                 //                          .offerDetailsModelData
+                 //                          ?.users
+                 //                          ?.profile ??
+                 //                      '',
+                 //                ),
+                 //                fit: BoxFit.cover,
+                 //                height: 40,
+                 //                width: 40,
+                 //              ),
+                 //            ),
+                 //        SizedBox(width: 10),
+                 //
+                 //        Text(
+                 //          snapShot.offerDetailsModelData?.users?.name ?? '',
+                 //          style: AppStyles.font500_14().copyWith(
+                 //            color: AppColors.black,
+                 //          ),
+                 //        ),
+                 //      ],
+                 //    ),
+                    SizedBox(height: 0),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -184,24 +193,26 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                           ],
                         ),
                     SizedBox(height: 16),
-                    (snapShot.offerDetailsModelData?.adOn?.isEmpty??true)?SizedBox():  Text(
-                      'Get more with offer adds on',
-                      style: AppStyles.font500_14().copyWith(
-                        color: AppColors.black,
-                      ),
-                    ),
-                    SizedBox(height: 16),
+                    (snapShot.offerDetailsModelData?.adOn?.isEmpty ?? true)
+                        ? SizedBox()
+                        : Text(
+                          'Get more with offer adds on',
+                          style: AppStyles.font700_16().copyWith(
+                            color: AppColors.black,
+                          ),
+                        ),
+                    SizedBox(height: 12),
 
-                    ListView.builder(
+                    ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount:
-                          snapShot.offerDetailsModelData?.adOn?.length ?? 0,
+                      itemCount: snapShot.offerDetailsModelData?.adOn?.length ?? 0,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey.shade300),
+                            color: Colors.white,
+                            border: Border.all(color: AppColors.borderColor),
                           ),
                           padding: EdgeInsets.symmetric(
                             vertical: 8,
@@ -209,35 +220,25 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              // --- checkbox (left) ---
+                              // Checkbox
                               Checkbox(
-                                value:
-                                    snapShot.offerDetailsModelData?.adOn
-                                        ?.elementAt(index)
-                                        ?.isSelected ??
-                                    false,
+                                value: snapShot.offerDetailsModelData?.adOn?.elementAt(index)?.isSelected ?? false,
                                 onChanged: (value) {
-                                  snapShot
-                                      .offerDetailsModelData
-                                      ?.adOn
-                                      ?.elementAt(index)
-                                      ?.isSelected = value ?? false;
+                                  snapShot.offerDetailsModelData?.adOn?.elementAt(index)?.isSelected = value ?? false;
                                   snapShot.update();
                                 },
-                              ),
+                                activeColor: AppColors.btncolor,
+                                checkColor: AppColors.white,
 
-                              // --- middle section ---
+                              ),
+                              // Title and Working Days
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      snapShot.offerDetailsModelData?.adOn
-                                              ?.elementAt(index)
-                                              ?.title ??
-                                          '',
+                                      snapShot.offerDetailsModelData?.adOn?.elementAt(index)?.title ?? '',
                                       style: AppStyles.font500_16().copyWith(
                                         color: Colors.black,
                                         fontSize: 14,
@@ -245,10 +246,7 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      snapShot.offerDetailsModelData?.adOn
-                                              ?.elementAt(index)
-                                              ?.workingDays ??
-                                          '',
+                                      snapShot.offerDetailsModelData?.adOn?.elementAt(index)?.workingDays ?? '',
                                       style: AppStyles.font500_16().copyWith(
                                         color: Colors.black,
                                         fontSize: 14,
@@ -257,15 +255,11 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                                   ],
                                 ),
                               ),
-                              // --- price (right) ---
+                              // Price with Currency
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 0,
-                                  left: 8,
-                                ),
+                                padding: const EdgeInsets.only(left: 8),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
-
                                   children: [
                                     GetCurrencyWidget(),
                                     SizedBox(width: 6),
@@ -283,7 +277,9 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
                           ),
                         );
                       },
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
                     ),
+
                   ],
                 ),
               );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:instajobs/utils/app_images.dart';
 
 import '../utils/app_styles.dart';
+import '../models/feed_tab_model.dart';
+import '../models/offer_tab_model.dart';
 
 class OffersWidget extends StatelessWidget {
   final String image;
@@ -9,7 +11,8 @@ class OffersWidget extends StatelessWidget {
   final String totalSold;
   final String price;
   final String name;
-
+ // List<OfferTabModelDataDataOfferImages?> offerImages;
+  final List<OfferTabModelDataDataOfferImages?> offerImages;
   const OffersWidget({
     super.key,
     required this.image,
@@ -17,12 +20,14 @@ class OffersWidget extends StatelessWidget {
     required this.totalSold,
     required this.price,
     required this.name,
+    required this.offerImages,
+
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.only(bottom: 16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Card(
@@ -31,31 +36,39 @@ class OffersWidget extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    height: 190,
+                    height: 168,
                     width: double.infinity,
                     child: ClipRRect(
                       borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(12),
-                        bottom: Radius.circular(12),
+                        top: Radius.circular(20),
                       ),
-                      child:
-                          (image.isEmpty ||  image==null)
-                              ? Container(
-
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(image:  AssetImage(AppImages.icon),fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(12),
-                                    bottom: Radius.circular(12),
-                                  ),
-                                ),
-                              )
-                              : Image(
-                                image: NetworkImage(image),
-                                fit: BoxFit.cover,
-                              ),
+                      child: offerImages.isEmpty
+                          ? Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(AppImages.icon),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(12),
+                            bottom: Radius.circular(12),
+                          ),
+                        ),
+                      )
+                          : PageView.builder(
+                        itemCount: offerImages.length,
+                        itemBuilder: (context, index) {
+                          final imageUrl = offerImages[index]?.attachments ?? '';
+                          return Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Center(child: Icon(Icons.broken_image)),
+                          );
+                        },
+                      ),
                     ),
                   ),
+
                   Positioned(
                     left: 0,
                     right: 0,
@@ -65,7 +78,7 @@ class OffersWidget extends StatelessWidget {
                         horizontal: 10,
                         vertical: 5,
                       ),
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withOpacity(0.55),
                       child: Row(
                         children: [
                           Row(
@@ -83,7 +96,7 @@ class OffersWidget extends StatelessWidget {
                           Spacer(),
                           Text(
                             'Sold: ${totalSold} Times',
-                            style: AppStyles.font500_14().copyWith(
+                            style: AppStyles.font600_12().copyWith(
                               color: Colors.white,
                             ),
                           ),
@@ -98,12 +111,18 @@ class OffersWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Expanded(child: Text(name)),
+                    SizedBox(width: 8),
+                    Expanded(child: Text(name, style: AppStyles.font500_14().copyWith(
+                      color: Colors.black,
+                    ),)
+                    ),
                     Row(
                       children: [
 
 
-                        Text(price),
+                        Text(price, style: AppStyles.font700_16().copyWith(
+                          color: Colors.black,
+                        ),),
                         SizedBox(width: 4),
                         getCurrencyCode(),
                       ],

@@ -15,6 +15,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_styles.dart';
 import '../../widgets/custom_drop_down.dart';
 import 'add_addons_page.dart';
+import 'dart:convert';
 
 class AddOfferPage extends StatefulWidget {
   const AddOfferPage({super.key});
@@ -31,7 +32,8 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
   ProfileController profileController = Get.put(ProfileController());
   final List<int> _numbers = List.generate(90, (i) => i + 1);
   int? _selectedNumber;
-  Map<String, dynamic> addOnList = {};
+  List<Map<String, dynamic>> addOnList = [];
+ // Map<String, dynamic> addOnList = {};
   final ImagePicker _picker = ImagePicker();
   final List<File> _pickedImages = [];
   final Map<String, String> headers = {
@@ -76,7 +78,6 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
             }).toList(),
       });
 
-
       final response = await dio.post(
         'https://app.superinstajobs.com/api/v1/offers',
         data: formData,
@@ -88,8 +89,6 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
         await profileController.getOffersApi();
         Get.back();
         showSuccess(title: 'Offer', message: 'Offer added successfully');
-
-
       } else {
         throw Exception('Failed with status ${response.statusCode}');
       }
@@ -107,9 +106,9 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
         backgroundColor: AppColors.bgColor,
         surfaceTintColor: Colors.transparent,
         centerTitle: false,
-
         title: Text(
           'Add Offer',
+
           style: AppStyles.fontInkika().copyWith(fontSize: 24),
         ),
       ),
@@ -119,30 +118,31 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
           children: [
             FormInputWithHint(
               label: 'Name',
+              borderColor: AppColors.borderColor,
               hintText: 'Title of your project',
               controller: nameController,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-
                     children: [
                       Text(
                         'Delivery',
                         textAlign: TextAlign.left,
-                        style: AppStyles.font400_14().copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
+                        style: AppStyles.fontInkika13().copyWith(
+                          color: AppColors.labelColor,
                         ),
                       ),
-                      SizedBox(height: 6),
+                      SizedBox(height: 8),
                       CustomDropdown<int?>(
                         items: _numbers,
                         height: 48,
                         hint: 'Select Time',
+                        borderColor: AppColors.borderColor,
+                        borderWidth: 1,
                         selectedValue: _selectedNumber,
                         onChanged: (value) async {
                           setState(() {
@@ -154,29 +154,41 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                     ],
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 16),
                 Expanded(
                   child: FormInputWithHint(
                     label: 'Price',
                     hintText: 'Price',
+                    borderColor: AppColors.borderColor,
                     controller: priceController,
                     keyboardType: TextInputType.numberWithOptions(
                       decimal: true,
                     ),
                     isDigitsOnly: true,
-                    prefixIcon: GetCurrencyWidget(),
+                    prefixIcon: SizedBox(
+                      width: 40, // control width
+                      height: 40, // control height
+                      child: Center(
+                        child: GetCurrencyWidget(
+                          radius: 15,   // smaller circle
+                          fontSize: 20, // smaller ₦ symbol
+                        ),
+                      ),
+                    ),
+
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             FormInputWithHint(
               label: 'Describe your offer in more details!',
               hintText: 'Enter text here',
               controller: descriptionController,
+              borderColor: AppColors.borderColor,
               maxLine: 3,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -200,13 +212,13 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.orange),
-                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.btncolor),
+                      borderRadius: BorderRadius.circular(13),
                     ),
                     child: Text(
                       '+ Upload files',
                       style: AppStyles.font500_14().copyWith(
-                        color: AppColors.primaryColor,
+                        color: AppColors.btncolor,
                       ),
                     ),
                   ),
@@ -216,17 +228,19 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                     pushToNextScreen(
                       context: context,
                       destination: AddAddonsPage(
-                        addOnList: addOnList,
+                        addOnList: {},
                         onTap: (String title, String price, int workingDays) {
                           if (addOnList.isNotEmpty) {
-                            addOnList.clear();
+                            // print('object');
+                            // addOnList.clear();
                           }
 
-                          addOnList.addAll({
+                          addOnList.add({
                             'title': title,
                             'workingDays': workingDays,
                             'price': price,
                           });
+
                           setState(() {});
                         },
                       ),
@@ -235,19 +249,23 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.orange),
-                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.btncolor),
+                      borderRadius: BorderRadius.circular(13),
                     ),
                     child: Text(
                       '+ Add Addons',
                       style: AppStyles.font500_14().copyWith(
-                        color: AppColors.primaryColor,
+                        color: AppColors.btncolor,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
+
+
+
+
             SizedBox(height: 16),
             GridView.builder(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -290,68 +308,115 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                 );
               },
             ),
+
+
             addOnList.isEmpty
                 ? SizedBox()
-                : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300),
+                : Column(
+              children: addOnList.asMap().entries.map((entry) {
+                int index = entry.key;
+                var addOn = entry.value;
+
+                return Dismissible(
+                  key: ValueKey(index),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    color: Colors.red,
+                    child: Icon(Icons.delete, color: Colors.white),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  onDismissed: (direction) {
+                    setState(() {
+                      addOnList.removeAt(index);
+                    });
+                  },
+                  child: GestureDetector(
+                    onTap: () {
+                      pushToNextScreen(
+                        context: context,
+                        destination: AddAddonsPage(
+                          addOnList: addOn,
+                          onTap: (String title, String price, int workingDays) {
+                            addOnList[index] = {
+                              'title': title,
+                              'workingDays': workingDays,
+                              'price': price,
+                            };
+                            setState(() {});
+                          },
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                addOn['title'] ?? '',
+                                style: AppStyles.font500_16().copyWith(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    addOn['price'] ?? '',
+                                    style: AppStyles.font500_16().copyWith(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  SizedBox(width: 6),
+                                  GetCurrencyWidget(),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
                           Text(
-                            addOnList['title'] ?? '',
+                            'Additional ${addOn['workingDays'].toString()} working days',
                             style: AppStyles.font500_16().copyWith(
                               color: Colors.black,
                               fontSize: 14,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 0, left: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-
-                              children: [
-                                Text(
-                                  addOnList['price'],
-                                  style: AppStyles.font500_16().copyWith(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(width: 6),
-                                GetCurrencyWidget(),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Additional ${addOnList['workingDays'].toString()} working days',
-                        style: AppStyles.font500_16().copyWith(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                );
+              }).toList(),
+            ),
+
+
+
+
+
             SizedBox(height: 16),
             RoundedEdgedButton(
               buttonText: 'Post a offer',
+              borderColor: AppColors.btncolor,
               onButtonClick: () async {
                 String description = descriptionController.text.trim();
                 String name = nameController.text.trim();
                 String price = priceController.text.trim();
+                print(_pickedImages.isEmpty);
                 int deliveryTime = _selectedNumber ?? 0;
                 if (name.isEmpty) {
                   showError(title: 'Name', message: 'Please add name');
+                } else if (name.length < 3) {
+                  showError(title: 'Name', message: 'Name Should be 3 character long');
                 } else if (price.isEmpty) {
                   showError(title: 'Price', message: 'Please add price');
                 } else if (description.isEmpty) {
@@ -364,10 +429,12 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                     title: 'Delivery',
                     message: 'Please choose delivery time',
                   );
+                } else if (_pickedImages.length == 0) {
+                  showError(title: 'Image', message: 'Please upload a image');
                 } else {
                   try {
                     if (_pickedImages.isNotEmpty) {
-
+                      print('with images');
                       queryParams.addAll({
                         'description': description,
                         'name': name,
@@ -375,24 +442,30 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                         'deliveryTime': deliveryTime,
                       });
                       if (addOnList.isNotEmpty) {
-                        queryParams.putIfAbsent('adOn', () => addOnList);
+
+                        queryParams['adOn'] = jsonEncode(addOnList.map((item) {
+                          return item.map((key, value) => MapEntry(key.toString(), value.toString()));
+                        }).toList());
+
+                       // queryParams.putIfAbsent('adOn', () => addOnList);
                       }
                       print(queryParams);
                       await _uploadImages();
-
                     } else {
-
+                      print('withImage');
                       await profileController.addOfferApi(
                         description: description,
                         name: name,
                         price: price,
                         deliveryTime: deliveryTime,
+                        adOn: addOnList.isNotEmpty ? addOnList : null,
                       );
-
-
-
-
-
+                      // await profileController.addOfferApi(
+                      //   description: description,
+                      //   name: name,
+                      //   price: price,
+                      //   deliveryTime: deliveryTime,
+                      // );
                     }
                   } catch (e) {
                     showError(title: 'Add Offer', message: e.toString());

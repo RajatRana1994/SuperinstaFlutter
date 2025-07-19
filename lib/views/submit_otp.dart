@@ -160,6 +160,7 @@ class _SubmitOtpState extends State<SubmitOtp> with BaseClass {
                       LocalKeys.userData,
                       userDataModel.toMap(userDataModel),
                     );
+
                     NetworkService().setLoginToken(
                       StorageService().getUserData().getAuthToken(),
                     );
