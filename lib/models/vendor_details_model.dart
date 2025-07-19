@@ -124,22 +124,26 @@ class VendorDetailsModelDataUserInfoCategorySubCategory {
   int? subCategoryId;
   String? name;
   String? image;
+  bool? isSelected;
 
   VendorDetailsModelDataUserInfoCategorySubCategory({
     this.subCategoryId,
     this.name,
     this.image,
+    this.isSelected,
   });
   VendorDetailsModelDataUserInfoCategorySubCategory.fromJson(Map<String, dynamic> json) {
     subCategoryId = json['subCategoryId']?.toInt();
     name = json['name']?.toString();
     image = json['image']?.toString();
+    isSelected = false;
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['subCategoryId'] = subCategoryId;
     data['name'] = name;
     data['image'] = image;
+    data['isSelected'] = isSelected;
     return data;
   }
 }

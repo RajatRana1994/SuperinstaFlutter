@@ -622,7 +622,7 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
                 onTap: () {
                   pushToNextScreen(
                     context: context,
-                    destination: CreateAppointmentDateTimePage(),
+                    destination: CreateAppointmentDateTimePage(vendorDetailsModel: homeTabController.vendorDetailsModel),
                   );
                 },
                 child: Container(
