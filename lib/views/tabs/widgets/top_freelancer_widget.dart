@@ -112,24 +112,24 @@ class TopFreelancerWidget extends StatelessWidget {
               top: 52, // so half is over white, half over green
               left: 40,
               child:
-                  profilePic.isEmpty
-                      ? Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black,
-                        ),
-                      )
-                      : ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image(
-                          image: NetworkImage(profilePic),
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+              profilePic.isEmpty
+                  ? Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                ),
+              )
+                  : ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Image(
+                  image: NetworkImage(profilePic),
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
 
             // Icons

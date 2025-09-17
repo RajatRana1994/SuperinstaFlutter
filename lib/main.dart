@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:instajobs/storage_services/local_stoage_service.dart';
 import 'package:instajobs/views/splash_page.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:instajobs/views/message/chat_vc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter bindings are initialized

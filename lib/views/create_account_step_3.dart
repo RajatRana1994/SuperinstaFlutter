@@ -144,9 +144,9 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
                   GestureDetector(
                     onTap: () {
                       ImageExpiryPickerSheet.show(context, (
-                        File? image,
-                        DateTime? date,
-                      ) async {
+                          File? image,
+                          DateTime? date,
+                          ) async {
                         if (image != null && date != null) {
                           identityImagePath = image;
                           identityExpiry =
@@ -207,11 +207,11 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
                           ),
                           identityImagePath != null
                               ? Image(
-                                image: FileImage(identityImagePath!),
-                                height: 48,
-                                width: 48,
-                                fit: BoxFit.cover,
-                              )
+                            image: FileImage(identityImagePath!),
+                            height: 48,
+                            width: 48,
+                            fit: BoxFit.cover,
+                          )
                               : SizedBox(),
                           SizedBox(width: 22),
                           Icon(Icons.edit, color: AppColors.orange, size: 14),
@@ -249,9 +249,9 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
                   GestureDetector(
                     onTap: () {
                       ImageExpiryPickerSheet.show(context, (
-                        File? image,
-                        DateTime? date,
-                      ) async{
+                          File? image,
+                          DateTime? date,
+                          ) async{
                         if (image != null && date != null) {
                           expiryImage = image;
 
@@ -262,9 +262,9 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
                           try {
                             showCircularDialog(context);
                             await uploadImageWithText(
-                            imageFile: expiryImage!,
-                            type: '2',
-                            description: '',
+                              imageFile: expiryImage!,
+                              type: '2',
+                              description: '',
                             );
                             popToPreviousScreen(context: context);
 
@@ -313,11 +313,11 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
                           ),
                           expiryImage != null
                               ? Image(
-                                image: FileImage(expiryImage!),
-                                height: 48,
-                                width: 48,
-                                fit: BoxFit.cover,
-                              )
+                            image: FileImage(expiryImage!),
+                            height: 48,
+                            width: 48,
+                            fit: BoxFit.cover,
+                          )
                               : SizedBox(),
                           SizedBox(width: 22),
                           Icon(Icons.edit, color: AppColors.orange, size: 14),
@@ -371,9 +371,9 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
 
 class ImageExpiryPickerSheet {
   static Future<void> show(
-    BuildContext context,
-    Function(File?, DateTime?) onDone,
-  ) async {
+      BuildContext context,
+      Function(File?, DateTime?) onDone,
+      ) async {
     File? selectedImage;
     DateTime? selectedDate;
 

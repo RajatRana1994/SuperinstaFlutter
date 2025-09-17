@@ -32,62 +32,68 @@ class _OffersFavPageState extends State<OffersFavPage> with BaseClass {
       builder: (snapshot) {
         return snapshot.favOffersList == null
             ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  AppColors.primaryColor,
-                ),
-              ),
-            )
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              AppColors.primaryColor,
+            ),
+          ),
+        )
             : ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
+          physics: AlwaysScrollableScrollPhysics(),
 
-              itemCount: snapshot.favOffersList?.length ?? 0,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    pushToNextScreen(
-                      context: context,
-                      destination: OfferDetailsPage(
-                        isEdit: true,
-                        offerID:
-                            snapshot.favOffersList
-                                ?.elementAt(index)
-                                ?.id
-                                .toString() ??
-                            '0',
-                      ),
-                    );
-                  },
-                  child: OffersWidget(
-                    image: '',
-                    offerImages: (snapshot.favOffersList
+          itemCount: snapshot.favOffersList?.length ?? 0,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                pushToNextScreen(
+                  context: context,
+                  destination: OfferDetailsPage(
+                    isEdit: true,
+                    offerID:
+                    snapshot.favOffersList
                         ?.elementAt(index)
-                        ?.usersOffers?.offerImages
-                        ?.isEmpty ??
-                        true)
-                        ? []
-                        : (snapshot.favOffersList?.elementAt(index)?.usersOffers?.offerImages ?? [])
-                    ,
-                    rating:
-                        snapshot.favOffersList?.elementAt(index)?.rating ?? '0',
-                    totalSold:
-                        snapshot.favOffersList
-                            ?.elementAt(index)?.usersOffers
-                            ?.totalSold
-                            .toString() ??
+                        ?.id
+                        .toString() ??
                         '0',
-                    price:
-                        snapshot.favOffersList
-                            ?.elementAt(index)?.usersOffers
-                            ?.price
-                            .toString() ??
-                        '0',
-                    name: snapshot.favOffersList?.elementAt(index)?.usersOffers?.name ?? '',
                   ),
                 );
               },
+              child: OffersWidget(
+                image: '',
+                isFavOffer: 1,
+                showFav: 1,
+                onClickFav: () {
+                  var offerId = snapshot.favOffersList?.elementAt(index)?.offerId ?? 0;
+                  profileController.favOffeerApi(offerId.toString(), index);
+                },
+                offerImages: (snapshot.favOffersList
+                    ?.elementAt(index)
+                    ?.usersOffers?.offerImages
+                    ?.isEmpty ??
+                    true)
+                    ? []
+                    : (snapshot.favOffersList?.elementAt(index)?.usersOffers?.offerImages ?? [])
+                ,
+                rating:
+                snapshot.favOffersList?.elementAt(index)?.rating ?? '0',
+                totalSold:
+                snapshot.favOffersList
+                    ?.elementAt(index)?.usersOffers
+                    ?.totalSold
+                    .toString() ??
+                    '0',
+                price:
+                snapshot.favOffersList
+                    ?.elementAt(index)?.usersOffers
+                    ?.price
+                    .toString() ??
+                    '0',
+                name: snapshot.favOffersList?.elementAt(index)?.usersOffers?.name ?? '',
+              ),
             );
+          },
+        );
       },
     );
   }

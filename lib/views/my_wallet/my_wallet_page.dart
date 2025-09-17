@@ -57,88 +57,88 @@ class _MyWalletPageState extends State<MyWalletPage> with BaseClass {
               SizedBox(height: 20),
               _myWalletController.walletDetailsData == null
                   ? Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  )
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
+                  ),
+                ),
+              )
                   : Column(
+                children: [
+                  Text(
+                    _myWalletController.walletDetailsData?.balance
+                        .toString() ??
+                        '0',
+                    style: AppStyles.font700_20().copyWith(
+                      color: AppColors.orange,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Coin value in Naira ₦ is ${((_myWalletController.walletDetailsData?.balance ?? 0) / 1000)}',
+                    style: AppStyles.font500_14().copyWith(
+                      color: AppColors.black,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
                     children: [
-                      Text(
-                        _myWalletController.walletDetailsData?.balance
-                                .toString() ??
-                            '0',
-                        style: AppStyles.font700_20().copyWith(
-                          color: AppColors.orange,
+                      Expanded(
+                        child: RoundedEdgedButton(
+                          buttonText: 'Cash Out',
+                          onButtonClick: () async {
+                            final result = await showCupertinoConfirmDialog(
+                              context: context,
+                              yesLabel: 'Link Now',
+                              noLabel: 'Later',
+                              title: 'Link Back Account',
+                              description:
+                              'Please link your bank account to cash out',
+                            );
+                            if (result == true) {
+                              pushToNextScreen(
+                                context: context,
+                                destination: LinkBankAccountPage(),
+                              );
+                            } else if (result == false) {
+                              // user pressed No
+                            } else {
+                              // dialog dismissed
+                            }
+                          },
+                          backgroundColor: Colors.white,
+                          borderColor: AppColors.textGreen,
+                          textColor: AppColors.textGreen,
+                          height: 44,
+                          leftMargin: 20,
                         ),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Coin value in Naira ₦ is ${((_myWalletController.walletDetailsData?.balance ?? 0) / 1000)}',
-                        style: AppStyles.font500_14().copyWith(
-                          color: AppColors.black,
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: RoundedEdgedButton(
+                          buttonText: 'Buy Coins',
+                          height: 44,
+                          rightMargin: 20,
+                          onButtonClick: () {
+                            pushToNextScreen(
+                              context: context,
+                              destination: BuyCoinsPage(
+                                walletId:
+                                snapshot.walletDetailsData?.id
+                                    .toString() ??
+                                    '',
+                              ),
+                            );
+                          },
+                          backgroundColor: Colors.white,
+                          borderColor: AppColors.orange,
+                          textColor: AppColors.orange,
                         ),
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: RoundedEdgedButton(
-                              buttonText: 'Cash Out',
-                              onButtonClick: () async {
-                                final result = await showCupertinoConfirmDialog(
-                                  context: context,
-                                  yesLabel: 'Link Now',
-                                  noLabel: 'Later',
-                                  title: 'Link Back Account',
-                                  description:
-                                      'Please link your bank account to cash out',
-                                );
-                                if (result == true) {
-                                  pushToNextScreen(
-                                    context: context,
-                                    destination: LinkBankAccountPage(),
-                                  );
-                                } else if (result == false) {
-                                  // user pressed No
-                                } else {
-                                  // dialog dismissed
-                                }
-                              },
-                              backgroundColor: Colors.white,
-                              borderColor: AppColors.textGreen,
-                              textColor: AppColors.textGreen,
-                              height: 44,
-                              leftMargin: 20,
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: RoundedEdgedButton(
-                              buttonText: 'Buy Coins',
-                              height: 44,
-                              rightMargin: 20,
-                              onButtonClick: () {
-                                pushToNextScreen(
-                                  context: context,
-                                  destination: BuyCoinsPage(
-                                    walletId:
-                                        snapshot.walletDetailsData?.id
-                                            .toString() ??
-                                        '',
-                                  ),
-                                );
-                              },
-                              backgroundColor: Colors.white,
-                              borderColor: AppColors.orange,
-                              textColor: AppColors.orange,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
+                ],
+              ),
               SizedBox(height: 16),
               Divider(),
               SizedBox(height: 16),
@@ -158,11 +158,11 @@ class _MyWalletPageState extends State<MyWalletPage> with BaseClass {
                         );
                       },
                       backgroundColor:
-                          snapshot.isPending
-                              ? Colors.deepOrangeAccent
-                              : Colors.deepOrangeAccent.withOpacity(0.3),
+                      snapshot.isPending
+                          ? AppColors.btncolor
+                          : AppColors.primaryColor.withOpacity(0.1),
                       textColor:
-                          snapshot.isPending ? Colors.white : Colors.black,
+                      snapshot.isPending ? Colors.white : Colors.black,
                     ),
                   ),
                   SizedBox(width: 12),
@@ -181,11 +181,11 @@ class _MyWalletPageState extends State<MyWalletPage> with BaseClass {
                         );
                       },
                       backgroundColor:
-                          snapshot.isDebited
-                              ? Colors.deepOrangeAccent
-                              : Colors.deepOrangeAccent.withOpacity(0.3),
+                      snapshot.isDebited
+                          ? AppColors.btncolor
+                          : AppColors.primaryColor.withOpacity(0.1),
                       textColor:
-                          snapshot.isDebited ? Colors.white : Colors.black,
+                      snapshot.isDebited ? Colors.white : Colors.black,
                     ),
                   ),
                   SizedBox(width: 12),
@@ -204,11 +204,11 @@ class _MyWalletPageState extends State<MyWalletPage> with BaseClass {
                         );
                       },
                       backgroundColor:
-                          snapshot.isCredited
-                              ? Colors.deepOrangeAccent
-                              : Colors.deepOrangeAccent.withOpacity(0.3),
+                      snapshot.isCredited
+                          ? AppColors.btncolor
+                          : AppColors.primaryColor.withOpacity(0.1),
                       textColor:
-                          snapshot.isCredited ? Colors.white : Colors.black,
+                      snapshot.isCredited ? Colors.white : Colors.black,
                     ),
                   ),
                 ],

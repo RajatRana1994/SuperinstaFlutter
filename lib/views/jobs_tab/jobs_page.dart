@@ -32,12 +32,12 @@ class _JobsPageState extends State<JobsPage> with BaseClass {
         builder: (snapshot) {
           return snapshot.jobsList == null
               ? Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppColors.primaryColor,
-                  ),
-                ),
-              )
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                AppColors.btncolor,
+              ),
+            ),
+          )
               : NotificationListener<ScrollNotification>(
             onNotification: (scrollNotification) {
               if (scrollNotification is ScrollEndNotification &&
@@ -126,6 +126,21 @@ class _JobsPageState extends State<JobsPage> with BaseClass {
                             children: [
                               Text('Proposals', style: AppStyles.font500_12().copyWith(color: Colors.black)),
                               Text(': ${job?.totalProposals ?? ''}', style: AppStyles.font700_14().copyWith(color: AppColors.green)),
+                              Spacer(),
+                              if (job?.isBoosted == 1) ... [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue, // background color
+                                    borderRadius: BorderRadius.circular(20), // round corners
+                                  ),
+                                  child: Text(
+                                    'URGENT',
+                                    style: AppStyles.font500_14().copyWith(color: Colors.white), // text color white for contrast
+                                  ),
+                                ),
+                              ],
+
                             ],
                           ),
                         ],

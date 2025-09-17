@@ -29,7 +29,7 @@ class NetworkService {
       connectTimeout: const Duration(seconds: 90),
       receiveTimeout: const Duration(seconds: 90),
       sendTimeout: const Duration(seconds: 90),
-     /* headers: {
+      /* headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },*/
@@ -119,9 +119,9 @@ class NetworkService {
 
   /// Handle successful response
   ApiResponse<T> _handleResponse<T>(
-    Response response,
-    T Function(Map<String, dynamic>)? converter,
-  ) {
+      Response response,
+      T Function(Map<String, dynamic>)? converter,
+      ) {
     try {
       final responseData = response.data;
 
@@ -172,9 +172,9 @@ class NetworkService {
 
   /// Parse error response with your specific API error structure
   ApiResponse<T> _parseErrorResponse<T>(
-    Map<String, dynamic> errorData,
-    int statusCode,
-  ) {
+      Map<String, dynamic> errorData,
+      int statusCode,
+      ) {
     print(errorData);
     String errorMessage = 'Unknown error occurred';
 
@@ -293,8 +293,8 @@ class NetworkService {
     required T Function(Map<String, dynamic>) converter,
   }) async {
     final formData = FormData.fromMap(data);
-print(formData.fields);
-print(data);
+    print(formData.fields);
+    print(data);
     return _request<T>(
       path: path,
       method: HttpMethod.post,
@@ -454,7 +454,7 @@ class ApiResponse<T> {
 
   bool get isError => status == ResponseStatus.error;
 
-  /// Get all error messages including both the main message and detailed messages
+/// Get all error messages including both the main message and detailed messages
 }
 
 /// Response status enum

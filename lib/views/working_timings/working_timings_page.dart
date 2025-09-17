@@ -24,8 +24,21 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
   }
 
   Map<String, String> getStartEnd(String timeRange) {
-    final parts = timeRange.split(' - ');
-    return {"start": parts[0].trim(), "end": parts[1].trim()};
+    if (timeRange.isEmpty) {
+      return {"start": "00:00", "end": "00:00"};
+    }
+    // Normalize: handle both "10:00 - 18:00" and "10:00-18:00"
+    final normalized = timeRange.replaceAll(" ", ""); // remove spaces
+    final parts = normalized.split('-');
+
+    if (parts.length < 2) {
+      return {"start": "00:00", "end": "00:00"};
+    }
+
+    return {
+      "start": parts[0].trim(),
+      "end": parts[1].trim(),
+    };
   }
 
   @override
@@ -53,47 +66,48 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
               children: [
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.monday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.monday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.monday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.monday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
                       context: context,
                       rawStart:
-                          getStartEnd(
-                            profileController
-                                    .profileDetailsModel
-                                    ?.userInfo
-                                    ?.workingHours
-                                    ?.monday ??
-                                '00:00 - 00:00',
-                          )['start'] ??
+                      getStartEnd(
+                        profileController
+                            .profileDetailsModel
+                            ?.userInfo
+                            ?.workingHours
+                            ?.monday ??
+                            '00:00 - 00:00',
+                      )['start'] ??
                           '00:00',
+                      dayName: 'Monday',
                       rawEnd:
-                          getStartEnd(
-                            profileController
-                                    .profileDetailsModel
-                                    ?.userInfo
-                                    ?.workingHours
-                                    ?.monday ??
-                                '00:00 - 00:00',
-                          )['end'] ??
+                      getStartEnd(
+                        profileController
+                            .profileDetailsModel
+                            ?.userInfo
+                            ?.workingHours
+                            ?.monday ??
+                            '00:00 - 00:00',
+                      )['end'] ??
                           '00:00',
                     );
 
@@ -119,24 +133,24 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 SizedBox(height: 16),
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.tuesday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.tuesday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.tuesday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.tuesday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
@@ -151,6 +165,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                             '00:00 - 00:00',
                       )['start'] ??
                           '00:00',
+                      dayName: 'Tuesday',
                       rawEnd:
                       getStartEnd(
                         profileController
@@ -185,24 +200,24 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 SizedBox(height: 16),
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.wednesday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.wednesday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.wednesday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.wednesday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
@@ -217,6 +232,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                             '00:00 - 00:00',
                       )['start'] ??
                           '00:00',
+                      dayName: 'Wednesday',
                       rawEnd:
                       getStartEnd(
                         profileController
@@ -251,24 +267,24 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 SizedBox(height: 16),
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.thursday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.thursday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.thursday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.thursday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
@@ -283,6 +299,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                             '00:00 - 00:00',
                       )['start'] ??
                           '00:00',
+                      dayName: 'Thursday',
                       rawEnd:
                       getStartEnd(
                         profileController
@@ -317,24 +334,24 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 SizedBox(height: 16),
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.friday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.friday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.friday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.friday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
@@ -349,6 +366,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                             '00:00 - 00:00',
                       )['start'] ??
                           '00:00',
+                      dayName: 'Friday',
                       rawEnd:
                       getStartEnd(
                         profileController
@@ -383,24 +401,24 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 SizedBox(height: 16),
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.saturday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.saturday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.saturday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.saturday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
@@ -415,6 +433,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                             '00:00 - 00:00',
                       )['start'] ??
                           '00:00',
+                      dayName: 'Saturday',
                       rawEnd:
                       getStartEnd(
                         profileController
@@ -449,24 +468,24 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 SizedBox(height: 16),
                 _getWorkingDays(
                   startTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.sunday ??
-                            '00:00 - 00:00',
-                      )['start'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.sunday ??
+                        '00:00 - 00:00',
+                  )['start'] ??
                       '00:00',
                   lastTime:
-                      getStartEnd(
-                        profileController
-                                .profileDetailsModel
-                                ?.userInfo
-                                ?.workingHours
-                                ?.sunday ??
-                            '00:00 - 00:00',
-                      )['end'] ??
+                  getStartEnd(
+                    profileController
+                        .profileDetailsModel
+                        ?.userInfo
+                        ?.workingHours
+                        ?.sunday ??
+                        '00:00 - 00:00',
+                  )['end'] ??
                       '00:00',
                   onTap: () async {
                     final result = await showStartEndTimePickerSheet(
@@ -481,6 +500,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                             '00:00 - 00:00',
                       )['start'] ??
                           '00:00',
+                      dayName: 'Sunday',
                       rawEnd:
                       getStartEnd(
                         profileController
@@ -514,7 +534,38 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
                 ),
 
                 SizedBox(height: 16),
-                RoundedEdgedButton(buttonText: 'Save', onButtonClick: () {}),
+                RoundedEdgedButton(buttonText: 'Save',
+                    onButtonClick: () {
+                      profileController.updateDayAndTime(profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.monday ?? '', profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.tuesday ?? '', profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.wednesday ?? '', profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.thursday ?? '', profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.friday ?? '', profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.saturday ?? '', profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.workingHours
+                          ?.sunday ?? '');
+                    }),
               ],
             ),
           );
@@ -550,7 +601,9 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
               border: Border.all(color: Colors.grey.shade500),
             ),
             child: Text(
-              '$startTime - $lastTime',
+              ('$startTime - $lastTime' == '00:00 - 00:00')
+                  ? 'Closed'
+                  : '$startTime - $lastTime',
               style: AppStyles.font500_14().copyWith(color: Colors.black),
             ),
           ),

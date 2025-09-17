@@ -28,7 +28,7 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
           'My InstaJobs',
           style: AppStyles.fontInkika().copyWith(fontSize: 24),
         ),
-       
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -46,9 +46,9 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
                       height: 42,
                       decoration: BoxDecoration(
                         color:
-                            selectedIndex == 0
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                        selectedIndex == 0
+                            ? Colors.orange
+                            : Colors.orange.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
@@ -56,9 +56,9 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
                           'Pending',
                           style: AppStyles.font500_14().copyWith(
                             color:
-                                selectedIndex == 0
-                                    ? Colors.white
-                                    : Colors.black,
+                            selectedIndex == 0
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                       ),
@@ -76,9 +76,9 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
                       height: 42,
                       decoration: BoxDecoration(
                         color:
-                            selectedIndex == 1
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                        selectedIndex == 1
+                            ? Colors.orange
+                            : Colors.orange.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
@@ -86,9 +86,9 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
                           'In Progress',
                           style: AppStyles.font500_14().copyWith(
                             color:
-                                selectedIndex == 1
-                                    ? Colors.white
-                                    : Colors.black,
+                            selectedIndex == 1
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                       ),
@@ -106,9 +106,9 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
                       height: 42,
                       decoration: BoxDecoration(
                         color:
-                            selectedIndex == 2
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                        selectedIndex == 2
+                            ? Colors.orange
+                            : Colors.orange.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
@@ -116,9 +116,9 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
                           'History',
                           style: AppStyles.font500_14().copyWith(
                             color:
-                                selectedIndex == 2
-                                    ? Colors.white
-                                    : Colors.black,
+                            selectedIndex == 2
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                       ),

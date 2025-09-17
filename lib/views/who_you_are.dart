@@ -64,9 +64,9 @@ class _WhoYouArePageState extends State<WhoYouArePage> with BaseClass {
                           border: Border.all(
                             width: isCustomer?2:1,
                             color:
-                                isCustomer
-                                    ? AppColors.orange
-                                    : AppColors.hintColor,
+                            isCustomer
+                                ? AppColors.orange
+                                : AppColors.hintColor,
                           ),
                         ),
                         child: Center(
@@ -81,10 +81,10 @@ class _WhoYouArePageState extends State<WhoYouArePage> with BaseClass {
                       Text(
                         'Customer',
                         style: AppStyles.fontInkika().copyWith(
-                          color: Colors.black,
-                          fontWeight:
-                              isCustomer ? FontWeight.w700 : FontWeight.w500,
-                          fontSize: 20
+                            color: Colors.black,
+                            fontWeight:
+                            isCustomer ? FontWeight.w700 : FontWeight.w500,
+                            fontSize: 20
                         ),
                       ),
                     ],

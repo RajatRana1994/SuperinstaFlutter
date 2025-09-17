@@ -89,21 +89,21 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                           );
                         },
                         child:
-                            _image == null
-                                ? Image(
-                                  image: AssetImage(AppImages.chooseImage),
-                                  height: 150,
-                                  width: 150,
-                                )
-                                : ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image(
-                                    image: FileImage(_image!),
-                                    fit: BoxFit.cover,
-                                    height: 150,
-                                    width: 150,
-                                  ),
-                                ),
+                        _image == null
+                            ? Image(
+                          image: AssetImage(AppImages.chooseImage),
+                          height: 150,
+                          width: 150,
+                        )
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image(
+                            image: FileImage(_image!),
+                            fit: BoxFit.cover,
+                            height: 150,
+                            width: 150,
+                          ),
+                        ),
                       ),
                       SizedBox(height: 28),
                       FormInputWithHint(
@@ -132,23 +132,23 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                         label: 'Password',
                         keyboardType: TextInputType.text,
                         controller:
-                            _signUpCustomerController.passwordController,
+                        _signUpCustomerController.passwordController,
                         obscureText:
-                            _signUpCustomerController.getPasswordStatus,
+                        _signUpCustomerController.getPasswordStatus,
                         suffixIcon: GestureDetector(
                           onTap: () {
                             snapshot.updatePasswordVisibility();
                           },
                           child:
-                              snapshot.getPasswordStatus
-                                  ? const Icon(
-                                    Icons.visibility_off_outlined,
-                                    color: AppColors.primaryColor,
-                                  )
-                                  : const Icon(
-                                    Icons.visibility,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          snapshot.getPasswordStatus
+                              ? const Icon(
+                            Icons.visibility_off_outlined,
+                            color: AppColors.primaryColor,
+                          )
+                              : const Icon(
+                            Icons.visibility,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                         hintText: 'Enter Password',
                       ),
@@ -161,20 +161,20 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                             snapshot.updateConfirmPasswordVisibility();
                           },
                           child:
-                              snapshot.getConfirmPasswordStatus
-                                  ? const Icon(
-                                    Icons.visibility_off_outlined,
-                                    color: AppColors.primaryColor,
-                                  )
-                                  : const Icon(
-                                    Icons.visibility,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          snapshot.getConfirmPasswordStatus
+                              ? const Icon(
+                            Icons.visibility_off_outlined,
+                            color: AppColors.primaryColor,
+                          )
+                              : const Icon(
+                            Icons.visibility,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                         obscureText:
-                            _signUpCustomerController.getConfirmPasswordStatus,
+                        _signUpCustomerController.getConfirmPasswordStatus,
                         controller:
-                            _signUpCustomerController.confirmPassController,
+                        _signUpCustomerController.confirmPassController,
                         hintText: 'Confirm Password',
                       ),
                       SizedBox(height: 28),
@@ -194,7 +194,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                               label: 'State',
                               keyboardType: TextInputType.text,
                               controller:
-                                  _signUpCustomerController.stateController,
+                              _signUpCustomerController.stateController,
                               hintText: '',
                             ),
                           ),
@@ -204,7 +204,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                               label: 'Country',
                               keyboardType: TextInputType.text,
                               controller:
-                                  _signUpCustomerController.countryController,
+                              _signUpCustomerController.countryController,
                               hintText: '',
                             ),
                           ),
@@ -330,9 +330,9 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                               message: 'Please enter Country',
                             );
                           } else if (_signUpCustomerController
-                                  .passwordController
-                                  .text
-                                  .trim() !=
+                              .passwordController
+                              .text
+                              .trim() !=
                               _signUpCustomerController
                                   .confirmPassController
                                   .text
@@ -340,7 +340,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
                             showError(
                               title: 'Confirm Password',
                               message:
-                                  'Confirm Password and password does not match',
+                              'Confirm Password and password does not match',
                             );
                           } else if (!isSelected) {
                             showError(

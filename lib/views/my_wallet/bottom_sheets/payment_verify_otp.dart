@@ -9,6 +9,11 @@ class PaymentVerifyOtpBottomSheet {
     required BuildContext context,
     required Function onCancel,
     required Function onDone,
+    required String bookingId,
+    final String? offerId,
+    final String? offerTime,
+    final String? adOns,
+    final String? amount,
     required PaymentReponseModelData? paymentResponseModel
   }) {
 
@@ -33,6 +38,11 @@ class PaymentVerifyOtpBottomSheet {
                 child: PaymentVerifyOtpBottomSheetWidget(
                   scrollController: scrollController,
                   paymentResponseModel: paymentResponseModel,
+                  bookingId: bookingId,
+                  offerId: offerId,
+                  adOns: adOns,
+                  price: amount,
+                  offerTime: offerTime,
                   onNextTap: () {onDone();},
                 ),
               ),

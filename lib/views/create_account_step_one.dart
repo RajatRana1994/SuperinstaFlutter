@@ -76,110 +76,110 @@ class _CreateAccountStepOneState extends State<CreateAccountStepOne>
                     builder: (snapshot) {
                       return freelancerSignUp.categoriesData == null
                           ? Center(
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              child: const CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.primaryColor,
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      )
+                          : Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: GridView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.categoriesData?.length ?? 0,
+                          shrinkWrap: true,
+                          gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, // 2 columns
+                            crossAxisSpacing: 10,
+                            childAspectRatio: 1,
+                            mainAxisSpacing: 10,
+                          ),
+                          padding: EdgeInsets.all(0),
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () async {
+                                try {
+                                  snapshot.updateSelection(index);
+                                  showCircularDialog(context);
+
+                                  await snapshot.getSubCategories(
+                                    categoryId:
+                                    snapshot.categoriesData
+                                        ?.elementAt(index)
+                                        ?.id
+                                        .toString() ??
+                                        '',
+                                  );
+                                  snapshot.selectedSubCategories.clear();
+                                  popToPreviousScreen(context: context);
+                                } catch (e) {
+                                  popToPreviousScreen(context: context);
+                                  showError(
+                                    title: '',
+                                    message: e.toString(),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color:
+                                    snapshot.categoriesData
+                                        ?.elementAt(index)
+                                        ?.isSelected ??
+                                        false
+                                        ? Colors.orange
+                                        : Color(0xffEBEBEB),
+                                  ),
+                                  color: Colors.white,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: 50,
+                                      width: 50,
+                                      child: Image(
+                                        image: NetworkImage(
+                                          snapshot.categoriesData
+                                              ?.elementAt(index)
+                                              ?.image ??
+                                              '',
+                                        ),
+                                        height: 80,
+                                        width: 80,
+                                      ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      snapshot.categoriesData
+                                          ?.elementAt(index)
+                                          ?.name ??
+                                          '',
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      style: AppStyles.font400_12()
+                                          .copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          )
-                          : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: GridView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.categoriesData?.length ?? 0,
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3, // 2 columns
-                                    crossAxisSpacing: 10,
-                                    childAspectRatio: 1,
-                                    mainAxisSpacing: 10,
-                                  ),
-                              padding: EdgeInsets.all(0),
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () async {
-                                    try {
-                                      snapshot.updateSelection(index);
-                                      showCircularDialog(context);
-
-                                      await snapshot.getSubCategories(
-                                        categoryId:
-                                            snapshot.categoriesData
-                                                ?.elementAt(index)
-                                                ?.id
-                                                .toString() ??
-                                            '',
-                                      );
-                                      snapshot.selectedSubCategories.clear();
-                                      popToPreviousScreen(context: context);
-                                    } catch (e) {
-                                      popToPreviousScreen(context: context);
-                                      showError(
-                                        title: '',
-                                        message: e.toString(),
-                                      );
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color:
-                                            snapshot.categoriesData
-                                                        ?.elementAt(index)
-                                                        ?.isSelected ??
-                                                    false
-                                                ? Colors.orange
-                                                : Color(0xffEBEBEB),
-                                      ),
-                                      color: Colors.white,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.center,
-                                          height: 50,
-                                          width: 50,
-                                          child: Image(
-                                            image: NetworkImage(
-                                              snapshot.categoriesData
-                                                      ?.elementAt(index)
-                                                      ?.image ??
-                                                  '',
-                                            ),
-                                            height: 80,
-                                            width: 80,
-                                          ),
-                                        ),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          snapshot.categoriesData
-                                                  ?.elementAt(index)
-                                                  ?.name ??
-                                              '',
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          style: AppStyles.font400_12()
-                                              .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
+                            );
+                          },
+                        ),
+                      );
                     },
                   ),
 
@@ -189,22 +189,22 @@ class _CreateAccountStepOneState extends State<CreateAccountStepOne>
                       return freelancerSignUp.subCategoriesData == null
                           ? SizedBox()
                           : Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 16,
-                              ),
-                              child: Text(
-                                'Sub Categories',
-                                textAlign: TextAlign.start,
-                                style: AppStyles.font600_18().copyWith(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                              ),
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                          child: Text(
+                            'Sub Categories',
+                            textAlign: TextAlign.start,
+                            style: AppStyles.font600_18().copyWith(
+                              color: Colors.black,
+                              fontSize: 14,
                             ),
-                          );
+                          ),
+                        ),
+                      );
                     },
                   ),
                   GetBuilder<FreelancerSignUp>(
@@ -213,100 +213,100 @@ class _CreateAccountStepOneState extends State<CreateAccountStepOne>
                       return freelancerSignUp.subCategoriesData == null
                           ? SizedBox()
                           : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: GridView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  snapshot.subCategoriesData?.length ?? 0,
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3, // 2 columns
-                                    crossAxisSpacing: 10,
-                                    childAspectRatio: 1,
-                                    mainAxisSpacing: 10,
-                                  ),
-                              padding: EdgeInsets.all(0),
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    snapshot.updateSubCategorySelection(
-                                      id:
-                                          snapshot.subCategoriesData
-                                              ?.elementAt(index)
-                                              ?.id,
-                                      index: index,
-                                    );
-                                    /* pushToNextScreen(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: GridView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:
+                          snapshot.subCategoriesData?.length ?? 0,
+                          shrinkWrap: true,
+                          gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, // 2 columns
+                            crossAxisSpacing: 10,
+                            childAspectRatio: 1,
+                            mainAxisSpacing: 10,
+                          ),
+                          padding: EdgeInsets.all(0),
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                snapshot.updateSubCategorySelection(
+                                  id:
+                                  snapshot.subCategoriesData
+                                      ?.elementAt(index)
+                                      ?.id,
+                                  index: index,
+                                );
+                                /* pushToNextScreen(
                                       context: context,
                                       destination: CreateAccountStep2(),
                                     );*/
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color:
-                                            snapshot.subCategoriesData
-                                                        ?.elementAt(index)
-                                                        ?.isSelected ??
-                                                    false
-                                                ? Colors.orange
-                                                : Color(0xffEBEBEB),
-                                      ),
-                                      color: Colors.white,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.center,
-                                          height: 50,
-                                          width: 50,
-                                          child: Image(
-                                            image: NetworkImage(
-                                              snapshot.subCategoriesData
-                                                          ?.elementAt(index)
-                                                          ?.image
-                                                          ?.isEmpty ??
-                                                      false
-                                                  ? snapshot.categoriesData!
-                                                      .elementAt(
-                                                        snapshot.selectedIndex,
-                                                      )!
-                                                      .image!
-                                                  : snapshot.subCategoriesData!
-                                                      .elementAt(index)!
-                                                      .image!,
-                                            ),
-                                            height: 80,
-                                            width: 80,
-                                          ),
-                                        ),
-                                        SizedBox(height: 16),
-                                        Text(
-                                          snapshot.subCategoriesData
-                                                  ?.elementAt(index)
-                                                  ?.name ??
-                                              '',
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          style: AppStyles.font400_12()
-                                              .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
                               },
-                            ),
-                          );
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color:
+                                    snapshot.subCategoriesData
+                                        ?.elementAt(index)
+                                        ?.isSelected ??
+                                        false
+                                        ? Colors.orange
+                                        : Color(0xffEBEBEB),
+                                  ),
+                                  color: Colors.white,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: 50,
+                                      width: 50,
+                                      child: Image(
+                                        image: NetworkImage(
+                                          snapshot.subCategoriesData
+                                              ?.elementAt(index)
+                                              ?.image
+                                              ?.isEmpty ??
+                                              false
+                                              ? snapshot.categoriesData!
+                                              .elementAt(
+                                            snapshot.selectedIndex,
+                                          )!
+                                              .image!
+                                              : snapshot.subCategoriesData!
+                                              .elementAt(index)!
+                                              .image!,
+                                        ),
+                                        height: 80,
+                                        width: 80,
+                                      ),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      snapshot.subCategoriesData
+                                          ?.elementAt(index)
+                                          ?.name ??
+                                          '',
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      style: AppStyles.font400_12()
+                                          .copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
                     },
                   ),
 

@@ -10,10 +10,10 @@ class CustomerDivider extends StatelessWidget {
 
   const CustomerDivider(
       {Key? key,
-      this.horizontalMargin = 0,
-      this.verticalMargin = 0,
-      this.color = AppColors.white,
-      this.height = 0.5})
+        this.horizontalMargin = 0,
+        this.verticalMargin = 0,
+        this.color = AppColors.white,
+        this.height = 0.5})
       : super(key: key);
 
   @override

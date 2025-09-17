@@ -61,67 +61,68 @@ class _MyOffersPageState extends State<MyOffersPage> with BaseClass {
               builder: (snapshot) {
                 return snapshot.offersList == null
                     ? Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.primaryColor,
-                        ),
-                      ),
-                    )
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primaryColor,
+                    ),
+                  ),
+                )
                     : ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: snapshot.offersList?.length ?? 0,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            pushToNextScreen(
-                              context: context,
-                              destination: OfferDetailsPage(
-                                isEdit: true,
-                                offerID:
-                                    snapshot.offersList
-                                        ?.elementAt(index)
-                                        ?.id
-                                        .toString() ??
-                                    '0',
-                              ),
-                            );
-                          },
-                          child: OffersWidget(
-                            image: '',
-                            offerImages:
-                                (snapshot.offersList
-                                            ?.elementAt(index)
-                                            ?.offerImages
-                                            ?.isEmpty ??
-                                        true)
-                                    ? []
-                                    : snapshot.offersList
-                                            ?.elementAt(index)
-                                            ?.offerImages ?? []
-                                            ,
-                            rating:
-                                snapshot.offersList?.elementAt(index)?.rating ??
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: snapshot.offersList?.length ?? 0,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        pushToNextScreen(
+                          context: context,
+                          destination: OfferDetailsPage(
+                            isEdit: true,
+                            offerID:
+                            snapshot.offersList
+                                ?.elementAt(index)
+                                ?.id
+                                .toString() ??
                                 '0',
-                            totalSold:
-                                snapshot.offersList
-                                    ?.elementAt(index)
-                                    ?.totalSold
-                                    .toString() ??
-                                '0',
-                            price:
-                                snapshot.offersList
-                                    ?.elementAt(index)
-                                    ?.price
-                                    .toString() ??
-                                '0',
-                            name:
-                                snapshot.offersList?.elementAt(index)?.name ??
-                                '',
                           ),
                         );
                       },
+                      child: OffersWidget(
+                        image: '',
+                        isFavOffer: snapshot.offersList?.elementAt(index)?.isFavOffer ?? 0,
+                        offerImages:
+                        (snapshot.offersList
+                            ?.elementAt(index)
+                            ?.offerImages
+                            ?.isEmpty ??
+                            true)
+                            ? []
+                            : snapshot.offersList
+                            ?.elementAt(index)
+                            ?.offerImages ?? []
+                        ,
+                        rating:
+                        snapshot.offersList?.elementAt(index)?.rating ??
+                            '0',
+                        totalSold:
+                        snapshot.offersList
+                            ?.elementAt(index)
+                            ?.totalSold
+                            .toString() ??
+                            '0',
+                        price:
+                        snapshot.offersList
+                            ?.elementAt(index)
+                            ?.price
+                            .toString() ??
+                            '0',
+                        name:
+                        snapshot.offersList?.elementAt(index)?.name ??
+                            '',
+                      ),
                     );
+                  },
+                );
               },
             ),
           ),

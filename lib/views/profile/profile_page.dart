@@ -5,6 +5,9 @@ import 'package:instajobs/utils/app_colors.dart';
 import 'package:instajobs/utils/app_images.dart';
 import 'package:instajobs/utils/app_styles.dart';
 import 'package:instajobs/utils/baseClass.dart';
+import 'package:instajobs/views/feed_tab/feed_tab_page.dart';
+import 'package:instajobs/views/feed_tab/my_feed_tab.dart';
+import 'package:instajobs/views/message/inbox.dart';
 import 'package:instajobs/views/my_bookings/my_bookings_page.dart';
 import 'package:instajobs/views/my_fav/my_fav_page.dart';
 import 'package:instajobs/views/my_insta_jobs/my_insta_jobs_page.dart';
@@ -33,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _profileController.getAppSetting();
     _profileController.getProfileDetails();
   }
 
@@ -43,10 +47,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
         backgroundColor: AppColors.bgColor,
         surfaceTintColor: Colors.transparent,
         centerTitle: false,
-        title: Text(
-          '',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
-        ),
+        title: Text('', style: AppStyles.fontInkika().copyWith(fontSize: 24)),
       ),
       backgroundColor: AppColors.bgColor,
       body: GetBuilder<ProfileController>(
@@ -76,40 +77,40 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                         color: Colors.black,
                       ),
                       child:
+                      (_profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.profile ==
+                          null ||
                           (_profileController
-                                          .profileDetailsModel
-                                          ?.userInfo
-                                          ?.profile ==
-                                      null ||
-                                  (_profileController
-                                          .profileDetailsModel
-                                          ?.userInfo
-                                          ?.profile
-                                          ?.isEmpty ??
-                                      true))
-                              ? Container(
-                                height: 80,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black,
-                                ),
-                              )
-                              : ClipRRect(
-                                borderRadius: BorderRadius.circular(40),
-                                child: Image(
-                                  height: 80,
-                                  width: 80,
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    _profileController
-                                            .profileDetailsModel
-                                            ?.userInfo
-                                            ?.profile ??
-                                        '',
-                                  ),
-                                ),
-                              ),
+                              .profileDetailsModel
+                              ?.userInfo
+                              ?.profile
+                              ?.isEmpty ??
+                              true))
+                          ? Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black,
+                        ),
+                      )
+                          : ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: Image(
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            _profileController
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.profile ??
+                                '',
+                          ),
+                        ),
+                      ),
                     ),
                     SizedBox(width: 20),
                     Expanded(
@@ -118,9 +119,9 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                         children: [
                           Text(
                             _profileController
-                                    .profileDetailsModel
-                                    ?.userInfo
-                                    ?.name ??
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.name ??
                                 '',
                             style: AppStyles.font700_16().copyWith(
                               color: Colors.black,
@@ -128,9 +129,9 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           ),
                           Text(
                             _profileController
-                                    .profileDetailsModel
-                                    ?.userInfo
-                                    ?.email ??
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.email ??
                                 '',
                             style: AppStyles.font500_16().copyWith(
                               color: Colors.black,
@@ -169,6 +170,111 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                 ),
 
                 Divider(),
+                if ((StorageService().getUserData().isCustomer ?? true) ==
+                    false)
+                  ...[
+                    Container(
+                      margin: const EdgeInsets.all(0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.orange.shade200,
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Left side (icon + text)
+                          Row(
+                            children: [
+                              // Circle placeholder
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.grey, width: 4),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+
+                              // Texts
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Boost Profile",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    ((_profileController
+                                        .profileDetailsModel
+                                        ?.userInfo
+                                        ?.isBoosted ??
+                                        0) == 0) ?  "0 Days left" : "${_profileController.profileDetailsModel?.userInfo?.remainBoostedTime?.daysDifference ?? 0} Days left",
+                                    style: TextStyle(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          // Right side button
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange.shade700,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () {
+                              if ((_profileController
+                                  .profileDetailsModel
+                                  ?.userInfo
+                                  ?.isBoosted ??
+                                  0) == 1) {
+                                showSuccess(title: 'Boost', message: 'Already Boosted');
+                              } else {
+                                _profileController.boostMyProfile();
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.monetization_on,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            label: Text(
+                              "Boost ${_profileController.boostProfile?.value ?? ''}",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+
                 SizedBox(height: 12),
                 Row(
                   children: [
@@ -176,7 +282,12 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                       child: Column(
                         children: [
                           Text(
-                            '0',
+                            (_profileController
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.totalJobPosted ??
+                                0)
+                                .toString(),
                             textAlign: TextAlign.center,
                             style: AppStyles.font700_16().copyWith(
                               color: Colors.black,
@@ -198,7 +309,12 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                       child: Column(
                         children: [
                           Text(
-                            '0',
+                            (_profileController
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.totalOfferPurchased ??
+                                0)
+                                .toString(),
                             textAlign: TextAlign.center,
                             style: AppStyles.font700_16().copyWith(
                               color: Colors.black,
@@ -220,7 +336,19 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                       child: Column(
                         children: [
                           Text(
-                            '0',
+                            (StorageService().getUserData().isCustomer ?? true)
+                                ? (_profileController
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.totalAmountSpend ??
+                                0)
+                                .toString()
+                                : (_profileController
+                                .profileDetailsModel
+                                ?.userInfo
+                                ?.totalAmountEarned ??
+                                0)
+                                .toString(),
                             textAlign: TextAlign.center,
                             style: AppStyles.font700_16().copyWith(
                               color: Colors.black,
@@ -254,12 +382,23 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           onTap: () {
                             pushToNextScreen(
                               context: context,
-                              destination: MyProfilePage(profileDetailsModelData: _profileController.profileDetailsModel),
+                              destination: MyProfilePage(
+                                profileDetailsModelData:
+                                _profileController.profileDetailsModel,
+                              ),
                             );
                           },
                         ),
-                        ProfileWidget(image: AppImages.my_offer, title: 'Messages', onTap: () {}),
-                      (StorageService().getUserData().isCustomer??true)?SizedBox():  ProfileWidget(
+                        ProfileWidget(
+                          image: AppImages.my_offer,
+                          title: 'Messages',
+                          onTap: () {
+                            pushToNextScreen(context: context, destination: Inbox());
+                          },
+                        ),
+                        (StorageService().getUserData().isCustomer ?? true)
+                            ? SizedBox()
+                            : ProfileWidget(
                           image: '',
                           title: 'My Working Timings',
                           onTap: () {
@@ -289,7 +428,9 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             );
                           },
                         ),
-                        (StorageService().getUserData().isCustomer??true)?SizedBox(): ProfileWidget(
+                        (StorageService().getUserData().isCustomer ?? true)
+                            ? SizedBox()
+                            : ProfileWidget(
                           image: AppImages.portfolio,
                           title: 'My Portfolio',
                           onTap: () {
@@ -299,8 +440,21 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             );
                           },
                         ),
-                        (StorageService().getUserData().isCustomer??true)?SizedBox():  ProfileWidget(image: '', title: 'My Feeds', onTap: () {}),
-                        (StorageService().getUserData().isCustomer??true)?SizedBox():  ProfileWidget(
+                        (StorageService().getUserData().isCustomer ?? true)
+                            ? SizedBox()
+                            : ProfileWidget(
+                          image: '',
+                          title: 'My Feeds',
+                          onTap: () {
+                            pushToNextScreen(
+                              context: context,
+                              destination: MyFeedTab(),
+                            );
+                          },
+                        ),
+                        (StorageService().getUserData().isCustomer ?? true)
+                            ? SizedBox()
+                            : ProfileWidget(
                           image: AppImages.my_offer,
                           title: 'My Offers',
                           onTap: () {
@@ -310,11 +464,13 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                             );
                           },
                         ),
-                        (StorageService().getUserData().isCustomer??true)?ProfileWidget(
+                        (StorageService().getUserData().isCustomer ?? true)
+                            ? ProfileWidget(
                           image: AppImages.my_offer,
                           title: 'My Purchased Offers',
                           onTap: () {},
-                        ):   ProfileWidget(
+                        )
+                            : ProfileWidget(
                           image: '',
                           title: 'My Sell/Purchased Offers',
                           onTap: () {},
@@ -372,7 +528,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
               ],
             ),
           );
-        }
+        },
       ),
     );
   }

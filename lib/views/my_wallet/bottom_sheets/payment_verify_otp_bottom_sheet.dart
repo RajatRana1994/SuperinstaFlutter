@@ -12,12 +12,22 @@ class PaymentVerifyOtpBottomSheetWidget extends StatefulWidget {
   final ScrollController scrollController;
   final Function onNextTap;
   final PaymentReponseModelData? paymentResponseModel;
+  final String? bookingId;
+  final String? offerId;
+  final String? offerTime;
+  final String? adOns;
+  final String? price;
 
   const PaymentVerifyOtpBottomSheetWidget({
     super.key,
     required this.scrollController,
     required this.onNextTap,
     this.paymentResponseModel,
+    this.offerId,
+    this.offerTime,
+    this.adOns,
+    this.price,
+    required this.bookingId,
   });
 
   @override
@@ -156,10 +166,28 @@ class _PaymentVerifyOtpBottomSheetWidgetState
                   } else {
                     try {
                       showGetXCircularDialog();
-                      await _myWalletController.verifyPaymentTransaction(
-                        otp: pin,
-                        refId: widget.paymentResponseModel?.flwRef ?? '',
-                      );
+                      if (widget.bookingId != '') {
+                        await _myWalletController.verifyBookingPaymentTransaction(
+                          otp: pin,
+                          refId: widget.paymentResponseModel?.flwRef ?? '',
+                          bookingId: widget.bookingId ?? '',
+                        );
+                      } else if (widget.offerId != '') {
+                        await _myWalletController.buyOfferApi(amount: widget.price ?? '', offerTime: widget.offerTime ?? '', adOns: widget.adOns ?? '', offerId: widget.offerId ?? '');
+
+                        await _myWalletController.verifyOfferPaymentTransaction(
+                          otp: pin,
+                          refId: widget.paymentResponseModel?.flwRef ?? '',
+                          offerId: _myWalletController.purchasedOfferId.toString() ?? '',
+                        );
+
+                      } else {
+                        await _myWalletController.verifyPaymentTransaction(
+                          otp: pin,
+                          refId: widget.paymentResponseModel?.flwRef ?? '',
+                        );
+                      }
+
                       popToPreviousScreen(context: context);
                       widget.onNextTap();
                       /*pushToNextScreen(

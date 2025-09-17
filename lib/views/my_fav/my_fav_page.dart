@@ -128,11 +128,14 @@ class _MyFavPageState extends State<MyFavPage> {
               ],
             ),
             SizedBox(height: 20),
-            selectedIndex == 0
-                ? FreelancerFavPage()
-                : selectedIndex == 1
-                ? OffersFavPage()
-                : FeedFavPage(),
+            SizedBox(height: 20),
+            Expanded(
+              child: selectedIndex == 0
+                  ? FreelancerFavPage()
+                  : selectedIndex == 1
+                  ? OffersFavPage()
+                  : FeedFavPage(),
+            ),
           ],
         ),
       ),

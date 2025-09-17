@@ -225,70 +225,7 @@ class MyBookingModelDataDataFreelancer {
 }
 
 class MyBookingModelDataData {
-/*
-{
-  "id": 4,
-  "userId": 2,
-  "date": 1736961035,
-  "time": "10:12:00",
-  "endTime": "12:30:00",
-  "endDate": 1736961035,
-  "recipientName": "Game name",
-  "address": "UNA",
-  "postalCode": "174306",
-  "latitude": 30.7269755,
-  "longitude": 76.8441849,
-  "phone": "8894041118",
-  "assignUserId": 6,
-  "status": 0,
-  "paymentStatus": 0,
-  "price": 290,
-  "bookingType": 1,
-  "notes": "Noted is here",
-  "subCategoryIds": "4,3,2",
-  "created": 1739897407,
-  "modified": 1739897407,
-  "isRated": 0,
-  "addOns": [
-    ""
-  ],
-  "freelancer": {
-    "id": 6,
-    "name": "Dave",
-    "email": "davi.geologist@gmail.com",
-    "phone": "123456789",
-    "profile": "https://app.superinstajobs.com/uploads/1739114526295.5203.jpg",
-    "hourlyPrice": 0,
-    "dailyPrice": 0,
-    "country": "Nigeria",
-    "state": "Lagos",
-    "city": "Lagos",
-    "street": "Fola Agoro Street, 5, null",
-    "categoryName": ""
-  },
-  "subCategories": [
-    {
-      "id": 2,
-      "categoryId": 1,
-      "name": "Tiler",
-      "image": "",
-      "status": 0,
-      "created": 0,
-      "modified": 0
-    }
-  ],
-  "users": {
-    "id": 2,
-    "name": "Jyoti Builders",
-    "email": "jyoti@yopmail.com",
-    "phone": "7888644412",
-    "profile": "https://app.superinstajobs.com/uploads/1743437099493.0781.jpg",
-    "hourlyPrice": 10,
-    "dailyPrice": 100,
-    "categoryName": "Builders"
-  }
-}
-*/
+
 
   int? id;
   int? userId;
@@ -312,7 +249,7 @@ class MyBookingModelDataData {
   int? created;
   int? modified;
   int? isRated;
-  List<String?>? addOns;
+  List<AddOnModel>? addOns;
   MyBookingModelDataDataFreelancer? freelancer;
   List<MyBookingModelDataDataSubCategories?>? subCategories;
   MyBookingModelDataDataUsers? users;
@@ -367,14 +304,25 @@ class MyBookingModelDataData {
     subCategoryIds = json['subCategoryIds']?.toString();
     created = json['created']?.toInt();
     modified = json['modified']?.toInt();
-    isRated = json['isRated']?.toInt();
+    if (json['isRated'] is int) {
+      isRated = json['isRated'];
+    } else if (json['isRated'] is bool) {
+      isRated = json['isRated'] ? 1 : 0;
+    } else {
+      isRated = null;
+    }
+    // if (json['addOns'] != null) {
+    //   final v = json['addOns'];
+    //   final arr0 = <String>[];
+    //   v.forEach((v) {
+    //     arr0.add(v.toString());
+    //   });
+    //   addOns = arr0;
+    // }
+
     if (json['addOns'] != null) {
-      final v = json['addOns'];
-      final arr0 = <String>[];
-      v.forEach((v) {
-        arr0.add(v.toString());
-      });
-      addOns = arr0;
+      final v = json['addOns'] as List;
+      addOns = v.map((e) => AddOnModel.fromJson(e)).toList();
     }
     freelancer = (json['freelancer'] != null) ? MyBookingModelDataDataFreelancer.fromJson(json['freelancer']) : null;
     if (json['subCategories'] != null) {
@@ -411,14 +359,18 @@ class MyBookingModelDataData {
     data['created'] = created;
     data['modified'] = modified;
     data['isRated'] = isRated;
+
     if (addOns != null) {
-      final v = addOns;
-      final arr0 = [];
-      v!.forEach((v) {
-        arr0.add(v);
-      });
-      data['addOns'] = arr0;
+      data['addOns'] = addOns!.map((e) => e.toJson()).toList();
     }
+    // if (addOns != null) {
+    //   final v = addOns;
+    //   final arr0 = [];
+    //   v!.forEach((v) {
+    //     arr0.add(v);
+    //   });
+    //   data['addOns'] = arr0;
+    // }
     if (freelancer != null) {
       data['freelancer'] = freelancer!.toJson();
     }
@@ -655,5 +607,96 @@ class MyBookingModel {
       data['data'] = this.data!.toJson();
     }
     return data;
+  }
+}
+
+
+class MyBookingDetailModel {
+
+
+  bool? success;
+  String? message;
+  int? status;
+  MyBookingModelDataData? data;
+
+  MyBookingDetailModel({
+    this.success,
+    this.message,
+    this.status,
+    this.data,
+  });
+  MyBookingDetailModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    message = json['message']?.toString();
+    status = json['status'];
+    data = (json['data'] != null) ? MyBookingModelDataData.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final jsonData = <String, dynamic>{};
+    jsonData['success'] = success;
+    jsonData['message'] = message;
+    jsonData['status'] = status;
+
+    if (this.data != null) {
+      jsonData['data'] = this.data!.toJson();
+    }
+    return jsonData;
+  }
+}
+
+class AddOnModel {
+  int? id;
+  int? userId;
+  int? bookingId;
+  int? price;
+  String? description;
+  int? status;
+  int? timeToComplete;
+  int? paymentStatus;
+  int? created;
+  int? modified;
+
+  AddOnModel({
+    this.id,
+    this.userId,
+    this.bookingId,
+    this.price,
+    this.description,
+    this.status,
+    this.timeToComplete,
+    this.paymentStatus,
+    this.created,
+    this.modified,
+  });
+
+  factory AddOnModel.fromJson(Map<String, dynamic> json) {
+    return AddOnModel(
+      id: json['id']?.toInt(),
+      userId: json['userId']?.toInt(),
+      bookingId: json['bookingId']?.toInt(),
+      price: json['price']?.toInt(),
+      description: json['description']?.toString(),
+      status: json['status']?.toInt(),
+      timeToComplete: json['timeToComplete']?.toInt(),
+      paymentStatus: json['paymentStatus']?.toInt(),
+      created: json['created']?.toInt(),
+      modified: json['modified']?.toInt(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'bookingId': bookingId,
+      'price': price,
+      'description': description,
+      'status': status,
+      'timeToComplete': timeToComplete,
+      'paymentStatus': paymentStatus,
+      'created': created,
+      'modified': modified,
+    };
   }
 }

@@ -11,7 +11,10 @@ class OffersWidget extends StatelessWidget {
   final String totalSold;
   final String price;
   final String name;
- // List<OfferTabModelDataDataOfferImages?> offerImages;
+  final int isFavOffer;
+  final int showFav;
+  final VoidCallback? onClickFav;
+  // List<OfferTabModelDataDataOfferImages?> offerImages;
   final List<OfferTabModelDataDataOfferImages?> offerImages;
   const OffersWidget({
     super.key,
@@ -21,6 +24,9 @@ class OffersWidget extends StatelessWidget {
     required this.price,
     required this.name,
     required this.offerImages,
+    required this.isFavOffer,
+    this.onClickFav,
+    this.showFav = 0,
 
   });
 
@@ -68,6 +74,36 @@ class OffersWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  if (showFav == 1) ... [Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.7),
+                        shape: BoxShape.circle,
+                      ),
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: IconButton(
+                          icon: Icon(
+                            isFavOffer == 1 ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.red,
+                            size: 18, // icon visual size
+                          ),
+                          onPressed: () {
+                            onClickFav?.call();
+                            // Handle tap
+                          },
+                          padding: EdgeInsets.zero, // remove default padding
+                          constraints: BoxConstraints(), // remove default size constraints
+                          splashRadius: 16, // splash radius for tap feedback
+                        ),
+                      ),
+                    ),
+                  ),],
+
 
                   Positioned(
                     left: 0,

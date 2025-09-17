@@ -50,12 +50,12 @@ class PortfolioDetails extends StatelessWidget with BaseClass {
               // ⬇️ show a local fallback if the network image can’t load
               errorBuilder:
                   (context, error, stackTrace) => Image.asset(
-                    'assets/images/icon.png',
-                    height: 300,
-                    width: double.infinity,
-                    // put the asset in pubspec.yaml
-                    fit: BoxFit.cover,
-                  ),
+                'assets/images/icon.png',
+                height: 300,
+                width: double.infinity,
+                // put the asset in pubspec.yaml
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(height: 20),
             Container(

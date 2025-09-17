@@ -14,11 +14,13 @@ import '../../widgets/form_input_with_hint_on_top.dart';
 class PopularServiceDetailsPage extends StatefulWidget {
   final List<SubCategoryModelDataSubCategories?>? subCategoriesData;
   final int index;
+  final String caategoryId;
 
   const PopularServiceDetailsPage({
     super.key,
     required this.subCategoriesData,
     required this.index,
+    required this.caategoryId,
   });
 
   @override
@@ -37,13 +39,19 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
     super.initState();
     selectedIndex = widget.index;
 
+    final subCategoryId =
+    (widget.index == 0)
+        ? '' // send empty for "All"
+        : (widget.subCategoriesData?[selectedIndex]?.id ?? 0).toString();
+
     homeTabController.getUsersPopularServices(
-      widget.subCategoriesData
-              ?.elementAt(widget.index)
-              ?.categoryId
-              .toString() ??
-          '',
+      widget.caategoryId,
+      subCategoryId,
+      '1',
     );
+    if (subCategoryId != '') {
+      selectedIndex = selectedIndex + 1;
+    }
   }
 
   @override
@@ -67,18 +75,33 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
 
-                itemCount: widget.subCategoriesData?.length ?? 0,
+                itemCount: (widget.subCategoriesData?.length ?? 0) + 1,
                 itemBuilder: (BuildContext context, int index) {
+                  final isAllTab = index == 0;
+                  final displayName =
+                  isAllTab
+                      ? 'All'
+                      : widget.subCategoriesData!
+                      .elementAt(index - 1)
+                      ?.name ??
+                      '';
+                  final categoryId =
+                  isAllTab
+                      ? ''
+                      : widget.subCategoriesData!
+                      .elementAt(index - 1)
+                      ?.id
+                      .toString() ??
+                      '';
+
                   return GestureDetector(
                     onTap: () {
                       selectedIndex = index;
                       setState(() {});
                       homeTabController.getUsersPopularServices(
-                        widget.subCategoriesData
-                                ?.elementAt(selectedIndex)
-                                ?.categoryId
-                                .toString() ??
-                            '',
+                        widget.caategoryId,
+                        categoryId,
+                        '1',
                       );
                     },
                     child: Center(
@@ -88,20 +111,19 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color:
-                              selectedIndex == index
-                                  ? AppColors.primaryColor
-                                  : Colors.orange.shade300,
+                          selectedIndex == index
+                              ? AppColors.primaryColor
+                              : Colors.orange.shade300,
                         ),
                         height: 50,
                         child: Center(
                           child: Text(
-                            widget.subCategoriesData?.elementAt(index)?.name ??
-                                '',
+                            displayName,
                             style: AppStyles.font500_16().copyWith(
                               color:
-                                  selectedIndex == index
-                                      ? Colors.white
-                                      : Colors.black,
+                              selectedIndex == index
+                                  ? Colors.white
+                                  : Colors.black,
                               fontSize: 14,
                             ),
                           ),
@@ -119,258 +141,303 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
               builder: (snapshot) {
                 return homeTabController.popularServiceDetailsModel == null
                     ? Center(
-                      child: Container(
-                        margin: EdgeInsets.only(top: 100),
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.primaryColor,
-                          ),
-                        ),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 100),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.primaryColor,
                       ),
-                    )
+                    ),
+                  ),
+                )
                     : Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount:
-                            snapshot.popularServiceDetailsModel?.length ?? 0,
-                        shrinkWrap: true,
-                      
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              pushToNextScreen(
-                                context: context,
-                                destination: VendorDetailsPage(
-                                  snapshot.popularServiceDetailsModel
-                                          ?.elementAt(index)
-                                          ?.users
-                                          ?.id
-                                          .toString() ??
-                                      '',
-                                ),
-                              );
-                            },
-                            child: Container(
-                              //height: 170,
-                              margin: EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Color(0xffEBEBEB),
-                                  width: 2,
-                                ),
-                              ),
-                      
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount:
+                    snapshot.popularServiceDetailsModel?.length ?? 0,
+                    shrinkWrap: true,
+
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          pushToNextScreen(
+                            context: context,
+                            destination: VendorDetailsPage(
+                              snapshot.popularServiceDetailsModel
+                                  ?.elementAt(index)
+                                  ?.users
+                                  ?.id
+                                  .toString() ??
+                                  '',
+                            ),
+                          );
+                        },
+                        child: Container(
+                          //height: 170,
+                          margin: EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Color(0xffEBEBEB),
+                              width: 2,
+                            ),
+                          ),
+
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Stack(
                                 children: [
-                                  Stack(
-                                    children: [
-                                      ClipRRect(
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      bottomLeft: Radius.circular(16),
+                                    ),
+                                    child: Container(
+                                      height: 150,
+                                      decoration: BoxDecoration(
+                                        //color: Colors.green.shade500,
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(16),
                                           bottomLeft: Radius.circular(16),
                                         ),
-                                        child: Container(
-                                             height: 150,
-                                          decoration: BoxDecoration(
-                                            //color: Colors.green.shade500,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(16),
-                                              bottomLeft: Radius.circular(16),
-                                            ),
-                                          ),
-                                          width: 120,
-                                          child: Image(
-                                            image: AssetImage(AppImages.icon),
-                                            //    height: 150,
-                                            width: 120,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
                                       ),
-                                      Positioned(
-                                        left: 8,
-                                        bottom: 8,
-                                        child: Container(
-                                          height: 20,
-                                          width: 20,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.orange,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.check,
-                                              color: AppColors.white,
-                                              size: 16,
-                                            ),
-                                          ),
-                                        ),
+                                      width: 120,
+                                      child: Image(
+                                        image: AssetImage(AppImages.icon),
+                                        //    height: 150,
+                                        width: 120,
+                                        fit: BoxFit.cover,
                                       ),
-                                      Positioned(
-                                        top: 8,
-                                        left: 8,
-                                        child: Container(
-                                          height: 20,
-                                          width: 20,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: AppColors.white,
-                                              size: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                  SizedBox(width: 8),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        snapshot.popularServiceDetailsModel
-                                                ?.elementAt(index)
+                                  Positioned(
+                                    left: 8,
+                                    bottom: 8,
+                                    child: Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.orange,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.check,
+                                          color: AppColors.white,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    left: 8,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(
+                                          0.7,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: SizedBox(
+                                        width: 30,
+                                        height: 30,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            ((snapshot.popularServiceDetailsModel
+                                                ?.elementAt(
+                                              index,
+                                            )
                                                 ?.users
-                                                ?.name ??
-                                            '',
-                                        textAlign: TextAlign.start,
-                                        maxLines: 1,
-                                        style: AppStyles.font400_12().copyWith(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      SizedBox(height: 2),
-                                      getItemWidget(
-                                        icon: Icon(
-                                          Icons.phone,
-                                          color: AppColors.orange,
-                                          size: 14,
-                                        ),
-                                        textColor: Colors.blue,
-                                        title:
-                                            snapshot.popularServiceDetailsModel
-                                                ?.elementAt(index)
-                                                ?.users
-                                                ?.phone ??
-                                            '',
-                                      ),
-                                      SizedBox(height: 2),
-                                      getItemWidget(
-                                        icon: Icon(
-                                          Icons.add_location_alt_sharp,
-                                          color: AppColors.orange,
-                                          size: 14,
-                                        ),
-                                        title:
-                                            '${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.country ?? ''},${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.city ?? ''}${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.state ?? ''}',
-                                      ),
-                                      SizedBox(height: 2),
-                                      getItemWidget(
-                                        icon: Icon(
-                                          Icons.star,
-                                          color: AppColors.orange,
-                                          size: 14,
-                                        ),
-                                        title:
-                                            snapshot.popularServiceDetailsModel
-                                                ?.elementAt(index)
-                                                ?.users
-                                                ?.overallRating ??
-                                            '',
-                                      ),
-                                      SizedBox(height: 2),
-                                      Row(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              GetCurrencyWidget(),
-                                              SizedBox(width: 2),
-                                              getItemWidget(
-                                                icon: Text(
-                                                  'Hourly Price:',
-                                                  style: AppStyles.font600_12()
-                                                      .copyWith(
-                                                        color: Colors.black,
-                                                      ),
-                                                ),
-                                                title:
-                                                    snapshot
-                                                        .popularServiceDetailsModel
-                                                        ?.elementAt(index)
-                                                        ?.users
-                                                        ?.hourlyPrice
-                                                        .toString() ??
-                                                    '',
-                                              ),
-                                            ],
+                                                ?.favVendor ??
+                                                0) ==
+                                                0)
+                                                ? Icons.favorite_border
+                                                : Icons.favorite,
+                                            color: Colors.red,
+                                            size: 18, // icon visual size
                                           ),
-                                          SizedBox(width: 5),
-                                          Row(
-                                            children: [
-                                              GetCurrencyWidget(),
-                                              SizedBox(width: 2),
-                                              getItemWidget(
-                                                icon: Text(
-                                                  'Daily Price:',
-                                                  style: AppStyles.font600_12()
-                                                      .copyWith(
-                                                        color: Colors.black,
-                                                      ),
-                                                ),
-                                                title:
-                                                    snapshot
-                                                        .popularServiceDetailsModel
-                                                        ?.elementAt(index)
-                                                        ?.users
-                                                        ?.dailyPrice
-                                                        .toString() ??
-                                                    '',
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 2),
-                                      Row(
-                                        children: [
-                                          GetCurrencyWidget(),
-                                          SizedBox(width: 2),
-                                          getItemWidget(
-                                            icon: Text(
-                                              'Offers From:',
-                                              style: AppStyles.font600_12()
-                                                  .copyWith(color: Colors.black),
-                                            ),
-                                            title:
+                                          onPressed: () {
+                                            var verdorId =
                                                 snapshot
                                                     .popularServiceDetailsModel
                                                     ?.elementAt(index)
                                                     ?.users
-                                                    ?.totalJobs
-                                                    .toString() ??
-                                                '',
-                                          ),
-                                        ],
+                                                    ?.id ??
+                                                    0;
+
+                                            homeTabController
+                                                .addRemoveFacVendor(
+                                              verdorId.toString(),
+                                              index,
+                                            );
+                                            // profileController.removeVenderToFav(snapshot.favFreelancers
+                                            //     ?.elementAt(index)
+                                            //     ?.vendorId
+                                            //     .toString() ??
+                                            //     '', index);
+                                          },
+                                          padding:
+                                          EdgeInsets
+                                              .zero, // remove default padding
+                                          constraints:
+                                          BoxConstraints(), // remove default size constraints
+                                          splashRadius:
+                                          16, // splash radius for tap feedback
+                                        ),
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      snapshot.popularServiceDetailsModel
+                                          ?.elementAt(index)
+                                          ?.users
+                                          ?.name ??
+                                          '',
+                                      textAlign: TextAlign.start,
+                                      maxLines: 1,
+                                      style: AppStyles.font400_12()
+                                          .copyWith(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    SizedBox(height: 2),
+                                    getItemWidget(
+                                      icon: Icon(
+                                        Icons.phone,
+                                        color: AppColors.orange,
+                                        size: 14,
+                                      ),
+                                      textColor: Colors.blue,
+                                      title:
+                                      snapshot
+                                          .popularServiceDetailsModel
+                                          ?.elementAt(index)
+                                          ?.users
+                                          ?.phone ??
+                                          '',
+                                    ),
+                                    SizedBox(height: 2),
+                                    getItemWidget(
+                                      icon: Icon(
+                                        Icons.add_location_alt_sharp,
+                                        color: AppColors.orange,
+                                        size: 14,
+                                      ),
+                                      title:
+                                      '${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.country ?? ''},${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.city ?? ''}${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.state ?? ''}',
+                                    ),
+                                    SizedBox(height: 2),
+                                    getItemWidget(
+                                      icon: Icon(
+                                        Icons.star,
+                                        color: AppColors.orange,
+                                        size: 14,
+                                      ),
+                                      title:
+                                      snapshot
+                                          .popularServiceDetailsModel
+                                          ?.elementAt(index)
+                                          ?.users
+                                          ?.overallRating ??
+                                          '',
+                                    ),
+                                    SizedBox(height: 2),
+                                    Row(
+                                      children: [
+                                        GetCurrencyWidget(),
+                                        SizedBox(width: 2),
+                                        getItemWidget(
+                                          icon: Text(
+                                            'Hourly Price:',
+                                            style: AppStyles.font600_12()
+                                                .copyWith(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          title:
+                                          snapshot
+                                              .popularServiceDetailsModel
+                                              ?.elementAt(index)
+                                              ?.users
+                                              ?.hourlyPrice
+                                              .toString() ??
+                                              '',
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 2),
+                                    Row(
+                                      children: [
+                                        GetCurrencyWidget(),
+                                        SizedBox(width: 2),
+                                        getItemWidget(
+                                          icon: Text(
+                                            'Daily Price:',
+                                            style: AppStyles.font600_12()
+                                                .copyWith(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          title:
+                                          snapshot
+                                              .popularServiceDetailsModel
+                                              ?.elementAt(index)
+                                              ?.users
+                                              ?.dailyPrice
+                                              .toString() ??
+                                              '',
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 2),
+                                    Row(
+                                      children: [
+                                        GetCurrencyWidget(),
+                                        SizedBox(width: 2),
+                                        getItemWidget(
+                                          icon: Text(
+                                            'Offers From:',
+                                            style: AppStyles.font600_12()
+                                                .copyWith(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          title:
+                                          snapshot
+                                              .popularServiceDetailsModel
+                                              ?.elementAt(index)
+                                              ?.users
+                                              ?.totalJobs
+                                              .toString() ??
+                                              '',
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
               },
             ),
           ],

@@ -43,6 +43,7 @@ dependencies:
   flutter_multi_formatter: ^2.11.0
   email_validator: ^3.0.0
   image_picker: ^1.0.4
+  image: ^4.1.0
   intl:
   path: ^1.8.3
   #flutter_google_places_hoc081098: ^1.0.0
@@ -56,6 +57,9 @@ dependencies:
   url_launcher: ^6.3.1
   place_picker_google: ^0.0.18
   google_maps_flutter: ^2.6.0
+  flutter_rating_bar: ^4.0.1
+  socket_io_client: ^3.1.2
+
 
 dev_dependencies:
   flutter_test:

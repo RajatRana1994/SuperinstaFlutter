@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:instajobs/utils/app_colors.dart';
 import 'package:instajobs/widgets/currency_widget.dart';
 import 'package:instajobs/widgets/rounded_edged_button.dart';
+import 'package:intl/intl.dart';
 
 class BookingCard extends StatelessWidget {
   const BookingCard({
@@ -10,6 +12,8 @@ class BookingCard extends StatelessWidget {
     required this.addressLabel, // "Booking Address" etc.
     required this.location,
     required this.dateLabel, // "22 Feb, 2025"
+    required this.serviceCategory,
+    required this.typeUser,
     required this.frequencyLabel, // "Daily - 0"
     required this.services, // ["Tiler","Plumber","Painter"]
     required this.note,
@@ -18,22 +22,44 @@ class BookingCard extends StatelessWidget {
     this.onViewDetail,
     this.onChat,
     this.onCancel,
+    this.onAccept,
+    this.onSendQuote,
+    this.onPay,
+    this.onComplete,
+    this.onRating,
+    this.paymentStatus = 0,
+    this.isRated = 0,
   });
 
+  final VoidCallback? onAccept;
   final ImageProvider avatar;
   final String name;
   final String addressLabel;
   final String location;
   final String dateLabel;
+  final String serviceCategory;
   final String frequencyLabel;
   final List<String> services;
   final String note;
   final String statusLabel;
   final int status;
+  final int paymentStatus;
+  final int isRated;
+  final String typeUser;
 
   final VoidCallback? onViewDetail;
   final VoidCallback? onChat;
   final VoidCallback? onCancel;
+  final VoidCallback? onSendQuote;
+  final VoidCallback? onComplete;
+  final VoidCallback? onRating;
+  final VoidCallback? onPay;
+
+  String formatDateFromTimestampString(String timestampStr) {
+    int timestamp = int.tryParse(timestampStr) ?? 0;
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    return DateFormat('dd MMM, yyyy').format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +111,10 @@ class BookingCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: status==4?Colors.green: Colors.amber, // tweak per status
+                              color:
+                              status == 4
+                                  ? Colors.green
+                                  : Colors.amber, // tweak per status
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
@@ -147,7 +176,7 @@ class BookingCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            dateLabel,
+                            formatDateFromTimestampString(dateLabel),
                             maxLines: 1, // ‼️ keep to 1 line
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -194,20 +223,28 @@ class BookingCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(20),
+                    GestureDetector(
+                      onTap: () {
+                        onViewDetail?.call();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text('View Detail / Add Ons'),
                       ),
-                      child: Text('View Detail / Add Ons'),
                     ),
                   ],
                 ),
 
                 // services list
                 Text(
-                  ' - ${services.join(', ')}',
+                  '$serviceCategory - ${services.join(', ')}',
                   maxLines: 1, // ‼️ keep to 1 line
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -248,21 +285,197 @@ class BookingCard extends StatelessWidget {
                   iconSize: 32,
                 ),
                 Spacer(),
-                (status!=4 && status !=2 && status!=1)?  Container(
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Cancel',
 
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                if (status == 0) ...[
+                  if (typeUser == "0") ...[
+                    GestureDetector(
+                      onTap: () {
+                        // Your click logic here
+                        onAccept?.call();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Accept',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                  ],
+
+                  GestureDetector(
+                    onTap: () {
+                      // Your click logic here
+                      onCancel?.call();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        (typeUser == "1") ? 'Cancel' : 'Reject',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                ):SizedBox(),
+                ],
+
+                if (status == 1) ...[
+                  if (typeUser == '1') ...[
+                    GestureDetector(
+                      onTap: () {
+                        if (paymentStatus == 0) {
+                          print('object');
+                          onPay?.call();
+                        } else {
+                          onComplete?.call();
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          paymentStatus == 0 ? 'Pay' : 'Complete',
+
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                  ],
+
+                  if (paymentStatus == 0) ...[
+                    GestureDetector(
+                      onTap: () {
+                        if (typeUser == '1') {
+                          onCancel?.call();
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          (typeUser == '1') ? 'Cancel' : 'Waiting For Payment',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  if (paymentStatus == 1 && typeUser == '0') ...[
+                    GestureDetector(
+                      onTap: () {
+                        print('object');
+                        onSendQuote?.call();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Send Quote',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+
+                if (status == 2) ...[
+                  if (typeUser == '0') ...[
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Rejected',
+
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+
+
+                if (status == 4) ...[
+                  if (typeUser == '1' && isRated == 0) ...[
+                    GestureDetector(
+                      onTap: () {
+                        onRating?.call();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.orange,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Give Rating',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ],
               ],
             ),
           ],

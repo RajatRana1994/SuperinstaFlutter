@@ -120,11 +120,11 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                         });
                         snapshot.getSubCategories(
                           categoryId:
-                              snapshot.selectedCategory?.id.toString() ?? '',
+                          snapshot.selectedCategory?.id.toString() ?? '',
                         );
                         snapshot.getExperience(
                           categoryId:
-                              snapshot.selectedCategory?.id.toString() ?? '',
+                          snapshot.selectedCategory?.id.toString() ?? '',
                         );
                         if (kDebugMode) {
                           print('Selected: $value');
@@ -286,7 +286,6 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                           );
 
                           if (result is Map) {
-
                             snapshot.countryController.text =
                                 result['country'] ?? '';
                             snapshot.stateController.text =
@@ -331,77 +330,77 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
 
                 SizedBox(height: 16),
                 (snapshot.tagsData != null &&
-                        (snapshot.tagsData?.isNotEmpty ?? false))
+                    (snapshot.tagsData?.isNotEmpty ?? false))
                     ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Skills & Expertise',
-                          style: AppStyles.font400_14().copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        // give the Wrap the full width to work with:
-                        SizedBox(
-                          width: double.infinity,
-                          child: Wrap(
-                            spacing: 8, // gap between items horizontally
-                            runSpacing: 8, // gap between lines vertically
-                            alignment:
-                                WrapAlignment.start, // left-align each run
-                            children:
-                                snapshot.tagsData!
-                                    .asMap() // turns List<T> into Map<int, T>
-                                    .entries
-                                    .map((entry) {
-                                      final index = entry.key;
-                                      final item = entry.value;
-                                      return GestureDetector(
-                                        onTap: () {
-                                          snapshot.updateTagSelection(
-                                            index,
-                                            item?.isSelected ?? false,
-                                          );
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 8,
-                                            horizontal: 12,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                (item?.isSelected ?? false)
-                                                    ? Colors.orange
-                                                    : Colors.orange.shade50,
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                            border: Border.all(
-                                              color: Colors.orange.shade200,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            item?.name ?? '',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color:
-                                                  (item?.isSelected ?? false)
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      );
-                                    })
-                                    .toList(),
-                          ),
-                        ),
-                      ],
-                    )
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Skills & Expertise',
+                      style: AppStyles.font400_14().copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // give the Wrap the full width to work with:
+                    SizedBox(
+                      width: double.infinity,
+                      child: Wrap(
+                        spacing: 8, // gap between items horizontally
+                        runSpacing: 8, // gap between lines vertically
+                        alignment:
+                        WrapAlignment.start, // left-align each run
+                        children:
+                        snapshot.tagsData!
+                            .asMap() // turns List<T> into Map<int, T>
+                            .entries
+                            .map((entry) {
+                          final index = entry.key;
+                          final item = entry.value;
+                          return GestureDetector(
+                            onTap: () {
+                              snapshot.updateTagSelection(
+                                index,
+                                item?.isSelected ?? false,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                (item?.isSelected ?? false)
+                                    ? Colors.orange
+                                    : Colors.orange.shade50,
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ),
+                                border: Border.all(
+                                  color: Colors.orange.shade200,
+                                ),
+                              ),
+                              child: Text(
+                                item?.name ?? '',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                  (item?.isSelected ?? false)
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        })
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                )
                     : SizedBox(),
                 SizedBox(height: 16),
                 GestureDetector(
@@ -578,7 +577,7 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
                         context: context,
                         title: 'Post Job',
                         description:
-                            'Are you ready to post your job requirements?',
+                        'Are you ready to post your job requirements?',
                       );
 
                       if (result == true) {

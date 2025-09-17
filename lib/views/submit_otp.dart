@@ -153,7 +153,7 @@ class _SubmitOtpState extends State<SubmitOtp> with BaseClass {
                     showCircularDialog(context);
                     await signUpCustomerController.verifyPin(pin: pin);
                     UserDataModel userDataModel =
-                        StorageService().getUserData();
+                    StorageService().getUserData();
                     userDataModel.isLoggedIn = true;
                     popToPreviousScreen(context: context);
                     await StorageService().saveData(

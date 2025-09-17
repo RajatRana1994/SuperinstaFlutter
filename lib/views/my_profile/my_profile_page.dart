@@ -15,6 +15,8 @@ import 'package:get/get.dart';
 import '../../models/profile_details_model.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_styles.dart';
+import 'package:image/image.dart' as img;
+import 'package:instajobs/views/post_customer_job/placePicker.dart';
 
 class MyProfilePage extends StatefulWidget {
   final ProfileDetailsModelData? profileDetailsModelData;
@@ -38,6 +40,8 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
   TextEditingController stateController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController profileImageController = TextEditingController();
+  double latitude = 0.0;
+  double longtitde = 0.0;
 
   ///---
   ProfileController profileController = Get.put(ProfileController());
@@ -68,6 +72,8 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
         widget.profileDetailsModelData?.userInfo?.state.toString() ?? '';
     countryController.text =
         widget.profileDetailsModelData?.userInfo?.country.toString() ?? '';
+    latitude = widget.profileDetailsModelData?.userInfo?.latitude ?? 0.0;
+    longtitde = widget.profileDetailsModelData?.userInfo?.longitude ?? 0.0;
   }
 
   ({String first, String last}) splitName(String raw) {
@@ -85,18 +91,39 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  //
+  // Future<void> _pickImage(ImageSource source) async {
+  //   final pickedFile = await _picker.pickImage(source: source);
+  //
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //
+  //     // Close the bottom sheet after picking the image
+  //     Navigator.of(context).pop(); // 👈 add this line
+  //   }
+  // }
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(source: source);
+    final XFile? file = await _picker.pickImage(
+      source: source,
+      imageQuality: 100,
+    );
+    if (file == null) return;
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+    final bytes = await file.readAsBytes();
+    final originalImage = img.decodeImage(bytes);
 
-      // Close the bottom sheet after picking the image
-      Navigator.of(context).pop(); // 👈 add this line
-    }
+    if (originalImage == null) return;
+
+    final jpgBytes = img.encodeJpg(originalImage, quality: 100);
+    final newPath = "${file.path}.jpg";
+    final newFile = await File(newPath).writeAsBytes(jpgBytes);
+
+    setState(() {
+      _image = File(file.path);
+    });
   }
 
   @override
@@ -126,9 +153,19 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
                     shape: BoxShape.circle,
                     color: Colors.black,
                   ),
-                  child: _image == null
-                      ? (_profileController.profileDetailsModel?.userInfo?.profile == null ||
-                      (_profileController.profileDetailsModel?.userInfo?.profile?.isEmpty ?? true))
+                  child:
+                  _image == null
+                      ? (_profileController
+                      .profileDetailsModel
+                      ?.userInfo
+                      ?.profile ==
+                      null ||
+                      (_profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.profile
+                          ?.isEmpty ??
+                          true))
                       ? const Icon(
                     Icons.person,
                     color: Colors.white,
@@ -136,7 +173,11 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
                   )
                       : ClipOval(
                     child: Image.network(
-                      _profileController.profileDetailsModel?.userInfo?.profile ?? '',
+                      _profileController
+                          .profileDetailsModel
+                          ?.userInfo
+                          ?.profile ??
+                          '',
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
@@ -257,11 +298,51 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
               ),
               SizedBox(height: 16),
             ],
-            FormInputWithHint(
-              label: 'City',
-              hintText: 'City',
-              controller: cityController,
+
+
+            // FormInputWithHint(
+            //   label: 'City',
+            //   hintText: 'City',
+            //   controller: cityController,
+            // ),
+
+            GestureDetector(
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PlacePickerPage(),
+                  ),
+                );
+
+                if (result is Map) {
+                  countryController.text = result['country'] ?? '';
+                  latitude =  result['lat'];
+                  longtitde = result['lng'];
+                  stateController.text = result['state'] ?? '';
+                  cityController.text = result['city'] ?? '';
+                  // snapshot.countryController.text =
+                  //     result['country'] ?? '';
+                  // snapshot.stateController.text =
+                  //     result['state'] ?? '';
+                  // snapshot.lat = result['lat'];
+                  // snapshot.lng = result['lng'];
+                }
+              },
+
+              child: AbsorbPointer(
+                // prevents keyboard from appearing
+                child: FormInputWithHint(
+                  label: 'City',
+                  hintText: 'City',
+                  borderColor: AppColors.borderColor,
+                  controller: cityController,
+                ),
+              ),
             ),
+
+
+
             SizedBox(height: 16),
             Row(
               children: [
@@ -340,14 +421,25 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
                       email: emailController.text,
                       phone: phoneController.text,
                       description: descriptionController.text,
-                      hourlyPrice: double.tryParse(hourlyPriceController.text) ?? 0.0,
-                      dailyPrice: double.tryParse(dailyPriceController.text) ?? 0.0,
+                      hourlyPrice:
+                      double.tryParse(hourlyPriceController.text) ?? 0.0,
+                      dailyPrice:
+                      double.tryParse(dailyPriceController.text) ?? 0.0,
                       city: cityController.text,
                       state: stateController.text,
                       country: countryController.text,
-                      latitude: widget.profileDetailsModelData?.userInfo?.latitude.toString() ?? '',
-                      longitude: widget.profileDetailsModelData?.userInfo?.longitude.toString() ?? '',
-                      street: widget.profileDetailsModelData?.userInfo?.street.toString() ?? '',
+                      latitude:
+                      widget.profileDetailsModelData?.userInfo?.latitude
+                          .toString() ??
+                          '',
+                      longitude:
+                      widget.profileDetailsModelData?.userInfo?.longitude
+                          .toString() ??
+                          '',
+                      street:
+                      widget.profileDetailsModelData?.userInfo?.street
+                          .toString() ??
+                          '',
                       profile: _image,
                     );
                     Get.back();
@@ -366,5 +458,4 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
       ),
     );
   }
-
 }

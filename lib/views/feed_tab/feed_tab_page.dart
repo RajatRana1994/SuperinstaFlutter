@@ -56,13 +56,13 @@ class _FeedTabPageState extends State<FeedTabPage> {
                   feedItem?.feedImages
                       ?.whereType<FeedTabModelDataDataFeedImages>()
                       .toList() ??
-                  [];
+                      [];
 
               FeedTabModelDataDataFeedImages? videoItem;
               try {
                 videoItem = feedImages.firstWhere(
-                  (img) =>
-                      img.video != null &&
+                      (img) =>
+                  img.video != null &&
                       img.video!.isNotEmpty &&
                       img.video!.endsWith('.mp4'),
                 );
@@ -113,17 +113,61 @@ class _FeedTabPageState extends State<FeedTabPage> {
                       Column(
                         children: [
                           CarouselSlider.builder(
-                            itemCount: feedImages.length,
+                            itemCount: feedImages.isNotEmpty ? feedImages.length : 1,
                             itemBuilder: (context, imgIndex, realIdx) {
+                              if (feedImages.isEmpty) {
+                                // Show a placeholder image when feedImages is empty
+                                return Container(
+                                  color: Colors.grey[300],
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 250,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      color: Colors.white70,
+                                      size: 40,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              final imageUrl = feedImages[imgIndex].images;
+                              if (imageUrl == null || imageUrl.isEmpty) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 250,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      color: Colors.white70,
+                                      size: 40,
+                                    ),
+                                  ),
+                                );
+                              }
+
                               return Image.network(
-                                feedImages[imgIndex].images ?? '',
+                                imageUrl,
                                 fit: BoxFit.cover,
                                 width: MediaQuery.of(context).size.width,
+                                height: 250,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Container(
+                                    color: Colors.grey[200],
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 250,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                },
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
                                     color: Colors.green,
                                     width: MediaQuery.of(context).size.width,
-                                    height: 250, // or any desired height
+                                    height: 250,
                                     child: const Center(
                                       child: Icon(
                                         Icons.broken_image,
@@ -145,28 +189,31 @@ class _FeedTabPageState extends State<FeedTabPage> {
                               },
                             ),
                           ),
+
+
+
                           const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children:
-                                feedImages.asMap().entries.map((entry) {
-                                  final currentIndex =
-                                      _carouselCurrent[index] ?? 0;
-                                  return Container(
-                                    width: 8.0,
-                                    height: 8.0,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 4.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color:
-                                          currentIndex == entry.key
-                                              ? AppColors.primaryColor
-                                              : Colors.grey,
-                                    ),
-                                  );
-                                }).toList(),
+                            feedImages.asMap().entries.map((entry) {
+                              final currentIndex =
+                                  _carouselCurrent[index] ?? 0;
+                              return Container(
+                                width: 8.0,
+                                height: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                  currentIndex == entry.key
+                                      ? AppColors.primaryColor
+                                      : Colors.grey,
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ],
                       ),
@@ -177,9 +224,13 @@ class _FeedTabPageState extends State<FeedTabPage> {
                         children: [
                           Row(
                             children: [
+
                               IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.favorite_border),
+                                onPressed: () {
+                                  var feedId = feedItem?.id ?? 0;
+                                  feedTabController.saveFeedData(feedId.toString(), index);
+                                },
+                                icon: Icon( (feedItem?.isLike == 0) ? Icons.favorite_border : Icons.favorite),
                                 color: Colors.black,
                               ),
                               Text(feedItem?.totalLikes.toString() ?? '0'),

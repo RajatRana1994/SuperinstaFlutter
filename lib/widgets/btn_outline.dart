@@ -15,16 +15,16 @@ class OutlineBtn extends StatelessWidget {
 
   const OutlineBtn(
       {super.key,
-      required this.btnText,
-      this.width = double.infinity,
-      this.backgroundColor = AppColors.white,
-      this.borderColor = AppColors.lightGrey,
-      this.borderRadius = 35,
-      this.textSize = 18,
-      this.textColor = AppColors.lightGrey,
-      this.textPadding = const EdgeInsets.symmetric(vertical: 20.0),
-      this.margin = const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      required this.onClick});
+        required this.btnText,
+        this.width = double.infinity,
+        this.backgroundColor = AppColors.white,
+        this.borderColor = AppColors.lightGrey,
+        this.borderRadius = 35,
+        this.textSize = 18,
+        this.textColor = AppColors.lightGrey,
+        this.textPadding = const EdgeInsets.symmetric(vertical: 20.0),
+        this.margin = const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        required this.onClick});
 
   @override
   Widget build(BuildContext context) {

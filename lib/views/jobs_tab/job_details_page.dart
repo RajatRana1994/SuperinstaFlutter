@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instajobs/models/job_details_model.dart';
+import 'package:instajobs/views/jobs_tab/jobFlag_page.dart';
 import 'package:instajobs/views/jobs_tab/job_view_proposal.dart';
 import 'package:instajobs/views/jobs_tab/job_send_proposal.dart';
 import 'package:instajobs/utils/baseClass.dart';
@@ -27,6 +28,7 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
   void initState() {
     // TODO: implement initState
     super.initState();
+    jobTabController.getAppSetting();
     jobTabController.getJobDetailsApi(widget.jobId);
   }
 
@@ -73,321 +75,353 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
         builder: (snapshot) {
           return snapshot.jobDetailsModelData == null
               ? Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppColors.primaryColor,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                AppColors.primaryColor,
+              ),
+            ),
+          )
+              : SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  snapshot.jobDetailsModelData?.title ?? '',
+                  style: AppStyles.font700_16().copyWith(
+                    color: AppColors.labelColor,
                   ),
                 ),
-              )
-              : SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Column(
+                SizedBox(height: 4),
+                Text(
+                  getTimeAgoText(
+                    snapshot.jobDetailsModelData?.created ?? 0,
+                  ),
+                  style: AppStyles.font500_14().copyWith(
+                    color: AppColors.labelLightColor.withOpacity(0.6),
+                  ),
+                ),
+                SizedBox(height: 9),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_pin,
+                      color: AppColors.labelLightColor.withOpacity(0.6),
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      (snapshot.jobDetailsModelData?.isAnyWhere == 1)
+                          ? 'Anywhere'
+                          : [
+                        snapshot.jobDetailsModelData?.state,
+                        snapshot.jobDetailsModelData?.country,
+                      ]
+                          .where(
+                            (e) => e != null && e.trim().isNotEmpty,
+                      )
+                          .join(', '),
+                      style: AppStyles.font500_14().copyWith(
+                        color: AppColors.labelLightColor,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  snapshot.jobDetailsModelData?.descriptions ?? '',
+                  style: AppStyles.font500_14().copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      snapshot.jobDetailsModelData?.title ?? '',
-                      style: AppStyles.font700_16().copyWith(
-                        color: AppColors.labelColor,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      getTimeAgoText(
-                        snapshot.jobDetailsModelData?.created ?? 0,
-                      ),
-                      style: AppStyles.font500_14().copyWith(
-                        color: AppColors.labelLightColor.withOpacity(0.6),
-                      ),
-                    ),
-                    SizedBox(height: 9),
-                    Row(
+                    Icon(Icons.location_history, color: AppColors.orange),
+                    SizedBox(width: 11),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.location_pin,
-                          color: AppColors.labelLightColor.withOpacity(0.6),
-                        ),
-                        SizedBox(width: 6),
                         Text(
-                          (snapshot.jobDetailsModelData?.isAnyWhere == 1)
-                              ? 'Anywhere'
-                              : [
-                                    snapshot.jobDetailsModelData?.state,
-                                    snapshot.jobDetailsModelData?.country,
-                                  ]
-                                  .where(
-                                    (e) => e != null && e.trim().isNotEmpty,
-                                  )
-                                  .join(', '),
+                          snapshot.jobDetailsModelData?.experience ?? '',
                           style: AppStyles.font500_14().copyWith(
-                            color: AppColors.labelLightColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      snapshot.jobDetailsModelData?.descriptions ?? '',
-                      style: AppStyles.font500_14().copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.location_history, color: AppColors.orange),
-                        SizedBox(width: 11),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              snapshot.jobDetailsModelData?.experience ?? '',
-                              style: AppStyles.font500_14().copyWith(
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(height: 0),
-                            Text(
-                              'Experience Level',
-                              style: AppStyles.font500_12().copyWith(
-                                color: Colors.black.withOpacity(0.6),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GetCurrencyWidget(radius: 12, fontSize: 14),
-                        SizedBox(width: 11),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              snapshot.jobDetailsModelData?.totalBudgets
-                                      .toString() ??
-                                  '',
-                              style: AppStyles.font500_14().copyWith(
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(height: 0),
-                            Text(
-                              'Budget',
-                              style: AppStyles.font500_12().copyWith(
-                                color: Colors.black.withOpacity(0.6),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24),
-                    Divider(
-                      color: Color(
-                        0xFFECECEC,
-                      ), // Space above and below the divider
-                      thickness: 4, // Actual thickness of the line
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Skills & Expertise',
-                      style: AppStyles.font700_16().copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 14),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children:
-                          snapshot.skillsList.map((skill) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                                color: Color(0xFFEAEAEA),
-                              ),
-                              child: Text(
-                                skill,
-                                style: AppStyles.font600_12().copyWith(
-                                  color: Color(0xFF717171),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                    ),
-
-                    SizedBox(height: 24),
-                    Divider(
-                      color: Color(
-                        0xFFECECEC,
-                      ), // Space above and below the divider
-                      thickness: 4, // Actual thickness of the line
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text(
-                          (StorageService().getUserData().userId ==
-                                  snapshot.jobDetailsModelData?.userId
-                                      .toString())
-                              ? 'Proposals'
-                              : 'About Client',
-                          style: AppStyles.font700_16().copyWith(
                             color: Colors.black,
                           ),
                         ),
-                        if (StorageService().getUserData().userId !=
-                            snapshot.jobDetailsModelData?.userId
-                                .toString()) ...[
-                          Spacer(),
-                          Row(
-                            children: [
-                              Icon(Icons.flag, color: AppColors.orange),
-                              Text(
-                                'Flag an inappropriate client',
-                                style: AppStyles.font500_14().copyWith(
-                                  color: AppColors.orange,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
-                    ),
-                    SizedBox(height: 10),
-
-                    (StorageService().getUserData().userId !=
-                            snapshot.jobDetailsModelData?.userId.toString())
-                        ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                (snapshot.jobDetailsModelData?.users?.profile ==
-                                            null ||
-                                        (snapshot
-                                                .jobDetailsModelData
-                                                ?.users
-                                                ?.profile
-                                                ?.isEmpty ??
-                                            true))
-                                    ? SizedBox()
-                                    : ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
-                                      child: Image(
-                                        image: NetworkImage(
-                                          snapshot
-                                                  .jobDetailsModelData
-                                                  ?.users
-                                                  ?.profile ??
-                                              '',
-                                        ),
-                                        fit: BoxFit.cover,
-                                        height: 48,
-                                        width: 48,
-                                      ),
-                                    ),
-                                SizedBox(width: 14),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot
-                                              .jobDetailsModelData
-                                              ?.users
-                                              ?.name ??
-                                          '',
-                                      style: AppStyles.font600_14().copyWith(
-                                        color: Color(0xFF2D2B2B),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              snapshot.jobDetailsModelData?.users?.country ??
-                                  '',
-                              style: AppStyles.font500_14().copyWith(
-                                color: AppColors.black,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              '${snapshot.jobDetailsModelData?.users?.totalJobPosted.toString() ?? ''} Jobs Posted',
-                              style: AppStyles.font500_14().copyWith(
-                                color: AppColors.black,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              children: [
-                                GetCurrencyWidget(radius: 12, fontSize: 14),
-                                SizedBox(width: 4),
-                                Text(
-                                  '${snapshot.jobDetailsModelData?.users?.totalAmountSpend.toString() ?? ''} total Spent',
-                                  style: AppStyles.font500_14().copyWith(
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              snapshot.jobDetailsModelData?.categories?.name
-                                      ?.toString() ??
-                                  '',
-                              style: AppStyles.font500_14().copyWith(
-                                color: AppColors.black,
-                              ),
-                            ),
-                            (snapshot.jobDetailsModelData?.isSendProposals == 0)
-                                ? Column(
-                                  children: [
-                                    SizedBox(height: 24),
-                                    RoundedEdgedButton(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15,
-                                      buttonText: 'Send Proposal',
-                                      onButtonClick: () async {
-                                        pushToNextScreen(
-                                          context: context,
-                                          destination: SendProposal(proposal: snapshot.jobDetailsModelData!),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                )
-                                : SizedBox(height: 24),
-                          ],
-                        )
-                        : Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0),
-                          child: buildJobProposalList(
-                            snapshot.jobDetailsModelData?.jobProposals ?? [],
+                        SizedBox(height: 0),
+                        Text(
+                          'Experience Level',
+                          style: AppStyles.font500_12().copyWith(
+                            color: Colors.black.withOpacity(0.6),
                           ),
                         ),
+                      ],
+                    ),
                   ],
                 ),
-              );
+                SizedBox(height: 16),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GetCurrencyWidget(radius: 12, fontSize: 14),
+                    SizedBox(width: 11),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          snapshot.jobDetailsModelData?.totalBudgets
+                              .toString() ??
+                              '',
+                          style: AppStyles.font500_14().copyWith(
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 0),
+                        Text(
+                          'Budget',
+                          style: AppStyles.font500_12().copyWith(
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24),
+                Divider(
+                  color: Color(
+                    0xFFECECEC,
+                  ), // Space above and below the divider
+                  thickness: 4, // Actual thickness of the line
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Skills & Expertise',
+                  style: AppStyles.font700_16().copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 14),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children:
+                  snapshot.skillsList.map((skill) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        color: Color(0xFFEAEAEA),
+                      ),
+                      child: Text(
+                        skill,
+                        style: AppStyles.font600_12().copyWith(
+                          color: Color(0xFF717171),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+
+                SizedBox(height: 24),
+                Divider(
+                  color: Color(
+                    0xFFECECEC,
+                  ), // Space above and below the divider
+                  thickness: 4, // Actual thickness of the line
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Text(
+                      (StorageService().getUserData().userId ==
+                          snapshot.jobDetailsModelData?.userId
+                              .toString())
+                          ? 'Proposals'
+                          : 'About Client',
+                      style: AppStyles.font700_16().copyWith(
+                        color: Colors.black,
+                      ),
+                    ),
+                    if (StorageService().getUserData().userId !=
+                        snapshot.jobDetailsModelData?.userId
+                            .toString()) ...[
+                      Spacer(),
+                      InkWell(
+                        onTap: () {
+
+                          Get.bottomSheet(
+                            JobflagPage(proposal: snapshot.jobDetailsModelData!),
+                            isScrollControlled:
+                            true, // optional, useful for keyboard/form inputs
+                          );
+                          // Handle click here
+
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.flag, color: AppColors.orange),
+                            Text(
+                              'Flag an inappropriate client',
+                              style: AppStyles.font500_14().copyWith(
+                                color: AppColors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ],
+                ),
+                SizedBox(height: 10),
+
+                (StorageService().getUserData().userId !=
+                    snapshot.jobDetailsModelData?.userId.toString())
+                    ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        (snapshot.jobDetailsModelData?.users?.profile ==
+                            null ||
+                            (snapshot
+                                .jobDetailsModelData
+                                ?.users
+                                ?.profile
+                                ?.isEmpty ??
+                                true))
+                            ? SizedBox()
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: Image(
+                            image: NetworkImage(
+                              snapshot
+                                  .jobDetailsModelData
+                                  ?.users
+                                  ?.profile ??
+                                  '',
+                            ),
+                            fit: BoxFit.cover,
+                            height: 48,
+                            width: 48,
+                          ),
+                        ),
+                        SizedBox(width: 14),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              snapshot
+                                  .jobDetailsModelData
+                                  ?.users
+                                  ?.name ??
+                                  '',
+                              style: AppStyles.font600_14().copyWith(
+                                color: Color(0xFF2D2B2B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      snapshot.jobDetailsModelData?.users?.country ??
+                          '',
+                      style: AppStyles.font500_14().copyWith(
+                        color: AppColors.black,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '${snapshot.jobDetailsModelData?.users?.totalJobPosted.toString() ?? ''} Jobs Posted',
+                      style: AppStyles.font500_14().copyWith(
+                        color: AppColors.black,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        GetCurrencyWidget(radius: 12, fontSize: 14),
+                        SizedBox(width: 4),
+                        Text(
+                          '${snapshot.jobDetailsModelData?.users?.totalAmountSpend.toString() ?? ''} total Spent',
+                          style: AppStyles.font500_14().copyWith(
+                            color: AppColors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      snapshot.jobDetailsModelData?.categories?.name
+                          ?.toString() ??
+                          '',
+                      style: AppStyles.font500_14().copyWith(
+                        color: AppColors.black,
+                      ),
+                    ),
+                    (snapshot.jobDetailsModelData?.isSendProposals == 0)
+                        ? Column(
+                      children: [
+                        SizedBox(height: 24),
+                        RoundedEdgedButton(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          buttonText: 'Send Proposal',
+                          onButtonClick: () async {
+                            pushToNextScreen(
+                              context: context,
+                              destination: SendProposal(proposal: snapshot.jobDetailsModelData!),
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                        : SizedBox(height: 24),
+                  ],
+                )
+                    : Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0),
+                  child: Column(
+                    children: [
+                      buildJobProposalList(
+                        snapshot.jobDetailsModelData?.jobProposals ?? [],
+                      ),
+                      SizedBox(height: 20,),
+                      RoundedEdgedButton(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        buttonText: ((snapshot.jobDetailsModelData?.isBoosted ?? 0) == 0) ? 'Make Urgent ${snapshot.boostJobSetting?.value ?? ''}' : 'Boosted',
+                        onButtonClick: () async {
+                          if ((snapshot.jobDetailsModelData?.isBoosted ?? 0) == 0) {
+                            int jobId = snapshot.jobDetailsModelData?.id ?? 0;
+                            jobTabController.boostMyJob(jobId.toString(), snapshot.boostJobSetting?.value ?? '');
+                          } else {
+                            showError(title: 'Boost', message: 'Already Boosted');
+                          }
+
+
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
   }
 
   Widget buildJobProposalList(
-    List<JobDetailsModelDataJobProposals?> proposals,
-  ) {
+      List<JobDetailsModelDataJobProposals?> proposals,
+      ) {
     if (proposals.isEmpty) {
       return const Text('No proposals found.');
     }
@@ -425,14 +459,14 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
                   ((images.isEmpty ?? true))
                       ? SizedBox()
                       : ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
-                        child: Image(
-                          image: NetworkImage(images),
-                          fit: BoxFit.cover,
-                          height: 48,
-                          width: 48,
-                        ),
-                      ),
+                    borderRadius: BorderRadius.circular(40),
+                    child: Image(
+                      image: NetworkImage(images),
+                      fit: BoxFit.cover,
+                      height: 48,
+                      width: 48,
+                    ),
+                  ),
                   SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -482,12 +516,12 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
                             context: context,
                             builder:
                                 (context) => buildJobProposalDialog(
-                                  context,
-                                  'Accept',
-                                  userId,
-                                  proposalAmount,
-                                  idProposal,
-                                ),
+                              context,
+                              'Accept',
+                              userId,
+                              proposalAmount,
+                              idProposal,
+                            ),
                           );
                           // Handle button click
                         },
@@ -506,12 +540,12 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
                             context: context,
                             builder:
                                 (context) => buildJobProposalDialog(
-                                  context,
-                                  'Reject',
-                                  userId,
-                                  proposalAmount,
-                                  idProposal,
-                                ),
+                              context,
+                              'Reject',
+                              userId,
+                              proposalAmount,
+                              idProposal,
+                            ),
                           );
                           // Handle button click
                         },
@@ -542,12 +576,12 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
   }
 
   Widget buildJobProposalDialog(
-    BuildContext context,
-    String type,
-    String assignUserid,
-    String amount,
-    String proposalId,
-  ) {
+      BuildContext context,
+      String type,
+      String assignUserid,
+      String amount,
+      String proposalId,
+      ) {
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -586,7 +620,7 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
                           assignUserid,
                           amount,
                           proposalId,
-                          () {
+                              () {
                             jobTabController.getJobDetailsApi(widget.jobId);
                             Navigator.of(context).pop();
                           },

@@ -54,7 +54,7 @@ class LoginController extends GetxController with BaseClass{
         userDataModel.userId = loginModelData?.id.toString() ?? '';
         userDataModel.isLoggedIn = true;
         userDataModel.userType =
-            loginModelData?.userTypes == 0 ? 'customer' : 'freelancer';
+        loginModelData?.userTypes == 0 ? 'customer' : 'freelancer';
         userDataModel.isCustomer =
         loginModelData?.userTypes == 0 ? true : false;
         await StorageService().saveData(

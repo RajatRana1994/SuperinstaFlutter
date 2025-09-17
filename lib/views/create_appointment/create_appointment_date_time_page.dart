@@ -30,6 +30,11 @@ class _CreateAppointmentDateTimePageState
 
   @override
   Widget build(BuildContext context) {
+    final categories = widget.vendorDetailsModel?.userInfo?.category;
+    final firstCategory = (categories != null && categories.isNotEmpty) ? categories[0] : null;
+
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -59,14 +64,13 @@ class _CreateAppointmentDateTimePageState
                     height: 140,
                     child: ListView.builder(
                       itemCount:
-                          widget.vendorDetailsModel?.userInfo?.category
-                              ?.elementAt(0)
-                              ?.subCategory
-                              ?.length ??
-                          0,
+                      (firstCategory?.subCategory?.length) ?? 0,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
                         final isSelected = selectedIndices.contains(index);
+
+                        final subCategories = firstCategory?.subCategory;
+                        final subCategoryItem = (subCategories != null && subCategories.length > index) ? subCategories[index] : null;
 
                         return GestureDetector(
                           onTap: () {
@@ -103,9 +107,9 @@ class _CreateAppointmentDateTimePageState
                                           ? Icons.check_box
                                           : Icons.check_box_outline_blank,
                                       color:
-                                          isSelected
-                                              ? Colors.orange
-                                              : Colors.orange,
+                                      isSelected
+                                          ? Colors.orange
+                                          : Colors.orange,
                                       size: 20,
                                     ),
                                   ),
@@ -117,11 +121,11 @@ class _CreateAppointmentDateTimePageState
                                   child: Image(
                                     image: NetworkImage(
                                       widget
-                                              .vendorDetailsModel
-                                              ?.userInfo
-                                              ?.category
-                                              ?.elementAt(0)
-                                              ?.categoryImage ??
+                                          .vendorDetailsModel
+                                          ?.userInfo
+                                          ?.category
+                                          ?.elementAt(0)
+                                          ?.categoryImage ??
                                           '',
                                     ),
                                     height: 80,
@@ -131,10 +135,10 @@ class _CreateAppointmentDateTimePageState
                                 SizedBox(height: 16),
                                 Text(
                                   widget.vendorDetailsModel?.userInfo?.category
-                                          ?.elementAt(0)
-                                          ?.subCategory
-                                          ?.elementAt(index)
-                                          ?.name ??
+                                      ?.elementAt(0)
+                                      ?.subCategory
+                                      ?.elementAt(index)
+                                      ?.name ??
                                       '',
                                   textAlign: TextAlign.center,
                                   maxLines: 2,
@@ -165,7 +169,7 @@ class _CreateAppointmentDateTimePageState
                   SizedBox(height: 8),
                   HorizontalCalendar(
                     workingHours:
-                        widget.vendorDetailsModel?.userInfo?.workingHours,
+                    widget.vendorDetailsModel?.userInfo?.workingHours,
                     onDateSelected: (selectedDate) {
                       userSelectedDate = selectedDate.toIso8601String();
                       print('User selected: $selectedDate');
@@ -180,7 +184,7 @@ class _CreateAppointmentDateTimePageState
                   SizedBox(height: 8),
                   TimeSlotSelector(
                     workingHours:
-                        widget.vendorDetailsModel?.userInfo?.workingHours,
+                    widget.vendorDetailsModel?.userInfo?.workingHours,
                     onSlotSelected: (selectedSlot) {
                       userSelectedSlot = selectedSlot;
                       print('User selected slot: $selectedSlot');
@@ -255,7 +259,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
     final lastDay = DateTime(now.year, now.month + 1, 0);
     return List.generate(
       lastDay.day - now.day + 1,
-      (i) => DateTime(now.year, now.month, now.day + i),
+          (i) => DateTime(now.year, now.month, now.day + i),
     );
   }
 
@@ -293,24 +297,24 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
           final bgColor = isSelected ? Colors.orange : Colors.white;
 
           final textColor =
-              isSelected
-                  ? Colors.white
-                  : unavailable
-                  ? Colors.red
-                  : Colors.black;
+          isSelected
+              ? Colors.white
+              : unavailable
+              ? Colors.red
+              : Colors.black;
 
           return GestureDetector(
             onTap:
-                unavailable
-                    ? null
-                    : () {
-                      setState(() {
-                        selectedDate = date;
-                      });
-                      if (widget.onDateSelected != null) {
-                        widget.onDateSelected!(date); // <-- trigger callback
-                      }
-                    },
+            unavailable
+                ? null
+                : () {
+              setState(() {
+                selectedDate = date;
+              });
+              if (widget.onDateSelected != null) {
+                widget.onDateSelected!(date); // <-- trigger callback
+              }
+            },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
               padding: const EdgeInsets.all(10),

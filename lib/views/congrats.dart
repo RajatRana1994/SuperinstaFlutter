@@ -24,7 +24,7 @@ class Congrats extends StatelessWidget with BaseClass{
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-               // Image(image: AssetImage('assets/images/user.png'),height: 120,width: 120,),
+                // Image(image: AssetImage('assets/images/user.png'),height: 120,width: 120,),
                 SizedBox(height: 20,),
                 Text(
                   'Congratulations!',

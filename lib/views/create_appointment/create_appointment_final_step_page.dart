@@ -180,14 +180,14 @@ class _CreateAppointmentFinalStepPageState
                         List<int> subCategoryIds = [];
 
                         for (
-                          int i = 0;
-                          i <
-                              (widget.vendorDetails?.userInfo?.category
-                                      ?.elementAt(0)
-                                      ?.subCategory
-                                      ?.length ??
-                                  0);
-                          i++
+                        int i = 0;
+                        i <
+                            (widget.vendorDetails?.userInfo?.category
+                                ?.elementAt(0)
+                                ?.subCategory
+                                ?.length ??
+                                0);
+                        i++
                         ) {
                           if (widget.selectedIndices.contains(i)) {
                             final id =
@@ -219,8 +219,8 @@ class _CreateAppointmentFinalStepPageState
                             'longitude': '76.8441849',
                             "postalCode": widget.postalCode,
                             "price": selectedOption=='option1'?
-                                widget.vendorDetails?.userInfo?.hourlyPrice :
-                                widget.vendorDetails?.userInfo?.dailyPrice,
+                            widget.vendorDetails?.userInfo?.hourlyPrice :
+                            widget.vendorDetails?.userInfo?.dailyPrice,
                             "notes": widget.notes,
                             "subCategoryIds": subCategoryIds.join(','),
                           },

@@ -33,7 +33,7 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
   final List<int> _numbers = List.generate(90, (i) => i + 1);
   int? _selectedNumber;
   List<Map<String, dynamic>> addOnList = [];
- // Map<String, dynamic> addOnList = {};
+  // Map<String, dynamic> addOnList = {};
   final ImagePicker _picker = ImagePicker();
   final List<File> _pickedImages = [];
   final Map<String, String> headers = {
@@ -70,12 +70,12 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
       final formData = diox.FormData.fromMap({
         ...queryParams,
         'image':
-            _pickedImages.map((file) {
-              return diox.MultipartFile.fromFileSync(
-                file.path,
-                filename: file.path.split('/').last,
-              );
-            }).toList(),
+        _pickedImages.map((file) {
+          return diox.MultipartFile.fromFileSync(
+            file.path,
+            filename: file.path.split('/').last,
+          );
+        }).toList(),
       });
 
       final response = await dio.post(
@@ -447,7 +447,7 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
                           return item.map((key, value) => MapEntry(key.toString(), value.toString()));
                         }).toList());
 
-                       // queryParams.putIfAbsent('adOn', () => addOnList);
+                        // queryParams.putIfAbsent('adOn', () => addOnList);
                       }
                       print(queryParams);
                       await _uploadImages();

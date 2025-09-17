@@ -137,7 +137,7 @@ class FreelancerSignUp extends GetxController {
         userDataModel.userEmail = response.data?.data?.email ?? '';
         userDataModel.fullName =  response.data?.data?.name ?? '';
         userDataModel.userType =
-            response.data?.data?.userTypes == 0 ? 'customer' : 'freelancer';
+        response.data?.data?.userTypes == 0 ? 'customer' : 'freelancer';
         userDataModel.isCustomer =
         response.data?.data?.userTypes == 0 ? true : false;
         await StorageService().saveData(

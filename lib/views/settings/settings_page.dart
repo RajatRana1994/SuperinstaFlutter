@@ -81,24 +81,24 @@ class _SettingsPageState extends State<SettingsPage> with BaseClass {
                         context: context,
                         builder:
                             (context) => AlertDialog(
-                              title: Text('Logout'),
-                              content: Text('Are you sure you want to logout?'),
-                              actions: [
-                                TextButton(
-                                  onPressed:
-                                      () => Navigator.of(context).pop(false),
-                                  child: Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed:
-                                      () => Navigator.of(context).pop(true),
-                                  child: Text(
-                                    'Logout',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ],
+                          title: Text('Logout'),
+                          content: Text('Are you sure you want to logout?'),
+                          actions: [
+                            TextButton(
+                              onPressed:
+                                  () => Navigator.of(context).pop(false),
+                              child: Text('Cancel'),
                             ),
+                            TextButton(
+                              onPressed:
+                                  () => Navigator.of(context).pop(true),
+                              child: Text(
+                                'Logout',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
 
                       if (shouldLogout == true) {

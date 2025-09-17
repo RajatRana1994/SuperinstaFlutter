@@ -92,38 +92,38 @@ class _AddPortfolioPageState extends State<AddPortfolioPage> with BaseClass {
                 );
               },
               child:
-                  _image == null
-                      ? widget.isEditPortfolio
-                          ? Image.network(
-                            widget.portfolioModelDataData?.image ?? '',
-                            height: 150,
-                            width: 150,
-                            // fit: BoxFit.cover,
-                            // ⬇️ show a local fallback if the network image can’t load
-                            errorBuilder:
-                                (context, error, stackTrace) => Image.asset(
-                                  'assets/images/icon.png',
-                                  height: 150,
-                                  width: 150,
-                                  // put the asset in pubspec.yaml
-                                  fit: BoxFit.cover,
-                                ),
-                          )
-                          : Image(
-                            image: AssetImage(AppImages.chooseImage),
+              _image == null
+                  ? widget.isEditPortfolio
+                  ? Image.network(
+                widget.portfolioModelDataData?.image ?? '',
+                height: 150,
+                width: 150,
+                // fit: BoxFit.cover,
+                // ⬇️ show a local fallback if the network image can’t load
+                errorBuilder:
+                    (context, error, stackTrace) => Image.asset(
+                  'assets/images/icon.png',
+                  height: 150,
+                  width: 150,
+                  // put the asset in pubspec.yaml
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : Image(
+                image: AssetImage(AppImages.chooseImage),
 
-                            height: 150,
-                            width: 150,
-                          )
-                      : ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image(
-                          image: FileImage(_image!),
-                          fit: BoxFit.cover,
-                          height: 150,
-                          width: 150,
-                        ),
-                      ),
+                height: 150,
+                width: 150,
+              )
+                  : ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image(
+                  image: FileImage(_image!),
+                  fit: BoxFit.cover,
+                  height: 150,
+                  width: 150,
+                ),
+              ),
             ),
             SizedBox(height: 28),
             FormInputWithHint(
@@ -165,11 +165,11 @@ class _AddPortfolioPageState extends State<AddPortfolioPage> with BaseClass {
                     } else {
                       if(widget.isEditPortfolio){
                         await controller.uploadImageHttp(
-                          imageFile: _image!,
-                          title:title,
-                          description:description,
-                          isEditPortfolio: true,
-                          itemId: widget.portfolioModelDataData?.id.toString()??''
+                            imageFile: _image!,
+                            title:title,
+                            description:description,
+                            isEditPortfolio: true,
+                            itemId: widget.portfolioModelDataData?.id.toString()??''
                         );
 
                       }

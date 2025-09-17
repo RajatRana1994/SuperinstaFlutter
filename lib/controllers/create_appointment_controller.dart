@@ -7,7 +7,7 @@ class CreateAppointmentController extends GetxController {
   final AppointmentRepository _appointmentRepository = AppointmentRepository();
 
   Future<void> createAppointment({required Map<String,dynamic> params}) async {
-print(jsonEncode(params));
+    print(jsonEncode(params));
     final response = await _appointmentRepository.createAppointment(params);
     if (response.isSuccess) {
 

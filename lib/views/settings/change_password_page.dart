@@ -53,9 +53,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                   });
                 },
                 child:
-                    isOldPassVisible
-                        ? Icon(Icons.visibility_off)
-                        : Icon(Icons.visibility),
+                isOldPassVisible
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility),
               ),
               controller: oldPassController,
               obscureText: isOldPassVisible,
@@ -71,9 +71,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                   });
                 },
                 child:
-                    isNewPassVisible
-                        ? Icon(Icons.visibility_off)
-                        : Icon(Icons.visibility),
+                isNewPassVisible
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility),
               ),
               hintText: 'Enter new password',
               obscureText: isNewPassVisible,
@@ -91,9 +91,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
                   });
                 },
                 child:
-                    isConfirmPassVisible
-                        ? Icon(Icons.visibility_off)
-                        : Icon(Icons.visibility),
+                isConfirmPassVisible
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility),
               ),
               obscureText: isConfirmPassVisible,
               controller: confirmPassController,

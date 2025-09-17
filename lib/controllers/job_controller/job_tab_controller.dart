@@ -15,15 +15,18 @@ import 'package:instajobs/utils/baseClass.dart';
 import '../../storage_services/local_stoage_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
+import 'package:instajobs/models/feed_tab_model.dart';
 
 class JobTabController extends GetxController with BaseClass {
   JobRepository jobRepository = JobRepository();
   List<JobsModelDataData?> jobsList = [];
- // List<JobsModelDataData?>? jobsList;
+  // List<JobsModelDataData?>? jobsList;
   List<OfferTabModelDataData?>? offersList;
   OfferDetailsModelData? offerDetailsModelData;
   JobDetailsModelData? jobDetailsModelData;
-
+  List<AppSettingBodyModel>? appSetting;
+  AppSettingBodyModel? boostFeedSetting;
+  AppSettingBodyModel? boostJobSetting;
   List<String> skillsList = [];
 
   int _currentPage = 1;
@@ -105,6 +108,27 @@ class JobTabController extends GetxController with BaseClass {
     }
   }
 
+  Future<void> favOffeerApi(String offerId, int index) async {
+    try {
+
+      final response = await jobRepository.offerFavApi(offerId);
+
+      if (response.isSuccess) {
+
+        final currentFav = offersList?[index]?.isFavOffer ?? 0;
+        offersList?[index]?.isFavOffer = currentFav == 1 ? 0 : 1;
+        update(); // Notify UI
+
+
+      } else {
+
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<void> getOffersDetailsApi(String offerId) async {
     try {
       offerDetailsModelData = null;
@@ -120,6 +144,34 @@ class JobTabController extends GetxController with BaseClass {
       throw e.toString();
     }
   }
+
+  Future<void> boostMyOffer(String id, String amount) async {
+    final response = await jobRepository.boostMyOffer(id, amount);
+    print("Raw wrapper message: ${response.message}");
+    print("Model message: ${response.data?.message}");
+    if (response.isSuccess) {
+      offerDetailsModelData?.isBoosted = 1;
+      showSuccess(title: 'Boost', message: response.data?.message ?? '');
+    } else {
+      showError(title: 'Boost', message: response.data?.message ?? '');
+    }
+    update();
+  }
+
+  Future<void> boostMyJob(String id, String amount) async {
+    final response = await jobRepository.boostMyJob(id, amount);
+    print("Raw wrapper message: ${response.message}");
+    print("Model message: ${response.data?.message}");
+    if (response.isSuccess) {
+      jobDetailsModelData?.isBoosted = 1;
+      showSuccess(title: 'Boost', message: response.data?.message ?? '');
+    } else {
+      showError(title: 'Boost', message: response.data?.message ?? '');
+    }
+    update();
+  }
+
+
 
   Future<void> getJobDetailsApi(String jobId) async {
     try {
@@ -141,6 +193,142 @@ class JobTabController extends GetxController with BaseClass {
     } catch (e) {
       throw e.toString();
     }
+  }
+
+
+  Future<void> rejectJobMilestone(String proposalId, String jobId) async {
+    try {
+
+      final response = await jobRepository.rejectJobMilestone(proposalId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+
+  Future<void> startJobMileStone(String proposalId, String jobId) async {
+    try {
+
+      final response = await jobRepository.startJobMilestone(proposalId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+
+
+  Future<void> acceptJobMilstone(String proposalId, String jobId) async {
+    try {
+
+      final response = await jobRepository.acceptJobMilestone(proposalId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> submitJobMilestone(String proposalId, String jobId) async {
+    try {
+
+      final response = await jobRepository.submitJobMilestone(proposalId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> submitJob(String jobId) async {
+    try {
+
+      final response = await jobRepository.submitJob(jobId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> rejectJob(String jobId) async {
+    try {
+
+      final response = await jobRepository.rejectJob(jobId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> acceptJob(String jobId) async {
+    try {
+
+      final response = await jobRepository.acceptJob(jobId);
+
+      if (response.isSuccess) {
+        getJobDetailsApi(jobId);
+      } else {
+        throw response.message.toString();
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> getAppSetting() async {
+    appSetting = null;
+    final response = await jobRepository.getAppSetting();
+    if (response.isSuccess) {
+      appSetting = response.data?.data ?? [];
+      boostFeedSetting = appSetting?.firstWhere(
+            (e) => e.name == "Boost offer",
+        orElse: () => AppSettingBodyModel(value: "0"),
+      );
+
+      boostJobSetting = appSetting?.firstWhere(
+            (e) => e.name == "Boost job",
+        orElse: () => AppSettingBodyModel(value: "0"),
+      );
+    } else {
+      appSetting = [];
+    }
+    update();
   }
 
   Future<void> acceptJobApi(
@@ -189,7 +377,7 @@ class JobTabController extends GetxController with BaseClass {
   }
 
   final ImagePicker _picker = ImagePicker();
-   List<File> pickedImages = [];
+  List<File> pickedImages = [];
   TextEditingController totalAmountController = TextEditingController();
   TextEditingController proposalDescription = TextEditingController();
 

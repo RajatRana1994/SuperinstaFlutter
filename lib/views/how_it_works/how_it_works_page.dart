@@ -22,8 +22,8 @@ class _HowItWorksPageState extends State<HowItWorksPage> with BaseClass{
       "image": "assets/images/screenone.jpeg",
       "title": "Welcome to SuperInstaJobs!",
       "text":
-          "*\"Your All-in-One Handyman Solution!\"*  \n\n"
-              "Find skilled professionals or post your own handyman jobs in seconds." +
+      "*\"Your All-in-One Handyman Solution!\"*  \n\n"
+          "Find skilled professionals or post your own handyman jobs in seconds." +
           " Whether it’s fixing a leak, assembling furniture, or renovating your space, " +
           "we’ve got you covered. Tap into a marketplace of trusted experts ready to help!\n\n" +
           "Get started today and make your to-do list disappear!",
@@ -32,7 +32,7 @@ class _HowItWorksPageState extends State<HowItWorksPage> with BaseClass{
       "image": "assets/images/screentwo.jpeg",
       "title": "Explore the Business Directory",
       "text":
-          "*\"Connect with Local Pros in Your Area!\"*  \n\n" +
+      "*\"Connect with Local Pros in Your Area!\"*  \n\n" +
           "Discover a curated directory of businesses and independent contractors near you. " +
           "From plumbers to electricians, painters to landscapers, find the perfect match for your project. " +
           "Read reviews, compare prices, and book directly through the app.\n\n" +
@@ -42,7 +42,7 @@ class _HowItWorksPageState extends State<HowItWorksPage> with BaseClass{
       "image": "assets/images/screenthree.jpeg",
       "title": "Stay Inspired with Our Feed",
       "text":
-          "*\"Get Inspired, Share Your Projects!\"*  \n\n" +
+      "*\"Get Inspired, Share Your Projects!\"*  \n\n" +
           "Scroll through our Instagram-style feed to see before-and-after transformations, " +
           "DIY tips, and success stories from our community. Share your own projects, connect with others," +
           " and get ideas for your next home improvement adventure.\n\n" +

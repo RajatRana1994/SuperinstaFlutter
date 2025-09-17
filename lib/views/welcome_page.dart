@@ -94,15 +94,15 @@ class WelcomePage extends StatelessWidget with BaseClass {
                                   loginController.updatePasswordVisibility();
                                 },
                                 child:
-                                    loginController.getPasswordStatus
-                                        ? const Icon(
-                                          Icons.visibility_off_outlined,
-                                          color: AppColors.primaryColor,
-                                        )
-                                        : const Icon(
-                                          Icons.visibility,
-                                          color: AppColors.primaryColor,
-                                        ),
+                                loginController.getPasswordStatus
+                                    ? const Icon(
+                                  Icons.visibility_off_outlined,
+                                  color: AppColors.primaryColor,
+                                )
+                                    : const Icon(
+                                  Icons.visibility,
+                                  color: AppColors.primaryColor,
+                                ),
                               ),
                               hintText: 'Enter Password',
                             ),

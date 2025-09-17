@@ -81,7 +81,7 @@ class _ForgotPaswordState extends State<ForgotPasword> with BaseClass {
       );
       Get.back();
       if (response.isSuccess) {
-        
+
       } else {
         throw response.message.toString();
       }
@@ -122,35 +122,35 @@ class _ForgotPaswordState extends State<ForgotPasword> with BaseClass {
 
               isVerified
                   ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Your account is verified Please enter new password to reset in given New Password field and save.',
-                        style: AppStyles.font500_16().copyWith(
-                          color: Colors.green,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      FormInputWithHint(
-                        label: 'New Password',
-                        hintText: 'Enter new password',
-                        obscureText: isPasswordShown,
-                        controller: passController,
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordShown = !isPasswordShown;
-                            });
-                          },
-                          child:
-                              isPasswordShown
-                                  ? Icon(Icons.visibility_off)
-                                  : Icon(Icons.visibility),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                    ],
-                  )
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Your account is verified Please enter new password to reset in given New Password field and save.',
+                    style: AppStyles.font500_16().copyWith(
+                      color: Colors.green,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  FormInputWithHint(
+                    label: 'New Password',
+                    hintText: 'Enter new password',
+                    obscureText: isPasswordShown,
+                    controller: passController,
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isPasswordShown = !isPasswordShown;
+                        });
+                      },
+                      child:
+                      isPasswordShown
+                          ? Icon(Icons.visibility_off)
+                          : Icon(Icons.visibility),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                ],
+              )
                   : SizedBox(),
               RoundedEdgedButton(
                 buttonText: isVerified ? 'Reset Password' : 'Send',
@@ -209,7 +209,7 @@ class _OTPBottomSheetContentState extends State<OTPBottomSheetContent>
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
   final List<TextEditingController> _controllers = List.generate(
     4,
-    (_) => TextEditingController(),
+        (_) => TextEditingController(),
   );
 
   @override

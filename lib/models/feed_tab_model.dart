@@ -143,44 +143,6 @@ class FeedTabModelDataDataFeedImages {
 }
 
 class FeedTabModelDataData {
-/*
-{
-  "id": 7,
-  "userId": 2,
-  "title": "Feed Data",
-  "description": "Test vdo file",
-  "isBoosted": 1,
-  "boostTime": 1744107705,
-  "created": 1742397267,
-  "modified": 1743502905,
-  "isSaveFeed": 0,
-  "totalCoins": "",
-  "totalComments": 0,
-  "totalLikes": 0,
-  "isLike": 0,
-  "feedImages": [
-    {
-      "id": 13,
-      "feedId": 7,
-      "images": "https://app.superinstajobs.com/uploads/1742397267083.3887.mp4",
-      "type": 0,
-      "video": "",
-      "created": 1742397267,
-      "modified": 1742397267
-    }
-  ],
-  "users": {
-    "id": 2,
-    "name": "Jyoti Builders",
-    "email": "jyoti@yopmail.com",
-    "phone": "7888644412",
-    "profile": "https://app.superinstajobs.com/uploads/1743437099493.0781.jpg",
-    "hourlyPrice": 10,
-    "dailyPrice": 100
-  }
-}
-*/
-
   int? id;
   int? userId;
   String? title;
@@ -196,6 +158,7 @@ class FeedTabModelDataData {
   int? isLike;
   List<FeedTabModelDataDataFeedImages?>? feedImages;
   FeedTabModelDataDataUsers? users;
+  List<FeedComment>? feedComments;
 
   FeedTabModelDataData({
     this.id,
@@ -213,6 +176,7 @@ class FeedTabModelDataData {
     this.isLike,
     this.feedImages,
     this.users,
+    this.feedComments,
   });
   FeedTabModelDataData.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toInt();
@@ -235,6 +199,15 @@ class FeedTabModelDataData {
         arr0.add(FeedTabModelDataDataFeedImages.fromJson(v));
       });
       feedImages = arr0;
+    }
+
+    if (json['feedComments'] != null) {
+      final v = json['feedComments'];
+      final arr0 = <FeedComment>[];
+      v.forEach((v) {
+        arr0.add(FeedComment.fromJson(v));
+      });
+      feedComments = arr0;
     }
     users = (json['users'] != null) ? FeedTabModelDataDataUsers.fromJson(json['users']) : null;
   }
@@ -261,6 +234,17 @@ class FeedTabModelDataData {
       });
       data['feedImages'] = arr0;
     }
+
+    if (feedComments != null) {
+      final v = feedComments;
+      final arr0 = [];
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
+      data['feedComments'] = arr0;
+    }
+
+
     if (users != null) {
       data['users'] = users!.toJson();
     }
@@ -353,59 +337,6 @@ class FeedTabModelData {
 }
 
 class FeedTabModel {
-/*
-{
-  "success": true,
-  "message": "Feed list",
-  "status": 200,
-  "data": {
-    "data": [
-      {
-        "id": 7,
-        "userId": 2,
-        "title": "Feed Data",
-        "description": "Test vdo file",
-        "isBoosted": 1,
-        "boostTime": 1744107705,
-        "created": 1742397267,
-        "modified": 1743502905,
-        "isSaveFeed": 0,
-        "totalCoins": "",
-        "totalComments": 0,
-        "totalLikes": 0,
-        "isLike": 0,
-        "feedImages": [
-          {
-            "id": 13,
-            "feedId": 7,
-            "images": "https://app.superinstajobs.com/uploads/1742397267083.3887.mp4",
-            "type": 0,
-            "video": "",
-            "created": 1742397267,
-            "modified": 1742397267
-          }
-        ],
-        "users": {
-          "id": 2,
-          "name": "Jyoti Builders",
-          "email": "jyoti@yopmail.com",
-          "phone": "7888644412",
-          "profile": "https://app.superinstajobs.com/uploads/1743437099493.0781.jpg",
-          "hourlyPrice": 10,
-          "dailyPrice": 100
-        }
-      }
-    ],
-    "pagination": {
-      "currentPage": 1,
-      "totalPage": 1,
-      "totalRecord": 6,
-      "limit": 20
-    }
-  }
-}
-*/
-
   bool? success;
   String? message;
   int? status;
@@ -419,9 +350,48 @@ class FeedTabModel {
   });
   FeedTabModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
+
     message = json['message']?.toString();
     status = json['status']?.toInt();
-    data = (json['data'] != null) ? FeedTabModelData.fromJson(json['data']) : null;
+    if (json['data'] is Map<String, dynamic>) {
+      data = FeedTabModelData.fromJson(json['data']);
+    } else {
+      data = null; // ignore if it's int or null
+    }
+
+  }
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['success'] = success;
+    map['message'] = message;
+    map['status'] = status;
+    if (data != null) {
+      map['data'] = data!.toJson();
+    }
+    return map;
+  }
+}
+
+
+
+class FeedTabFavModel {
+  bool? success;
+  String? message;
+  int? status;
+  FeedTabModelFavData? data;
+
+  FeedTabFavModel({
+    this.success,
+    this.message,
+    this.status,
+    this.data,
+  });
+  FeedTabFavModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    message = json['message']?.toString();
+    status = json['status']?.toInt();
+
+    data = (json['data'] != null) ? FeedTabModelFavData.fromJson(json['data']) : null;
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -431,6 +401,257 @@ class FeedTabModel {
     if (data != null) {
       data['data'] = this.data!.toJson();
     }
+    return data;
+  }
+}
+
+
+class FeedTabModelFavData {
+
+
+  List<FeedTabModelFavFeedData?>? data;
+  FeedTabModelDataPagination? pagination;
+
+  FeedTabModelFavData({
+    this.data,
+    this.pagination,
+  });
+  FeedTabModelFavData.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      final v = json['data'];
+      final arr0 = <FeedTabModelFavFeedData>[];
+      v.forEach((v) {
+        arr0.add(FeedTabModelFavFeedData.fromJson(v));
+      });
+      this.data = arr0;
+    }
+    pagination = (json['pagination'] != null) ? FeedTabModelDataPagination.fromJson(json['pagination']) : null;
+  }
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (this.data != null) {
+      final v = this.data;
+      final arr0 = [];
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
+      data['data'] = arr0;
+    }
+    if (pagination != null) {
+      data['pagination'] = pagination!.toJson();
+    }
+    return data;
+  }
+}
+
+
+class FeedTabModelFavFeedData {
+
+
+  FeedTabModelDataData? feeds;
+
+  FeedTabModelFavFeedData({
+    this.feeds,
+  });
+  FeedTabModelFavFeedData.fromJson(Map<String, dynamic> json) {
+    feeds = (json['feeds'] != null) ? FeedTabModelDataData.fromJson(json['feeds']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (data != null) {
+      data['feeds'] = this.feeds!.toJson();
+    }
+
+    return data;
+  }
+}
+
+
+class AppSettingModel {
+  bool? success;
+  int? status;
+  List<AppSettingBodyModel>? data;
+
+  AppSettingModel({
+    this.success,
+    this.status,
+    this.data,
+  });
+  AppSettingModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    status = json['status']?.toInt();
+    data = (json['data'] as List<dynamic>?)
+        ?.map((e) => AppSettingBodyModel.fromJson(e))
+        .toList();
+  }
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['success'] = success;
+    data['status'] = status;
+    if (this.data != null) {
+      data['data'] = this.data!.map((e) => e.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class AppSettingBodyModel {
+  int? id;
+  String? name;
+  String? value;
+
+  AppSettingBodyModel({
+    this.id,
+    this.name,
+    this.value,
+  });
+  AppSettingBodyModel.fromJson(Map<String, dynamic> json) {
+    id = json['id']?.toInt();
+    name = json['name']?.toString();
+    value = json['value']?.toString();
+  }
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['value'] = value;
+    return data;
+  }
+}
+
+
+class FeedDetailModel {
+  bool? success;
+  String? message;
+  int? status;
+  FeedTabModelDataData? data;
+
+  FeedDetailModel({
+    this.success,
+    this.message,
+    this.status,
+    this.data,
+  });
+  FeedDetailModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+
+    message = json['message']?.toString();
+    status = json['status']?.toInt();
+    if (json['data'] is Map<String, dynamic>) {
+      data = FeedTabModelDataData.fromJson(json['data']);
+    } else {
+      data = null; // ignore if it's int or null
+    }
+
+  }
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['success'] = success;
+    map['message'] = message;
+    map['status'] = status;
+    if (data != null) {
+      map['data'] = data!.toJson();
+    }
+    return map;
+  }
+}
+
+
+class FeedComment {
+  int? id;
+  int? userId;
+  int? feedId;
+  String? comment;
+  int? created;
+  int? modified;
+  int? totalLikes;
+  int? isCommentLike;
+  User? user;
+
+  FeedComment({
+    this.id,
+    this.userId,
+    this.feedId,
+    this.comment,
+    this.created,
+    this.modified,
+    this.totalLikes,
+    this.isCommentLike,
+    this.user,
+  });
+
+  factory FeedComment.fromJson(Map<String, dynamic> json) {
+    return FeedComment(
+      id: json['id'],
+      userId: json['userId'],
+      feedId: json['feedId'],
+      comment: json['comment'],
+      created: json['created'],
+      modified: json['modified'],
+      totalLikes: json['totalLikes'],
+      isCommentLike: json['isCommentLike'],
+      user: json['users'] != null ? User.fromJson(json['users']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['userId'] = userId;
+    data['feedId'] = feedId;
+    data['comment'] = comment;
+    data['created'] = created;
+    data['modified'] = modified;
+    data['totalLikes'] = totalLikes;
+    data['isCommentLike'] = isCommentLike;
+    if (user != null) {
+      data['users'] = user!.toJson();
+    }
+    return data;
+  }
+}
+
+class User {
+  int? id;
+  String? name;
+  String? email;
+  String? phone;
+  String? profile;
+  int? hourlyPrice;
+  int? dailyPrice;
+
+  User({
+    this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.profile,
+    this.hourlyPrice,
+    this.dailyPrice,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'],
+      profile: json['profile'],
+      hourlyPrice: json['hourlyPrice'],
+      dailyPrice: json['dailyPrice'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['phone'] = phone;
+    data['profile'] = profile;
+    data['hourlyPrice'] = hourlyPrice;
+    data['dailyPrice'] = dailyPrice;
     return data;
   }
 }

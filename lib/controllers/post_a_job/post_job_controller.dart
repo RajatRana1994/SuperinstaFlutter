@@ -151,7 +151,7 @@ class PostJobController extends GetxController with BaseClass {
     } else {
       showError(title: 'Not Posted', message: 'Job is Not posted');
     }
-    
+
     update();
   }
 
@@ -217,12 +217,12 @@ class PostJobController extends GetxController with BaseClass {
       final formData = diox.FormData.fromMap({
         ...queryParams,
         'attachments':
-            pickedImages.map((file) {
-              return diox.MultipartFile.fromFileSync(
-                file.path,
-                filename: file.path.split('/').last,
-              );
-            }).toList(),
+        pickedImages.map((file) {
+          return diox.MultipartFile.fromFileSync(
+            file.path,
+            filename: file.path.split('/').last,
+          );
+        }).toList(),
       });
 
       final response = await dio.post(

@@ -72,17 +72,17 @@ mixin BaseClass {
         pageBuilder: (context, animation, secondaryAnimation) => destination,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             ScaleTransition(
-          scale: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(
-            CurvedAnimation(
-              parent: animation,
-              curve: Curves.fastOutSlowIn,
+              scale: Tween<double>(
+                begin: 0.0,
+                end: 1.0,
+              ).animate(
+                CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.fastOutSlowIn,
+                ),
+              ),
+              child: child,
             ),
-          ),
-          child: child,
-        ),
         /*transitionDuration: Duration(milliseconds: 2000),*/
       ),
     );
@@ -90,8 +90,8 @@ mixin BaseClass {
 
   void pushToNextScreenWithFadeAnimation(
       {required BuildContext context,
-      required Widget destination,
-      int duration = 500}) {
+        required Widget destination,
+        int duration = 500}) {
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -107,13 +107,13 @@ mixin BaseClass {
       {required BuildContext context, required Widget destination}) {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => destination),
-        (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false);
   }
 
   void fieldFocusChange(
       {required BuildContext context,
-      required FocusNode currentFocus,
-      required FocusNode nextFocus}) {
+        required FocusNode currentFocus,
+        required FocusNode nextFocus}) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }

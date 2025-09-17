@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:instajobs/models/customer_home_model/customer_home_model.dart';
 import 'package:instajobs/models/feed_model.dart';
 import 'package:instajobs/models/offers_model.dart';
@@ -13,15 +14,22 @@ import '../models/categoris.dart';
 import '../models/subCategory_model.dart';
 
 class HomeTabController extends GetxController with BaseClass {
+
   CustomerHomeModelData? customerHomeModel;
   List<PopularServiceDetailsMoelDataData?>? popularServiceDetailsModel;
   List<SubCategoryModelDataSubCategories?>? subCategoriesData;
+  List<SubCategoryModelDataSubCategories?>? subMainCategoriesData;
   List<ServicesUsersModel?>? usersPopularServicesList;
   VendorDetailsModelData? vendorDetailsModel;
   PortfilioModelData? portfolioModelData;
   UserFeedModelData? userFeedModelData;
   OffersModelData? offersModelData;
+  TextEditingController searchController = TextEditingController();
   final HomeTabRepository _homeTabRepository = HomeTabRepository();
+
+  int currentPage = 1;
+  bool isLoading = false;
+  bool hasMore = true;
 
   Future<void> getHomeData() async {
     try {
@@ -38,10 +46,28 @@ class HomeTabController extends GetxController with BaseClass {
     }
   }
 
-  Future<void> getUsersPopularServices(String itemId) async {
+  void applyFilter() {
+    searchController.addListener(_filterCategories);
+  }
+
+  void _filterCategories() {
+    final query = searchController.text.toLowerCase();
+
+    if (subCategoriesData != null) {
+      subCategoriesData = subMainCategoriesData!
+          .where((cat) =>
+      cat != null &&
+          cat.name != null &&
+          cat.name!.toLowerCase().contains(query))
+          .toList();
+      update(); // notify listeners
+    }
+  }
+
+  Future<void> getUsersPopularServices(String itemId, String subCategory, String page, {bool isLoadMore = false}) async {
     try {
       popularServiceDetailsModel = null;
-      final response = await _homeTabRepository.getUserPopularServices(itemId);
+      final response = await _homeTabRepository.getUserPopularServices(itemId, subCategory, page);
       if (response.isSuccess) {
         popularServiceDetailsModel = response.data?.data?.data??[];
       } else {
@@ -54,17 +80,35 @@ class HomeTabController extends GetxController with BaseClass {
     }
   }
 
+  Future<void> addRemoveFacVendor(String vendorId, int index) async {
+    try {
+      final response = await _homeTabRepository.addVendertoFav(vendorId);
+
+      if (response.isSuccess == true) {
+        var value = popularServiceDetailsModel?[index]?.users?.favVendor;
+        popularServiceDetailsModel?[index]?.users?.favVendor = (value == 0) ? 1 : 0;
+
+        update();
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   Future<void> getSelectedPopularServiceItem({
     required String categoryId,
   }) async {
     subCategoriesData = null;
+    subMainCategoriesData = null;
     final response = await _homeTabRepository.getSubCategories(
       categoryId: categoryId,
     );
     if (response.isSuccess) {
+      subMainCategoriesData = response.data?.data?.subCategories ?? [];
       subCategoriesData = response.data?.data?.subCategories ?? [];
     } else {
       subCategoriesData = [];
+      subMainCategoriesData = [];
     }
     update();
   }
@@ -96,6 +140,27 @@ class HomeTabController extends GetxController with BaseClass {
     }
     update();
   }
+
+
+  Future<void> favOffeerApi(String offerId, int index) async {
+    try {
+
+      final response = await _homeTabRepository.offerFavApi(offerId);
+
+      if (response.isSuccess) {
+
+        final currentFav = offersModelData?.data?[index]?.isFavOffer ?? 0;
+        offersModelData?.data?[index]?.isFavOffer = currentFav == 1 ? 0 : 1;
+        update(); // Notify UI
+      } else {
+
+      }
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
 
   Future<void> getVendorOffers({required String vendorId}) async {
     offersModelData = null;

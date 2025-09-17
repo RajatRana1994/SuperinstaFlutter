@@ -3,6 +3,7 @@ import 'package:instajobs/models/change_password.dart';
 import 'package:instajobs/models/delete_portfolio_model.dart';
 import 'package:instajobs/models/fav_freelancers_model.dart';
 import 'package:instajobs/models/fav_offers_model.dart';
+import 'package:instajobs/models/forgot_pass.dart';
 import 'package:instajobs/models/my_booking_model.dart';
 import 'package:instajobs/models/my_insta_jobs_model.dart';
 import 'package:instajobs/models/my_portfolio_model.dart';
@@ -43,6 +44,32 @@ class ProfileRepository {
       converter: (data) {
         // The converter is only called for successful responses now
         return AddPortfolioModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<AppSettingModel>> getAppSetting() async {
+    print('objectsss');
+    final currentLoginUserId = StorageService().getUserData().userId.toString();
+    return await _networkService.get<AppSettingModel>(
+      path: "${ApiUrlConstants.appSetting}",
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return AppSettingModel.fromJson(data);
+      },
+    );
+  }
+
+
+  Future<ApiResponse<ForgotPassModel>> boostProfile(String price) async {
+
+    final currentLoginUserId = StorageService().getUserData().userId.toString();
+    return await _networkService.post<ForgotPassModel>(
+      path: "${ApiUrlConstants.boostProfile}",
+      data: {'amount': price},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return ForgotPassModel.fromJson(data);
       },
     );
   }
@@ -121,6 +148,23 @@ class ProfileRepository {
     );
   }
 
+  Future<ApiResponse<ProfileDetailsModel>> updateWorkingHour(String monday,
+      String tuesday,
+      String wednesday,
+      String thursday,
+      String friday,
+      String saturday,
+      String sunday) async {
+    return await _networkService.put<ProfileDetailsModel>(
+      path: 'user-working-hours',
+      data: {'monday': monday, 'tuesday': tuesday, 'wednesday': wednesday, 'thursday': thursday, 'friday': friday, 'saturday': saturday, 'sunday': sunday},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return ProfileDetailsModel.fromJson(data);
+      },
+    );
+  }
+
   //getMultipartImage
   static Future<MultipartFile> getMultipartImage({required String path}) async {
     String fileName = path.split('/').last;
@@ -166,6 +210,74 @@ class ProfileRepository {
     );
   }
 
+  Future<ApiResponse<MyBookingDetailModel>> getBookingDetail(
+      String bookingId,
+      ) async {
+    return await _networkService.get<MyBookingDetailModel>(
+      path: 'booking/$bookingId',
+      converter: (data) {
+        try {
+          print('Sham');
+          final model = MyBookingDetailModel.fromJson(data);
+          print(model.message); // This line was crashing before
+          print('Sundar');
+          return model;
+        } catch (e, stack) {
+          print('❌ Error in converter');
+          print(e);
+          print(stack);
+          rethrow; // So the error propagates properly
+        }
+      },
+    );
+  }
+
+  Future<ApiResponse<MyBookingDetailModel>> completeBooking(
+      String bookingId,
+      ) async {
+    return await _networkService.patch<MyBookingDetailModel>(
+      path: 'complete-booking/$bookingId',
+      converter: (data) {
+        try {
+          print('Sham');
+          final model = MyBookingDetailModel.fromJson(data);
+          print(model.message); // This line was crashing before
+          print('Sundar');
+          return model;
+        } catch (e, stack) {
+          print('❌ Error in converter');
+          print(e);
+          print(stack);
+          rethrow; // So the error propagates properly
+        }
+      },
+    );
+  }
+
+  Future<ApiResponse<MyBookingDetailModel>> adOnAcceptReject(
+      String adOnid,
+      String status,
+      ) async {
+    return await _networkService.put<MyBookingDetailModel>(
+      path: 'booking/addon-accept-reject/$adOnid',
+      data: {'status': status},
+      converter: (data) {
+        try {
+          print('Sham');
+          final model = MyBookingDetailModel.fromJson(data);
+          print(model.message); // This line was crashing before
+          print('Sundar');
+          return model;
+        } catch (e, stack) {
+          print('❌ Error in converter');
+          print(e);
+          print(stack);
+          rethrow; // So the error propagates properly
+        }
+      },
+    );
+  }
+
   /// MY Offers
   Future<ApiResponse<OfferTabModel>> getOffersApi() async {
     return await _networkService.get<OfferTabModel>(
@@ -187,9 +299,31 @@ class ProfileRepository {
     );
   }
 
+  Future<ApiResponse<OfferTabModel>> offerFavApi(String offerId) async {
+    return await _networkService.post<OfferTabModel>(
+      path: 'fav-offers/$offerId',
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return OfferTabModel.fromJson(data);
+      },
+    );
+  }
+
   Future<ApiResponse<FavFreelancersModel>> getFavFreelancersApi() async {
     return await _networkService.get<FavFreelancersModel>(
       path: 'fav-vendors',
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return FavFreelancersModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<FavFreelancersModel>> addVendertoFav(
+      String vendorId,
+      ) async {
+    return await _networkService.post<FavFreelancersModel>(
+      path: 'fav-vendors/$vendorId',
       converter: (data) {
         // The converter is only called for successful responses now
         return FavFreelancersModel.fromJson(data);
@@ -233,4 +367,110 @@ class ProfileRepository {
       },
     );
   }
+
+  Future<ApiResponse<OfferTabModel>> bookingAcceptReject({
+    required String status,
+    required String bookingId,
+  }) async {
+    return await _networkService.put<OfferTabModel>(
+      path: 'booking-accept-reject/$bookingId',
+      data: {'status': status},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return OfferTabModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<OfferTabModel>> bookingCancel({
+    required String bookingId,
+  }) async {
+    return await _networkService.patch<OfferTabModel>(
+      path: 'cancel-booking/$bookingId',
+      data: {},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return OfferTabModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<AddPortfolioModel>> addBookingAdOn({
+    required String bookingId,
+    required String price,
+    required String description,
+    required String timeToComplete,
+  }) async {
+    return await _networkService.post<AddPortfolioModel>(
+      path: 'booking/add-on/$bookingId',
+      data: {
+        'price': price,
+        'description': description,
+        'timeToComplete': timeToComplete,
+      },
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return AddPortfolioModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<AddPortfolioModel>> addBookingRating({
+    required String bookingId,
+    required String userId,
+    required String communicationRating,
+    required String attitudeRating,
+    required String deliveryRating,
+    required String deliveryComment,
+    required String attitudeComment,
+    required String communicationComment,
+  }) async {
+    return await _networkService.post<AddPortfolioModel>(
+      path: 'rating',
+      data: {
+        'bookingId': bookingId,
+        'userId': userId,
+        'communicationRating': communicationRating,
+        'attitudeRating': attitudeRating,
+        'deliveryRating': deliveryRating,
+        'deliveryComment': deliveryComment,
+        'attitudeComment': attitudeComment,
+        'communicationComment': communicationComment
+      },
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return AddPortfolioModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<AddPortfolioModel>> addJobRating({
+    required String bookingId,
+    required String userId,
+    required String communicationRating,
+    required String attitudeRating,
+    required String deliveryRating,
+    required String deliveryComment,
+    required String attitudeComment,
+    required String communicationComment,
+  }) async {
+    return await _networkService.post<AddPortfolioModel>(
+      path: 'rating',
+      data: {
+        'jobId': bookingId,
+        'userId': userId,
+        'communicationRating': communicationRating,
+        'attitudeRating': attitudeRating,
+        'deliveryRating': deliveryRating,
+        'deliveryComment': deliveryComment,
+        'attitudeComment': attitudeComment,
+        'communicationComment': communicationComment
+      },
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return AddPortfolioModel.fromJson(data);
+      },
+    );
+  }
+
 }

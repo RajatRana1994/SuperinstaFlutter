@@ -7,7 +7,8 @@ import 'package:instajobs/models/portfolio_model.dart';
 import 'package:instajobs/models/subCategory_model.dart';
 import 'package:instajobs/models/vendor_details_model.dart';
 import 'package:instajobs/storage_services/local_stoage_service.dart';
-
+import 'package:instajobs/models/offer-details_model.dart';
+import 'package:instajobs/models/offer_tab_model.dart';
 import '../models/customer_sign_up_model.dart';
 import '../models/login.dart';
 import '../network/api_url.dart';
@@ -25,12 +26,36 @@ class HomeTabRepository {
       },
     );
   }
-  Future<ApiResponse<PopularServiceDetailsMoel>> getUserPopularServices(String itemId) async {
+  Future<ApiResponse<PopularServiceDetailsMoel>> getUserPopularServices(String itemId, String subCategoryId, String page) async {
+    final path = subCategoryId.isEmpty
+        ? 'users/$itemId/?page=1'
+        : 'users/$itemId/$subCategoryId/?page=1';
+
     return await _networkService.get<PopularServiceDetailsMoel>(
-      path: 'users/$itemId/?page=1',
+      path: path,
       converter: (data) {
         // The converter is only called for successful responses now
         return PopularServiceDetailsMoel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<PopularServiceDetailsMoel>> addVendertoFav(String vendorId) async {
+    return await _networkService.post<PopularServiceDetailsMoel>(
+      path: 'fav-vendors/$vendorId',
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return PopularServiceDetailsMoel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<OfferTabModel>> offerFavApi(String offerId) async {
+    return await _networkService.post<OfferTabModel>(
+      path: 'fav-offers/$offerId',
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return OfferTabModel.fromJson(data);
       },
     );
   }

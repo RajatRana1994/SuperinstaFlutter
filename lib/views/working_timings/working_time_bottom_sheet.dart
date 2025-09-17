@@ -15,6 +15,7 @@ Future<Map<String, String>?> showStartEndTimePickerSheet({
   required BuildContext context,
   required String rawStart,
   required String rawEnd,
+  required String dayName,
 }) {
   // Helper to parse "HH:mm" into a DateTime (today’s date + that time).
   DateTime _parseToDateTime(String hhmm) {
@@ -39,7 +40,7 @@ Future<Map<String, String>?> showStartEndTimePickerSheet({
       // We’ll need to keep mutable state for the two picked times inside the sheet.
       DateTime selectedStart = initialStart;
       DateTime selectedEnd   = initialEnd;
-
+      bool isEnabled = !(rawStart == "00:00" && rawEnd == "00:00");
       return DraggableScrollableSheet(
         initialChildSize: 0.72,
         minChildSize: 0.65,
@@ -56,6 +57,36 @@ Future<Map<String, String>?> showStartEndTimePickerSheet({
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    const SizedBox(height: 20),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          dayName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        // Switch on the right
+                        StatefulBuilder(
+                          builder: (context, setState) {
+
+
+                            return Switch(
+                              value: isEnabled,
+                              onChanged: (val) {
+                                setState(() {
+                                  isEnabled = val;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
 
                     // A “grabber” to indicate draggable sheet
                     Center(
@@ -121,34 +152,42 @@ Future<Map<String, String>?> showStartEndTimePickerSheet({
                     const SizedBox(height: 16),
                     RoundedEdgedButton(buttonText: 'Save', onButtonClick: (){
                       // Format each DateTime back to "HH:mm"
-                      if (selectedStart.isBefore(selectedEnd)) {
-                        // Format each DateTime back to "HH:mm"
-                        String formattedStart =
-                            '${selectedStart.hour.toString().padLeft(2, '0')}:${selectedStart.minute.toString().padLeft(2, '0')}';
-                        String formattedEnd =
-                            '${selectedEnd.hour.toString().padLeft(2, '0')}:${selectedEnd.minute.toString().padLeft(2, '0')}';
+                      if (isEnabled == false) {
 
                         Navigator.of(context).pop({
-                          'start': formattedStart,
-                          'end': formattedEnd,
+                          'start': '00:00',
+                          'end': '00:00',
                         });
                       } else {
-                        // Show alert: start must be earlier than end
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: const Text('Invalid Time Range'),
-                            content: const Text(
-                              'Start time must be earlier than End time.',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(ctx).pop(),
-                                child: const Text('OK'),
+                        if (selectedStart.isBefore(selectedEnd)) {
+                          // Format each DateTime back to "HH:mm"
+                          String formattedStart =
+                              '${selectedStart.hour.toString().padLeft(2, '0')}:${selectedStart.minute.toString().padLeft(2, '0')}';
+                          String formattedEnd =
+                              '${selectedEnd.hour.toString().padLeft(2, '0')}:${selectedEnd.minute.toString().padLeft(2, '0')}';
+
+                          Navigator.of(context).pop({
+                            'start': formattedStart,
+                            'end': formattedEnd,
+                          });
+                        } else {
+                          // Show alert: start must be earlier than end
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text('Invalid Time Range'),
+                              content: const Text(
+                                'Start time must be earlier than End time.',
                               ),
-                            ],
-                          ),
-                        );
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }
                     }),
 

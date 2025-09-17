@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:instajobs/utils/app_styles.dart';
+import 'package:instajobs/utils/baseClass.dart';
+import 'package:instajobs/views/jobs_tab/job_details_page.dart';
+import 'package:instajobs/views/jobs_tab/job_details_page_new.dart';
 
 import '../../controllers/profile_controller.dart';
 import 'package:get/get.dart';
@@ -14,7 +17,7 @@ class InProgressPage extends StatefulWidget {
   State<InProgressPage> createState() => _InProgressPageState();
 }
 
-class _InProgressPageState extends State<InProgressPage> {
+class _InProgressPageState extends State<InProgressPage> with BaseClass {
   ProfileController controller = Get.put(ProfileController());
 
   @override
@@ -31,61 +34,96 @@ class _InProgressPageState extends State<InProgressPage> {
       builder: (snapshot) {
         return snapshot.inProgressInstaJobsData == null
             ? Expanded(
-              child: Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppColors.primaryColor,
-                  ),
-                ),
+          child: Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                AppColors.primaryColor,
               ),
-            )
+            ),
+          ),
+        )
             : snapshot.inProgressInstaJobsData?.isEmpty ?? false
             ? Expanded(
-              child: Center(
-                child: Text(
-                  'No In progress InstaJobs found',
-                  style: AppStyles.font700_14().copyWith(color: Colors.black),
-                ),
-              ),
-            )
+          child: Center(
+            child: Text(
+              'No In progress InstaJobs found',
+              style: AppStyles.font700_14().copyWith(color: Colors.black),
+            ),
+          ),
+        )
             : Expanded(
-              child: ListView.builder(
-                itemCount: snapshot.inProgressInstaJobsData?.length ?? 0,
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return InstaJobWidget(
-                    title:
-                        snapshot.inProgressInstaJobsData
-                            ?.elementAt(index)
-                            ?.title ??
-                        '',
-                    location:
-                        snapshot.inProgressInstaJobsData
-                                    ?.elementAt(index)
-                                    ?.isAnyWhere ==
-                                1
-                            ? 'Anywhere'
-                            : snapshot.inProgressInstaJobsData
-                                    ?.elementAt(index)
-                                    ?.locations ??
-                                '',
-                    amount:
-                        snapshot.inProgressInstaJobsData
-                            ?.elementAt(index)
-                            ?.totalBudgets
-                            .toString() ??
-                        '0',
-                    proposals:
-                        snapshot.inProgressInstaJobsData
-                            ?.elementAt(index)
-                            ?.totalProposals
-                            .toString() ??
-                        '0',
+          child: ListView.builder(
+            itemCount: snapshot.inProgressInstaJobsData?.length ?? 0,
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              final job = snapshot.inProgressInstaJobsData?.elementAt(index);
+              return GestureDetector(
+                onTap: () {
+                  pushToNextScreen(
+                    context: context,
+                    destination: JobDetailsPageNew(
+                      jobId: job?.id?.toString() ?? '0',
+                    ),
                   );
                 },
-              ),
-            );
+                child: InstaJobWidget(
+                  title:
+                  snapshot.inProgressInstaJobsData
+                      ?.elementAt(index)
+                      ?.title ??
+                      '',
+                  location:
+                  snapshot.inProgressInstaJobsData
+                      ?.elementAt(index)
+                      ?.isAnyWhere ==
+                      1
+                      ? 'Anywhere'
+                      : '${snapshot.pendingInstaJobsData?.elementAt(index)?.state ?? ''}, ${snapshot.pendingInstaJobsData?.elementAt(index)?.country ?? ''}',
+                  amount:
+                  snapshot.inProgressInstaJobsData
+                      ?.elementAt(index)
+                      ?.totalBudgets
+                      .toString() ??
+                      '0',
+                  proposals:
+                  snapshot.inProgressInstaJobsData
+                      ?.elementAt(index)
+                      ?.totalProposals
+                      .toString() ??
+                      '0',
+                ),
+              );
+
+              return InstaJobWidget(
+                title:
+                snapshot.inProgressInstaJobsData
+                    ?.elementAt(index)
+                    ?.title ??
+                    '',
+                location:
+                snapshot.inProgressInstaJobsData
+                    ?.elementAt(index)
+                    ?.isAnyWhere ==
+                    1
+                    ? 'Anywhere'
+                    : '${snapshot.pendingInstaJobsData?.elementAt(index)?.state ?? ''}, ${snapshot.pendingInstaJobsData?.elementAt(index)?.country ?? ''}',
+                amount:
+                snapshot.inProgressInstaJobsData
+                    ?.elementAt(index)
+                    ?.totalBudgets
+                    .toString() ??
+                    '0',
+                proposals:
+                snapshot.inProgressInstaJobsData
+                    ?.elementAt(index)
+                    ?.totalProposals
+                    .toString() ??
+                    '0',
+              );
+            },
+          ),
+        );
       },
     );
   }

@@ -30,44 +30,44 @@ class _PendingWalletWidgetState extends State<PendingWalletWidget> {
       builder: (snapshot) {
         return _myWalletController.pendingWallet == null
             ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-            )
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
+        )
             : _myWalletController.pendingWallet!.isEmpty
             ? Center(
-              child: Text('No Pending Wallet', style: AppStyles.font700_16()),
-            )
+          child: Text('No Pending Wallet', style: AppStyles.font700_16()),
+        )
             : Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16.0),
-                shrinkWrap: true,
-                itemCount: _myWalletController.pendingWallet?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return WalletWidget(
-                    title: '',
-                    status:
-                        _myWalletController.pendingWallet
-                            ?.elementAt(index)
-                            ?.status ??
-                        '',
-                    dateTime:
-                        _myWalletController.pendingWallet
-                            ?.elementAt(index)
-                            ?.created ??
-                        0,
-                    amount:
-                        _myWalletController.pendingWallet
-                            ?.elementAt(index)
-                            ?.amount
-                            .toString() ??
-                        '0',
-                  );
-                },
-              ),
-            );
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            shrinkWrap: true,
+            itemCount: _myWalletController.pendingWallet?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) {
+              return WalletWidget(
+                title: 'Sent to',
+                status:
+                _myWalletController.pendingWallet
+                    ?.elementAt(index)
+                    ?.status ??
+                    '',
+                dateTime:
+                _myWalletController.pendingWallet
+                    ?.elementAt(index)
+                    ?.created ??
+                    0,
+                amount:
+                _myWalletController.pendingWallet
+                    ?.elementAt(index)
+                    ?.amount
+                    .toString() ??
+                    '0',
+              );
+            },
+          ),
+        );
       },
     );
   }

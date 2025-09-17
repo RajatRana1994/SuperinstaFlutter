@@ -44,12 +44,16 @@ class _PlacePickerPageState extends State<PlacePickerPage> {
       final lng = selectedResult!.latLng?.longitude;
       final country = selectedResult!.country?.longName ?? '';
       final state = selectedResult!.administrativeAreaLevel1?.longName ?? '';
-
+      final city = selectedResult!.locality?.longName
+          ?? selectedResult!.administrativeAreaLevel2?.longName
+          ?? selectedResult!.subLocalityLevel1?.longName
+          ?? '';
       Navigator.pop(context, {
         'lat': lat,
         'lng': lng,
         'country': country,
         'state': state,
+        'city': city,
       });
     } else {
       Navigator.pop(context, null); // Cancelled

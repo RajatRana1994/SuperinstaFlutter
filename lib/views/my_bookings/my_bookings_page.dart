@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:instajobs/views/my_bookings/cancelled_booking.dart';
 import 'package:instajobs/views/my_bookings/completed_bookings.dart';
 import 'package:instajobs/views/my_bookings/pending_bookings.dart';
-
+import 'package:instajobs/storage_services/local_stoage_service.dart';
 import '../../controllers/profile_controller.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_styles.dart';
@@ -20,9 +20,10 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   int selectedIndex = 0 ;
 
   ProfileController controller = Get.put(ProfileController());
-@override
+  @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     controller.completedTotal = -1;
     controller.inProgressTotal = -1;
@@ -61,9 +62,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           height: 52,
                           decoration: BoxDecoration(
                             color:
-                                selectedIndex == 0
-                                    ? Colors.orange
-                                    : Colors.orange.withOpacity(0.3),
+                            selectedIndex == 0
+                                ? Colors.orange
+                                : Colors.orange.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -74,9 +75,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                   'Pending',
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 0
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 0
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 2),
@@ -86,9 +87,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                       : controller.pendingTotal.toString(),
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 0
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 0
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                               ],
@@ -108,9 +109,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           height: 52,
                           decoration: BoxDecoration(
                             color:
-                                selectedIndex == 1
-                                    ? Colors.orange
-                                    : Colors.orange.withOpacity(0.3),
+                            selectedIndex == 1
+                                ? Colors.orange
+                                : Colors.orange.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -121,9 +122,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                   'In Progress',
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 1
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 1
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 2),
@@ -133,9 +134,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                       : controller.inProgressTotal.toString(),
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 1
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 1
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                               ],
@@ -155,9 +156,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           height: 52,
                           decoration: BoxDecoration(
                             color:
-                                selectedIndex == 2
-                                    ? Colors.orange
-                                    : Colors.orange.withOpacity(0.3),
+                            selectedIndex == 2
+                                ? Colors.orange
+                                : Colors.orange.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -168,9 +169,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                   'Cancelled',
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 2
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 2
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 2),
@@ -180,9 +181,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                       : controller.cancelledTotal.toString(),
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 2
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 2
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                               ],
@@ -202,9 +203,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           height: 52,
                           decoration: BoxDecoration(
                             color:
-                                selectedIndex == 3
-                                    ? Colors.orange
-                                    : Colors.orange.withOpacity(0.3),
+                            selectedIndex == 3
+                                ? Colors.orange
+                                : Colors.orange.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -215,9 +216,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                   'Completed',
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 3
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 3
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 2),
@@ -227,9 +228,9 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                       : controller.completedTotal.toString(),
                                   style: AppStyles.font400_12().copyWith(
                                     color:
-                                        selectedIndex == 3
-                                            ? Colors.white
-                                            : Colors.black,
+                                    selectedIndex == 3
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                               ],
@@ -243,27 +244,27 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                 SizedBox(height: 20),
                 selectedIndex == 0
                     ? Expanded(
-                      child: PendingBookings(
+                  child: PendingBookings(
 
-                      ),
-                    )
+                  ),
+                )
                     : selectedIndex == 1
                     ? Expanded(
-                      child: InprogressBooking(
+                  child: InprogressBooking(
 
-                      ),
-                    )
+                  ),
+                )
                     : selectedIndex == 2
                     ? Expanded(
-                      child: CancelledBooking(
+                  child: CancelledBooking(
 
-                      ),
-                    )
+                  ),
+                )
                     : Expanded(
-                      child: CompletedBookings(
+                  child: CompletedBookings(
 
-                      ),
-                    ),
+                  ),
+                ),
               ],
             ),
           );

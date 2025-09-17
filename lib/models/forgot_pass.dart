@@ -50,7 +50,13 @@ class ForgotPassModel {
     success = json['success'];
     message = json['message']?.toString();
     status = json['status']?.toInt();
-    data = (json['data'] != null) ? ForgotPassModelData.fromJson(json['data']) : null;
+
+    if (json['data'] != null && json['data'] is Map<String, dynamic>) {
+      data = ForgotPassModelData.fromJson(json['data']);
+    } else {
+      data = null; // in case it's int, string, or null
+    }
+    // data = (json['data'] != null) ? ForgotPassModelData.fromJson(json['data']) : null;
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -61,5 +67,56 @@ class ForgotPassModel {
       data['data'] = this.data!.toJson();
     }
     return data;
+  }
+}
+
+
+class OfferPurchaseResponse {
+  final bool success;
+  final String message;
+  final int status;
+  final OfferData? data;
+
+  OfferPurchaseResponse({
+    required this.success,
+    required this.message,
+    required this.status,
+    this.data,
+  });
+
+  factory OfferPurchaseResponse.fromJson(Map<String, dynamic> json) {
+    return OfferPurchaseResponse(
+      success: json['success'] ?? false,
+      message: json['message'] ?? '',
+      status: json['status'] ?? 0,
+      data: json['data'] != null ? OfferData.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "success": success,
+      "message": message,
+      "status": status,
+      "data": data?.toJson(),
+    };
+  }
+}
+
+class OfferData {
+  final int id;
+
+  OfferData({required this.id});
+
+  factory OfferData.fromJson(Map<String, dynamic> json) {
+    return OfferData(
+      id: json['id'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+    };
   }
 }

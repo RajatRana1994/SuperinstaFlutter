@@ -29,44 +29,44 @@ class _CreditedWalletWidgetState extends State<CreditedWalletWidget> {
       builder: (snapshot) {
         return _myWalletController.creditedWallet == null
             ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-            )
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
+        )
             : _myWalletController.creditedWallet!.isEmpty
             ? Center(
-              child: Text('No Credited Wallet', style: AppStyles.font700_16()),
-            )
+          child: Text('No Credited Wallet', style: AppStyles.font700_16()),
+        )
             : Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16.0),
-                shrinkWrap: true,
-                itemCount: _myWalletController.creditedWallet?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return WalletWidget(
-                    title: '',
-                    status:
-                        _myWalletController.creditedWallet
-                            ?.elementAt(index)
-                            ?.status ??
-                        '',
-                    dateTime:
-                        _myWalletController.creditedWallet
-                            ?.elementAt(index)
-                            ?.created ??
-                        0,
-                    amount:
-                        _myWalletController.creditedWallet
-                            ?.elementAt(index)
-                            ?.amount
-                            .toString() ??
-                        '0',
-                  );
-                },
-              ),
-            );
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            shrinkWrap: true,
+            itemCount: _myWalletController.creditedWallet?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) {
+              return WalletWidget(
+                title: 'Coins added to Wallet Credited',
+                status:
+                _myWalletController.creditedWallet
+                    ?.elementAt(index)
+                    ?.status ??
+                    '',
+                dateTime:
+                _myWalletController.creditedWallet
+                    ?.elementAt(index)
+                    ?.created ??
+                    0,
+                amount:
+                _myWalletController.creditedWallet
+                    ?.elementAt(index)
+                    ?.amount
+                    .toString() ??
+                    '0',
+              );
+            },
+          ),
+        );
       },
     );
   }

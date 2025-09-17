@@ -84,6 +84,33 @@ class MyWalletController extends GetxController {
     if (response.isSuccess) {
       paymentResponseModel = response.data?.data;
     } else {
+      Get.back();
+      throw Exception('Failed to load wallet details');
+    }
+    update();
+  }
+
+
+  Future<void> doBookingPaymentApi({
+    required String expiryMonth,
+    required String cardPin,
+    required String amount,
+    required String cardCvv,
+    required String expiryYear,
+    required String cardNumber,
+  }) async {
+    paymentResponseModel = null;
+    final response = await _myWalletRepository.bookingpaymentApi(
+      expiryMonth: expiryMonth,
+      cardPin: cardPin,
+      amount: amount,
+      cardCvv: cardCvv,
+      expiryYear: expiryYear,
+      cardNumber: cardNumber,
+    );
+    if (response.isSuccess) {
+      paymentResponseModel = response.data?.data;
+    } else {
       throw Exception('Failed to load wallet details');
     }
     update();
@@ -103,6 +130,73 @@ class MyWalletController extends GetxController {
       otp: otp,
     );
     if (response.isSuccess) {
+      //  paymentResponseModel = response.data?.data;
+    } else {
+      throw Exception('Failed to load wallet details');
+    }
+    update();
+  }
+
+
+  Future<void> verifyBookingPaymentTransaction({
+    required String refId,
+    required String otp,
+    required String bookingId,
+  }) async {
+    if (kDebugMode) {
+      print(refId);
+    }
+
+    //  paymentResponseModel = null;
+    final response = await _myWalletRepository.verifyBookingPaymentTransaction(
+        refId: refId,
+        otp: otp,
+        bookid: bookingId
+    );
+    if (response.isSuccess) {
+      //  paymentResponseModel = response.data?.data;
+    } else {
+      throw Exception('Failed to load wallet details');
+    }
+    update();
+  }
+
+
+  Future<void> verifyOfferPaymentTransaction({
+    required String refId,
+    required String otp,
+    required String offerId,
+  }) async {
+    if (kDebugMode) {
+      print(refId);
+    }
+
+    //  paymentResponseModel = null;
+    final response = await _myWalletRepository.verifyOfferPaymentTransaction(
+        refId: refId,
+        otp: otp,
+        bookid: offerId
+    );
+    if (response.isSuccess) {
+      //  paymentResponseModel = response.data?.data;
+    } else {
+      throw Exception('Failed to load wallet details');
+    }
+    update();
+  }
+
+  int? purchasedOfferId;
+  Future<void> buyOfferApi({
+    required String amount,
+    required String offerTime,
+    required String adOns,
+    required String offerId,
+  }) async {
+
+    //  paymentResponseModel = null;
+    final response = await _myWalletRepository.buyOfferApi(amount: amount, offerTime: offerTime, adOns: adOns, offerId: offerId);
+    if (response.isSuccess) {
+      purchasedOfferId =  response.data?.data?.id ?? 0;
       //  paymentResponseModel = response.data?.data;
     } else {
       throw Exception('Failed to load wallet details');

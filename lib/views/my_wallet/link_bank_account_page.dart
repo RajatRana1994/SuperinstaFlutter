@@ -66,11 +66,11 @@ class _LinkBankAccountPageState extends State<LinkBankAccountPage>
                 } else {
                   try {
                     showGetXCircularDialog();
-                   await  _myWalletController.linkBankAccount(
+                    await  _myWalletController.linkBankAccount(
                       accountNumber: accountController.text.trim(),
                       bankName: bankNameController.text.trim(),
                     );
-                   Get.back();
+                    Get.back();
                     showSuccess(
                       title: 'Link Account',
                       message: 'Bank account linked successfully',

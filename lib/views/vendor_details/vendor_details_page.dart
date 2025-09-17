@@ -7,6 +7,8 @@ import 'package:instajobs/utils/baseClass.dart';
 import 'package:instajobs/views/create_appointment/create_appointment_date_time_page.dart';
 
 import '../../utils/app_colors.dart';
+import 'package:instajobs/utils/app_images.dart';
+import 'package:instajobs/views/market_tab/offer_details_page.dart';
 
 class VendorDetailsPage extends StatefulWidget {
   final String vendorId;
@@ -14,9 +16,9 @@ class VendorDetailsPage extends StatefulWidget {
   //final CustomerHomeModelDataBoostProfile? vendorDetailsItem;
 
   const VendorDetailsPage(
-    this.vendorId /*this.vendorDetailsItem*/, {
-    super.key,
-  });
+      this.vendorId /*this.vendorDetailsItem*/, {
+        super.key,
+      });
 
   @override
   State<VendorDetailsPage> createState() => _VendorDetailsPageState();
@@ -94,448 +96,448 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
         builder: (snapshot) {
           return snapshot.vendorDetailsModel == null
               ? Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppColors.primaryColor,
-                  ),
-                ),
-              )
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                AppColors.primaryColor,
+              ),
+            ),
+          )
               : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 350,
-                      child: Stack(
-                        children: [
-                          ((snapshot.portfolioModelData != null) &&
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 350,
+                  child: Stack(
+                    children: [
+                      ((snapshot.portfolioModelData != null) &&
+                          (snapshot
+                              .portfolioModelData
+                              ?.data
+                              ?.isNotEmpty ??
+                              false))
+                          ? Image(
+                        image: NetworkImage(
+                          snapshot.portfolioModelData?.data
+                              ?.elementAt(0)
+                              ?.image ??
+                              '',
+                        ),
+                        height: 300,
+
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                          : Container(
+                        color: Colors.green,
+                        height: 300,
+                        width: double.infinity,
+                      ),
+
+                      Positioned(
+                        left: 8,
+                        top: 30,
+                        child: IconButton(
+                          onPressed: () {
+                            popToPreviousScreen(context: context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios_new_sharp,
+                            color: Colors.deepOrange,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 20,
+                        bottom: 0,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child:
+                          ((snapshot
+                              .vendorDetailsModel
+                              ?.userInfo
+                              ?.profile ==
+                              null) ||
+                              (snapshot
+                                  .vendorDetailsModel
+                                  ?.userInfo
+                                  ?.profile
+                                  ?.isEmpty ??
+                                  true))
+                              ? Container(
+                            height: 100,
+
+                            width: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Icon(Icons.person, size: 30),
+                            ),
+                          )
+                              : Image(
+                            image: NetworkImage(
+                              snapshot
+                                  .vendorDetailsModel
+                                  ?.userInfo
+                                  ?.profile ??
+                                  '',
+                            ),
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 15,
+                        left: 140,
+                        right: 20,
+
+                        child: Row(
+                          children: [
+                            Text(
+                              (snapshot
+                                  .vendorDetailsModel
+                                  ?.userInfo
+                                  ?.category !=
+                                  null &&
                                   (snapshot
-                                          .portfolioModelData
-                                          ?.data
-                                          ?.isNotEmpty ??
+                                      .vendorDetailsModel
+                                      ?.userInfo
+                                      ?.category
+                                      ?.isNotEmpty ??
                                       false))
-                              ? Image(
-                                image: NetworkImage(
-                                  snapshot.portfolioModelData?.data
-                                          ?.elementAt(0)
-                                          ?.image ??
-                                      '',
-                                ),
-                                height: 300,
-
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              )
-                              : Container(
-                                color: Colors.green,
-                                height: 300,
-                                width: double.infinity,
-                              ),
-
-                          Positioned(
-                            left: 8,
-                            top: 30,
-                            child: IconButton(
-                              onPressed: () {
-                                popToPreviousScreen(context: context);
-                              },
-                              icon: Icon(
-                                Icons.arrow_back_ios_new_sharp,
-                                color: Colors.deepOrange,
-                              ),
+                                  ? snapshot
+                                  .vendorDetailsModel
+                                  ?.userInfo
+                                  ?.category
+                                  ?.elementAt(0)
+                                  ?.categoryName ??
+                                  ''
+                                  : '',
                             ),
-                          ),
-                          Positioned(
-                            left: 20,
-                            bottom: 0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(60),
-                              child:
-                                  ((snapshot
-                                                  .vendorDetailsModel
-                                                  ?.userInfo
-                                                  ?.profile ==
-                                              null) ||
-                                          (snapshot
-                                                  .vendorDetailsModel
-                                                  ?.userInfo
-                                                  ?.profile
-                                                  ?.isEmpty ??
-                                              true))
-                                      ? Container(
-                                        height: 100,
-
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Center(
-                                          child: Icon(Icons.person, size: 30),
-                                        ),
-                                      )
-                                      : Image(
-                                        image: NetworkImage(
-                                          snapshot
-                                                  .vendorDetailsModel
-                                                  ?.userInfo
-                                                  ?.profile ??
-                                              '',
-                                        ),
-                                        height: 100,
-                                        width: 100,
-                                        fit: BoxFit.cover,
-                                      ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 15,
-                            left: 140,
-                            right: 20,
-
-                            child: Row(
+                            Spacer(),
+                            Row(
                               children: [
+                                Icon(Icons.star, color: Colors.amber),
                                 Text(
-                                  (snapshot
-                                                  .vendorDetailsModel
-                                                  ?.userInfo
-                                                  ?.category !=
-                                              null &&
-                                          (snapshot
-                                                  .vendorDetailsModel
-                                                  ?.userInfo
-                                                  ?.category
-                                                  ?.isNotEmpty ??
-                                              false))
-                                      ? snapshot
-                                              .vendorDetailsModel
-                                              ?.userInfo
-                                              ?.category
-                                              ?.elementAt(0)
-                                              ?.categoryName ??
-                                          ''
-                                      : '',
-                                ),
-                                Spacer(),
-                                Row(
-                                  children: [
-                                    Icon(Icons.star, color: Colors.amber),
-                                    Text(
-                                      snapshot
-                                              .vendorDetailsModel
-                                              ?.userInfo
-                                              ?.rating
-                                              ?.overallRating
-                                              .toString() ??
-                                          '0',
-                                    ),
-                                  ],
+                                  snapshot
+                                      .vendorDetailsModel
+                                      ?.userInfo
+                                      ?.rating
+                                      ?.overallRating
+                                      .toString() ??
+                                      '0',
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.vendorDetailsModel?.userInfo?.name ?? '',
+                        style: AppStyles.font700_16(),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        '${snapshot.vendorDetailsModel?.userInfo?.city ?? ''} ${snapshot.vendorDetailsModel?.userInfo?.city ?? ''} ${snapshot.vendorDetailsModel?.userInfo?.city ?? ''}',
+                        style: AppStyles.font400_14().copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Row(
                         children: [
-                          Text(
-                            snapshot.vendorDetailsModel?.userInfo?.name ?? '',
-                            style: AppStyles.font700_16(),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '${snapshot.vendorDetailsModel?.userInfo?.city ?? ''} ${snapshot.vendorDetailsModel?.userInfo?.city ?? ''} ${snapshot.vendorDetailsModel?.userInfo?.city ?? ''}',
-                            style: AppStyles.font400_14().copyWith(
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Hourly Price',
-                                    style: AppStyles.font700_14().copyWith(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Row(
-                                    children: [
-                                      const CircleAvatar(
-                                        radius: 8,
-                                        backgroundColor: Colors.orange,
-                                        child: Text(
-                                          '₦',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot
-                                                .vendorDetailsModel
-                                                ?.userInfo
-                                                ?.hourlyPrice
-                                                .toString() ??
-                                            'NA',
-                                        style: AppStyles.font700_14().copyWith(
-                                          color: AppColors.primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Daily Price',
-                                    style: AppStyles.font700_14().copyWith(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Row(
-                                    children: [
-                                      const CircleAvatar(
-                                        radius: 8,
-                                        backgroundColor: Colors.orange,
-                                        child: Text(
-                                          '₦',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot
-                                                .vendorDetailsModel
-                                                ?.userInfo
-                                                ?.dailyPrice
-                                                .toString() ??
-                                            'NA',
-                                        style: AppStyles.font700_14().copyWith(
-                                          color: AppColors.primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
                           Row(
                             children: [
                               Text(
-                                '${snapshot.vendorDetailsModel?.userInfo?.totalJobComplete.toString() ?? '0'}%\nJob Success',
-                                textAlign: TextAlign.start,
-                                style: AppStyles.font600_12().copyWith(
-                                  color: AppColors.black,
+                                'Hourly Price',
+                                style: AppStyles.font700_14().copyWith(
+                                  color: Colors.black,
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Container(
-                                  height: 15,
-
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.shade100,
-                                    borderRadius: BorderRadius.circular(10),
+                              SizedBox(width: 4),
+                              Row(
+                                children: [
+                                  const CircleAvatar(
+                                    radius: 8,
+                                    backgroundColor: Colors.orange,
+                                    child: Text(
+                                      '₦',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Text(
+                                    snapshot
+                                        .vendorDetailsModel
+                                        ?.userInfo
+                                        ?.hourlyPrice
+                                        .toString() ??
+                                        'NA',
+                                    style: AppStyles.font700_14().copyWith(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(height: 16),
+                          Spacer(),
                           Row(
                             children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    resetSelection(0);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color:
-                                          isAbout
-                                              ? AppColors.primaryColor
-                                              : Colors.orange.shade200,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'About',
-                                        style: AppStyles.font700_10().copyWith(
-                                          color:
-                                              isAbout
-                                                  ? AppColors.white
-                                                  : AppColors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                              Text(
+                                'Daily Price',
+                                style: AppStyles.font700_14().copyWith(
+                                  color: Colors.black,
                                 ),
                               ),
-                              SizedBox(width: 3),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    resetSelection(1);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color:
-                                          isPortfolio
-                                              ? AppColors.primaryColor
-                                              : Colors.orange.shade200,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Portfolio',
-                                        style: AppStyles.font700_10().copyWith(
-                                          color:
-                                              isPortfolio
-                                                  ? AppColors.white
-                                                  : AppColors.black,
-                                        ),
+                              SizedBox(width: 4),
+                              Row(
+                                children: [
+                                  const CircleAvatar(
+                                    radius: 8,
+                                    backgroundColor: Colors.orange,
+                                    child: Text(
+                                      '₦',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(width: 3),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    resetSelection(2);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color:
-                                          isOffers
-                                              ? AppColors.primaryColor
-                                              : Colors.orange.shade200,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Offers',
-                                        style: AppStyles.font700_10().copyWith(
-                                          color:
-                                              isOffers
-                                                  ? AppColors.white
-                                                  : AppColors.black,
-                                        ),
-                                      ),
+                                  Text(
+                                    snapshot
+                                        .vendorDetailsModel
+                                        ?.userInfo
+                                        ?.dailyPrice
+                                        .toString() ??
+                                        'NA',
+                                    style: AppStyles.font700_14().copyWith(
+                                      color: AppColors.primaryColor,
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(width: 3),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    resetSelection(3);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color:
-                                          isFeed
-                                              ? AppColors.primaryColor
-                                              : Colors.orange.shade200,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Feed',
-                                        style: AppStyles.font700_10().copyWith(
-                                          color:
-                                              isFeed
-                                                  ? AppColors.white
-                                                  : AppColors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 3),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    resetSelection(4);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color:
-                                          isReviews
-                                              ? AppColors.primaryColor
-                                              : Colors.orange.shade200,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Reviews',
-                                        style: AppStyles.font700_10().copyWith(
-                                          color:
-                                              isReviews
-                                                  ? AppColors.white
-                                                  : AppColors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(height: 20),
-                          isAbout
-                              ? aboutWidget()
-                              : isPortfolio
-                              ? getPortfolio()
-                              : isOffers
-                              ? getOffers()
-                              : SizedBox(),
                         ],
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Text(
+                            '${snapshot.vendorDetailsModel?.userInfo?.totalJobComplete.toString() ?? '0'}%\nJob Success',
+                            textAlign: TextAlign.start,
+                            style: AppStyles.font600_12().copyWith(
+                              color: AppColors.black,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Container(
+                              height: 15,
+
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade100,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                resetSelection(0);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color:
+                                  isAbout
+                                      ? AppColors.primaryColor
+                                      : Colors.orange.shade200,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'About',
+                                    style: AppStyles.font700_10().copyWith(
+                                      color:
+                                      isAbout
+                                          ? AppColors.white
+                                          : AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                resetSelection(1);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color:
+                                  isPortfolio
+                                      ? AppColors.primaryColor
+                                      : Colors.orange.shade200,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Portfolio',
+                                    style: AppStyles.font700_10().copyWith(
+                                      color:
+                                      isPortfolio
+                                          ? AppColors.white
+                                          : AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                resetSelection(2);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color:
+                                  isOffers
+                                      ? AppColors.primaryColor
+                                      : Colors.orange.shade200,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Offers',
+                                    style: AppStyles.font700_10().copyWith(
+                                      color:
+                                      isOffers
+                                          ? AppColors.white
+                                          : AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                resetSelection(3);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color:
+                                  isFeed
+                                      ? AppColors.primaryColor
+                                      : Colors.orange.shade200,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Feed',
+                                    style: AppStyles.font700_10().copyWith(
+                                      color:
+                                      isFeed
+                                          ? AppColors.white
+                                          : AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                resetSelection(4);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color:
+                                  isReviews
+                                      ? AppColors.primaryColor
+                                      : Colors.orange.shade200,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Reviews',
+                                    style: AppStyles.font700_10().copyWith(
+                                      color:
+                                      isReviews
+                                          ? AppColors.white
+                                          : AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      isAbout
+                          ? aboutWidget()
+                          : isPortfolio
+                          ? getPortfolio()
+                          : isOffers
+                          ? getOffers()
+                          : SizedBox(),
+                    ],
+                  ),
                 ),
-              );
+              ],
+            ),
+          );
         },
       ),
     );
@@ -604,10 +606,10 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
                       SizedBox(width: 4),
                       Text(
                         homeTabController
-                                .vendorDetailsModel
-                                ?.userInfo
-                                ?.lowestPrice
-                                .toString() ??
+                            .vendorDetailsModel
+                            ?.userInfo
+                            ?.lowestPrice
+                            .toString() ??
                             '',
                         style: AppStyles.font700_14().copyWith(
                           color: Colors.black,
@@ -622,7 +624,9 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
                 onTap: () {
                   pushToNextScreen(
                     context: context,
-                    destination: CreateAppointmentDateTimePage(vendorDetailsModel: homeTabController.vendorDetailsModel),
+                    destination: CreateAppointmentDateTimePage(
+                      vendorDetailsModel: homeTabController.vendorDetailsModel,
+                    ),
                   );
                 },
                 child: Container(
@@ -672,8 +676,8 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
                   child: Image(
                     image: NetworkImage(
                       homeTabController.portfolioModelData?.data
-                              ?.elementAt(index)
-                              ?.image ??
+                          ?.elementAt(index)
+                          ?.image ??
                           '',
                     ),
                     height: 130,
@@ -683,8 +687,8 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
                 SizedBox(height: 5),
                 Text(
                   homeTabController.portfolioModelData?.data
-                          ?.elementAt(index)
-                          ?.title ??
+                      ?.elementAt(index)
+                      ?.title ??
                       '',
                   textAlign: TextAlign.center,
                   maxLines: 2,
@@ -722,105 +726,157 @@ class _VendorDetailsPageState extends State<VendorDetailsPage> with BaseClass {
       padding: EdgeInsets.zero,
       physics: NeverScrollableScrollPhysics(),
       itemCount: homeTabController.offersModelData?.data?.length ?? 0,
+
       itemBuilder: (BuildContext context, int index) {
+        final offer = homeTabController.offersModelData?.data?.elementAt(index);
+        final hasImage = offer?.offerImages?.isNotEmpty ?? false;
+        final imageProvider =
+        hasImage
+            ? NetworkImage(offer!.offerImages![0]!.attachments!)
+            : AssetImage(AppImages.icon) as ImageProvider;
+
         return Container(
           margin: EdgeInsets.only(bottom: 10),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Card(
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      SizedBox(
-                        height: 190,
-                        width: double.infinity,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(12),
-                            bottom: Radius.circular(12),
-                          ),
-                          child: Image(
-                            image: NetworkImage(
-                              homeTabController.offersModelData?.data
-                                      ?.elementAt(index)
-                                      ?.offerImages
-                                      ?.elementAt(0)
-                                      ?.attachments ??
-                                  '',
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          color: Colors.black.withOpacity(0.5),
-                          child: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Rating: ${homeTabController.offersModelData?.data?.elementAt(index)?.rating ?? '0'}',
-                                    style: AppStyles.font500_14().copyWith(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Icon(Icons.star, color: Colors.amber),
-                                ],
-                              ),
-                              Spacer(),
-                              Text(
-                                'Sold: ${homeTabController.offersModelData?.data?.elementAt(index)?.totalSold ?? '0'} Times',
-                                style: AppStyles.font500_14().copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+          child: GestureDetector(
+            onTap: (){
+              pushToNextScreen(context: context, destination: OfferDetailsPage(offerID: offer?.id
+                  .toString() ?? '0'));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Card(
+                child: Column(
+                  children: [
+                    Stack(
                       children: [
-                        Expanded(
-                          child: Text(
-                            homeTabController.offersModelData?.data
-                                    ?.elementAt(index)
-                                    ?.name ??
-                                '',
+                        SizedBox(
+                          height: 190,
+                          width: double.infinity,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(12),
+                              bottom: Radius.circular(12),
+                            ),
+                            child: Image(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            getCurrencyCode(),
-                            SizedBox(width: 4),
-                            Text(
-                              homeTabController.offersModelData?.data
-                                      ?.elementAt(index)
-                                      ?.price
-                                      .toString() ??
-                                  '0',
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.7),
+                              shape: BoxShape.circle,
                             ),
-                          ],
+                            child: SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: IconButton(
+                                icon: Icon(
+                                  ((homeTabController.offersModelData?.data
+                                      ?.elementAt(index)
+                                      ?.isFavOffer ??
+                                      0) ==
+                                      1)
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.red,
+                                  size: 18, // icon visual size
+                                ),
+                                onPressed: () {
+                                  var offerId =
+                                      homeTabController.offersModelData?.data
+                                          ?.elementAt(index)
+                                          ?.id;
+                                  homeTabController.favOffeerApi(
+                                    offerId?.toString() ?? '',
+                                    index,
+                                  );
+                                  //onClickFav?.call();
+                                  // Handle tap
+                                },
+                                padding:
+                                EdgeInsets.zero, // remove default padding
+                                constraints:
+                                BoxConstraints(), // remove default size constraints
+                                splashRadius:
+                                16, // splash radius for tap feedback
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            color: Colors.black.withOpacity(0.5),
+                            child: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Rating: ${homeTabController.offersModelData?.data?.elementAt(index)?.rating ?? '0'}',
+                                      style: AppStyles.font500_14().copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(Icons.star, color: Colors.amber),
+                                  ],
+                                ),
+                                Spacer(),
+                                Text(
+                                  'Sold: ${homeTabController.offersModelData?.data?.elementAt(index)?.totalSold ?? '0'} Times',
+                                  style: AppStyles.font500_14().copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 4),
-                ],
+                    SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              homeTabController.offersModelData?.data
+                                  ?.elementAt(index)
+                                  ?.name ??
+                                  '',
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              getCurrencyCode(),
+                              SizedBox(width: 4),
+                              Text(
+                                homeTabController.offersModelData?.data
+                                    ?.elementAt(index)
+                                    ?.price
+                                    .toString() ??
+                                    '0',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                  ],
+                ),
               ),
             ),
           ),

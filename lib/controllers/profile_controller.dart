@@ -41,11 +41,42 @@ class ProfileController extends GetxController with BaseClass {
   List<FavOffersModelDataData?>? favOffersList;
 
   ProfileDetailsModelData? profileDetailsModel;
+  List<AppSettingBodyModel>? appSetting;
+  AppSettingBodyModel? boostProfile;
+  MyBookingModelDataData? bookingDetail;
 
   Future<void> getMyPortfolio() async {
     myPortfolioData = null;
     final response = await _profileRepository.getMyPortfolio();
     myPortfolioData = response.isSuccess ? response.data?.data?.data ?? [] : [];
+    update();
+  }
+
+  Future<void> getAppSetting() async {
+    appSetting = null;
+    final response = await _profileRepository.getAppSetting();
+    if (response.isSuccess) {
+      appSetting = response.data?.data ?? [];
+      boostProfile = appSetting?.firstWhere(
+            (e) => e.name == "Boost Profile",
+        orElse: () => AppSettingBodyModel(value: "0"),
+      );
+    } else {
+      appSetting = [];
+    }
+    update();
+  }
+
+  Future<void> boostMyProfile() async {
+
+    final response = await _profileRepository.boostProfile(boostProfile?.value ?? '');
+    print(response.isSuccess);
+    if (response.isSuccess) {
+      showSuccess(title: 'Boosted', message: response.data?.message ?? '');
+      getProfileDetails();
+    } else {
+      showError(title: 'Boosted', message: 'Insufficient wallet balance');
+    }
     update();
   }
 
@@ -74,7 +105,11 @@ class ProfileController extends GetxController with BaseClass {
     update();
   }
 
-  Future<void> editPortfolio(String id, String title, String description) async {
+  Future<void> editPortfolio(
+      String id,
+      String title,
+      String description,
+      ) async {
     showGetXCircularDialog();
     final response = await _profileRepository.editPortfolio(
       id: id,
@@ -100,7 +135,8 @@ class ProfileController extends GetxController with BaseClass {
   }) async {
     showGetXCircularDialog();
 
-    final request = http.MultipartRequest(
+    final request =
+    http.MultipartRequest(
       isEditPortfolio ? 'PUT' : 'POST',
       Uri.parse(
         isEditPortfolio
@@ -108,7 +144,8 @@ class ProfileController extends GetxController with BaseClass {
             : 'https://app.superinstajobs.com/api/v1/add-portfolio',
       ),
     )
-      ..headers['Authorization'] = StorageService().getUserData().authToken ?? ''
+      ..headers['Authorization'] =
+          StorageService().getUserData().authToken ?? ''
       ..fields['description'] = description
       ..fields['title'] = title
       ..fields['type'] = '0'
@@ -166,27 +203,59 @@ class ProfileController extends GetxController with BaseClass {
 
   Future<void> getMyBookings({required int status}) async {
     switch (status) {
-      case 0: pendingBookingsList = null; break;
-      case 1: inProgressBookingsList = null; break;
-      case 2: cancelledBookingsList = null; break;
-      case 4: completedBookingsList = null; break;
+      case 0:
+        pendingBookingsList = null;
+        break;
+      case 1:
+        inProgressBookingsList = null;
+        break;
+      case 2:
+        cancelledBookingsList = null;
+        break;
+      case 4:
+        completedBookingsList = null;
+        break;
     }
 
     final response = await _profileRepository.getMyBookings(status);
     if (response.isSuccess) {
       final data = response.data?.data?.data ?? [];
       switch (status) {
-        case 0: pendingBookingsList = data; pendingTotal = data.length; break;
-        case 1: inProgressBookingsList = data; inProgressTotal = data.length; break;
-        case 2: cancelledBookingsList = data; cancelledTotal = data.length; break;
-        case 4: completedBookingsList = data; completedTotal = data.length; break;
+        case 0:
+          pendingBookingsList = data;
+          pendingTotal = data.length;
+          break;
+        case 1:
+          inProgressBookingsList = data;
+          inProgressTotal = data.length;
+          break;
+        case 2:
+          cancelledBookingsList = data;
+          cancelledTotal = data.length;
+          break;
+        case 4:
+          completedBookingsList = data;
+          completedTotal = data.length;
+          break;
       }
     } else {
       switch (status) {
-        case 0: pendingBookingsList = []; pendingTotal = 0; break;
-        case 1: inProgressBookingsList = []; inProgressTotal = 0; break;
-        case 2: cancelledBookingsList = []; cancelledTotal = 0; break;
-        case 4: completedBookingsList = []; completedTotal = 0; break;
+        case 0:
+          pendingBookingsList = [];
+          pendingTotal = 0;
+          break;
+        case 1:
+          inProgressBookingsList = [];
+          inProgressTotal = 0;
+          break;
+        case 2:
+          cancelledBookingsList = [];
+          cancelledTotal = 0;
+          break;
+        case 4:
+          completedBookingsList = [];
+          completedTotal = 0;
+          break;
       }
     }
     update();
@@ -207,6 +276,132 @@ class ProfileController extends GetxController with BaseClass {
     update();
   }
 
+  Future<void> getBookingDetail(String bookingId) async {
+    showGetXCircularDialog();
+    final response = await _profileRepository.getBookingDetail(bookingId);
+
+    print('Success Again Check');
+    print(response.isSuccess);
+    print('Close');
+    Get.back();
+    if (response.isSuccess) {
+      bookingDetail = response.data?.data;
+    } else {
+      print(response.data);
+    }
+
+    update();
+  }
+
+  Future<bool> completeBooking({required String bookingId}) async {
+    showGetXCircularDialog();
+    final response = await _profileRepository.completeBooking(bookingId);
+
+    print('Success Again Check');
+    print(response.isSuccess);
+    print('Close');
+    Get.back();
+    update();
+    if (response.isSuccess) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> bookingAdonAcceptReject(
+      String adOnId,
+      String status,
+      int index,
+      ) async {
+    showGetXCircularDialog();
+    final response = await _profileRepository.adOnAcceptReject(adOnId, status);
+
+    print('Success Again Check');
+    print(response.isSuccess);
+    print('Close');
+    Get.back();
+    if (response.isSuccess) {
+      bookingDetail?.addOns?[index].status = int.tryParse(status);
+    } else {
+      print(response.data);
+    }
+
+    update();
+  }
+
+  Future<void> bookingAcceptReject(
+      String status,
+      String bookingId,
+      int index,
+      ) async {
+    showGetXCircularDialog();
+
+    final response = await _profileRepository.bookingAcceptReject(
+      status: status,
+      bookingId: bookingId,
+    );
+
+    Get.back(); // close the loading dialog
+
+    if (response.isSuccess) {
+      if (index != 9999) {
+        pendingBookingsList?.removeAt(index);
+      } else {
+        Get.back();
+      }
+    } else {
+      Get.snackbar('Error', 'Failed to update booking status');
+    }
+
+    update();
+  }
+
+  Future<void> bookingCancels(String bookingId, int index, int type) async {
+    showGetXCircularDialog();
+
+    final response = await _profileRepository.bookingCancel(
+      bookingId: bookingId,
+    );
+
+    Get.back(); // close the loading dialog
+
+    if (response.isSuccess) {
+      if (index != 9999) {
+        if (type == 0) {
+          pendingBookingsList?.removeAt(index);
+        } else if (type == 1) {
+          inProgressBookingsList?.removeAt(index);
+        }
+      } else {
+        Get.back();
+      }
+    } else {
+      Get.snackbar('Error', 'Failed to update booking status');
+    }
+
+    update();
+  }
+
+  Future<void> bookingCancel(String status, String bookingId, int index) async {
+    showGetXCircularDialog();
+
+    final response = await _profileRepository.bookingAcceptReject(
+      status: status,
+      bookingId: bookingId,
+    );
+
+    Get.back(); // close the loading dialog
+
+    if (response.isSuccess) {
+      pendingBookingsList?.removeAt(index);
+    } else {
+      Get.snackbar('Error', 'Failed to update booking status');
+    }
+
+    update();
+  }
+
   Future<void> logoutApi() async {
     showGetXCircularDialog();
     await _profileRepository.logoutApi();
@@ -224,6 +419,21 @@ class ProfileController extends GetxController with BaseClass {
     final response = await _profileRepository.getUserProfileDetails();
     if (response.isSuccess) {
       profileDetailsModel = response.data?.data;
+    }
+    update();
+  }
+
+
+  Future<void> updateDayAndTime(String monday,
+      String tuesday,
+      String wednesday,
+      String thursday,
+      String friday,
+      String saturday,
+      String sunday)  async {
+    final response = await _profileRepository.updateWorkingHour(monday, tuesday, wednesday, thursday, friday, saturday, sunday);
+    if (response.isSuccess) {
+      showSuccess(title: 'Added', message: 'Working hours updated successfully');
     }
     update();
   }
@@ -265,7 +475,7 @@ class ProfileController extends GetxController with BaseClass {
         profile.path,
         filename: profile.path.split('/').last,
       );
-    //  map['profile'] = await dio.MultipartFile.fromFile(profile.path);
+      //  map['profile'] = await dio.MultipartFile.fromFile(profile.path);
     } else {
       print('no image');
     }
@@ -299,13 +509,42 @@ class ProfileController extends GetxController with BaseClass {
     }
   }
 
+  Future<void> favOffeerApi(String offerId, int index) async {
+    try {
+      final response = await _profileRepository.offerFavApi(offerId);
+
+      if (response.isSuccess) {
+        favOffersList?.removeAt(index);
+
+        update(); // Notify UI
+      } else {}
+      update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
   List<FavFreelancersModelDataData?>? favFreelancers;
   Future<void> getFavFreelancers() async {
     try {
       favFreelancers = null;
       final response = await _profileRepository.getFavFreelancersApi();
-      favFreelancers = response.isSuccess ? response.data?.data?.data ?? [] : [];
+      favFreelancers =
+      response.isSuccess ? response.data?.data?.data ?? [] : [];
       update();
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> removeVenderToFav(String vendorId, int index) async {
+    try {
+      final response = await _profileRepository.addVendertoFav(vendorId);
+
+      if (response.isSuccess == true) {
+        favFreelancers?.removeAt(index);
+        update();
+      }
     } catch (e) {
       throw e.toString();
     }
@@ -337,15 +576,17 @@ class ProfileController extends GetxController with BaseClass {
 
       // Include adOn only if it's not empty
       if (adOn != null && adOn.isNotEmpty) {
-        map['adOn'] = jsonEncode(adOn.map((item) {
-          return item.map((key, value) => MapEntry(key.toString(), value.toString()));
-        }).toList());
-       // map['adOn'] = adOn;
+        map['adOn'] = jsonEncode(
+          adOn.map((item) {
+            return item.map(
+                  (key, value) => MapEntry(key.toString(), value.toString()),
+            );
+          }).toList(),
+        );
+        // map['adOn'] = adOn;
       }
       print(map);
-      final response = await _profileRepository.addOffersApi(
-        map: map
-      );
+      final response = await _profileRepository.addOffersApi(map: map);
       Get.back();
       if (response.isSuccess) {
         await getOffersApi();
@@ -376,14 +617,17 @@ class ProfileController extends GetxController with BaseClass {
         'name': name,
         'price': price,
         'deliveryTime': deliveryTime,
-
       };
       print(adOn?.length);
       if (adOn != null && adOn.isNotEmpty) {
         print('objectsss');
-        map['adOn'] = jsonEncode(adOn.map((item) {
-          return item.map((key, value) => MapEntry(key.toString(), value.toString()));
-        }).toList());
+        map['adOn'] = jsonEncode(
+          adOn.map((item) {
+            return item.map(
+                  (key, value) => MapEntry(key.toString(), value.toString()),
+            );
+          }).toList(),
+        );
         // map['adOn'] = adOn;
       }
       if (removedImageId.isNotEmpty) {
@@ -401,6 +645,114 @@ class ProfileController extends GetxController with BaseClass {
       update();
     } catch (e) {
       throw e.toString();
+    }
+  }
+
+  TextEditingController adOnInformation = TextEditingController();
+  TextEditingController adOnBudget = TextEditingController();
+  TextEditingController adOnTime = TextEditingController();
+
+  Future<bool> bookingSendQuote({required String bookId}) async {
+    if (adOnInformation.text.trim().isEmpty) {
+      showError(title: 'Information', message: 'Please enter information');
+      return false;
+    } else if (adOnBudget.text.trim().isEmpty) {
+      showError(title: 'Budget', message: 'Please enter budget');
+      return false;
+    } else if (adOnTime.text.trim().isEmpty) {
+      showError(title: 'Time', message: 'Please enter time');
+      return false;
+    } else {
+      showGetXCircularDialog();
+      try {
+        final response = await _profileRepository.addBookingAdOn(
+          bookingId: bookId.toString(),
+          price: adOnBudget.text,
+          description: adOnInformation.text,
+          timeToComplete: adOnTime.text,
+        );
+        Get.back();
+        if (response.isSuccess == true) {
+          update();
+          adOnInformation.text = '';
+          adOnBudget.text = '';
+          adOnTime.text = '';
+          return true; // ✅ Success
+        }
+        return false;
+      } catch (e) {
+        showError(title: 'Error', message: e.toString());
+        return false;
+      }
+    }
+  }
+
+
+  TextEditingController attitudeTextField = TextEditingController();
+  TextEditingController deliveryTextField = TextEditingController();
+  TextEditingController communicationTextField = TextEditingController();
+  double communicationRating = 3;
+  double deliveryRating = 3;
+  double attitudeRating = 3;
+
+  Future<bool> addBookingRating({required String bookingId, required String userId, required String jobId}) async {
+    if (communicationTextField.text.trim().isEmpty) {
+      showError(title: 'Communication', message: 'Please enter Communication');
+      return false;
+    } else if (attitudeTextField.text.trim().isEmpty) {
+      showError(title: 'Attitude', message: 'Please enter Attitude');
+      return false;
+    } else if (deliveryTextField.text.trim().isEmpty) {
+      showError(title: 'Delivery', message: 'Please enter Delivery');
+      return false;
+    } else {
+      showGetXCircularDialog();
+      if (jobId  == "") {
+        try {
+          final response = await _profileRepository.addBookingRating(bookingId: bookingId,
+              userId: userId,
+              communicationRating: communicationRating.toString(),
+              attitudeRating: attitudeRating.toString(), deliveryRating: deliveryRating.toString(),
+              deliveryComment: deliveryTextField.text,
+              attitudeComment: attitudeTextField.text, communicationComment: communicationTextField.text);
+          Get.back();
+          if (response.isSuccess == true) {
+            update();
+            deliveryTextField.text = '';
+            attitudeTextField.text = '';
+            communicationTextField.text = '';
+            getMyBookings(status: 4);
+            return true; // ✅ Success
+          }
+          return false;
+        } catch (e) {
+          showError(title: 'Error', message: e.toString());
+          return false;
+        }
+      } else {
+        try {
+          final response = await _profileRepository.addJobRating(bookingId: jobId,
+              userId: userId,
+              communicationRating: communicationRating.toString(),
+              attitudeRating: attitudeRating.toString(), deliveryRating: deliveryRating.toString(),
+              deliveryComment: deliveryTextField.text,
+              attitudeComment: attitudeTextField.text, communicationComment: communicationTextField.text);
+          Get.back();
+          if (response.isSuccess == true) {
+            update();
+            deliveryTextField.text = '';
+            attitudeTextField.text = '';
+            communicationTextField.text = '';
+            getMyBookings(status: 4);
+            return true; // ✅ Success
+          }
+          return false;
+        } catch (e) {
+          showError(title: 'Error', message: e.toString());
+          return false;
+        }
+      }
+
     }
   }
 }

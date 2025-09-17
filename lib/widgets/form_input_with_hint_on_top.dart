@@ -63,13 +63,13 @@ class FormInputWithHint extends StatelessWidget {
       children: <Widget>[
         showLabel
             ? Text(
-              label,
-              textAlign: TextAlign.left,
-              style: AppStyles.fontInkika13().copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-              ),
-            )
+          label,
+          textAlign: TextAlign.left,
+          style: AppStyles.fontInkika13().copyWith(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+          ),
+        )
             : const SizedBox(),
         showLabel ? const SizedBox(height: 6) : SizedBox(),
         TextField(
@@ -98,19 +98,19 @@ class FormInputWithHint extends StatelessWidget {
               horizontal: horizontalTextPadding,
             ),
             prefixIcon:
-                prefixIcon != null
-                    ? Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: prefixIcon,
-                    )
-                    : null,
+            prefixIcon != null
+                ? Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: prefixIcon,
+            )
+                : null,
             suffixIcon:
-                suffixIcon != null
-                    ? Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: suffixIcon,
-                    )
-                    : null,
+            suffixIcon != null
+                ? Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: suffixIcon,
+            )
+                : null,
             errorText: errorText,
             errorMaxLines: 3,
             hintText: hintText,

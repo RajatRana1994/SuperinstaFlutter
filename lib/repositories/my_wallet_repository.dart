@@ -1,3 +1,4 @@
+import 'package:instajobs/models/forgot_pass.dart';
 import 'package:instajobs/models/link_bank_account_model.dart';
 import 'package:instajobs/models/my_wallet_model.dart';
 import 'package:instajobs/models/payment_response_model.dart';
@@ -17,7 +18,7 @@ class MyWalletRepository {
   }) async {
     late String url;
     if (isPendingSelected) {
-      url = 'get-transaction?type=credit&status=pending';
+      url = 'get-transaction?type=debit&status=pending';
     } else if (isDebitedSelected) {
       url = 'get-transaction?type=debit&status=successful';
     } else if (isCreditedSelected) {
@@ -52,6 +53,44 @@ class MyWalletRepository {
       converter: (data) {
         // The converter is only called for successful responses now
         return PaymentVerificationResponseModel.fromJson(data);
+      },
+    );
+  }
+
+
+  Future<ApiResponse<PaymentVerificationResponseModel>>
+  verifyBookingPaymentTransaction({required String refId, required String otp, required String bookid}) async {
+    return await _networkService.put<PaymentVerificationResponseModel>(
+      path: 'booking-payment/verify/$bookid',
+      data: {'flw_ref': refId, 'otp': otp},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return PaymentVerificationResponseModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<PaymentVerificationResponseModel>>
+  verifyOfferPaymentTransaction({required String refId, required String otp, required String bookid}) async {
+    return await _networkService.put<PaymentVerificationResponseModel>(
+      path: 'offer-payment/verify/$bookid',
+      data: {'flw_ref': refId, 'otp': otp},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return PaymentVerificationResponseModel.fromJson(data);
+      },
+    );
+  }
+
+
+  Future<ApiResponse<OfferPurchaseResponse>>
+  buyOfferApi({required String amount, required String offerTime, required String adOns, required String offerId}) async {
+    return await _networkService.post<OfferPurchaseResponse>(
+      path: 'offer/purchase/$offerId',
+      data: {'amount': amount, 'offerTime': offerTime, "adOns": adOns},
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return OfferPurchaseResponse.fromJson(data);
       },
     );
   }
@@ -95,6 +134,31 @@ class MyWalletRepository {
         'card_number': cardNumber,
         'coinValue': coinValue,
         'userId': StorageService().getUserId(),
+        'expiry_year': expiryYear,
+      },
+      converter: (data) {
+        // The converter is only called for successful responses now
+        return PaymentReponseModel.fromJson(data);
+      },
+    );
+  }
+
+  Future<ApiResponse<PaymentReponseModel>> bookingpaymentApi({
+    required String expiryMonth,
+    required String cardPin,
+    required String amount,
+    required String cardCvv,
+    required String expiryYear,
+    required String cardNumber,
+  }) async {
+    return await _networkService.post<PaymentReponseModel>(
+      path: 'card-payment',
+      data: {
+        'expiry_month': expiryMonth,
+        'card_pin': cardPin,
+        'amount': amount,
+        'card_cvv': cardCvv,
+        'card_number': cardNumber,
         'expiry_year': expiryYear,
       },
       converter: (data) {

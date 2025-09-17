@@ -14,10 +14,21 @@ import 'bottom_sheets/payment_verify_otp.dart';
 
 class PayCoinsPage extends StatefulWidget {
   final String coins;
-
+  final String bookId;
   final String walletId;
+  final String? offerId;
+  final String? offerTime;
+  final String? adOns;
 
-  const PayCoinsPage({super.key, required this.coins, required this.walletId});
+  const PayCoinsPage({
+    super.key,
+    required this.coins,
+    required this.walletId,
+    required this.bookId,
+    this.offerId,
+    this.offerTime,
+    this.adOns
+  });
 
   @override
   State<PayCoinsPage> createState() => _PayCoinsPageState();
@@ -53,8 +64,8 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
   }
 
   ({String monthStr, String yearStr, int month, int year}) parseExpiry(
-    String raw,
-  ) {
+      String raw,
+      ) {
     // Expecting "MM/YY"
     final parts = raw.split('/');
     if (parts.length != 2) {
@@ -93,20 +104,51 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
       String year = parts.yearStr;
       try {
         showGetXCircularDialog();
-        await _myWalletController.doPaymentApi(
-          walletId: widget.walletId,
-          expiryMonth: month.toString(),
-          cardPin: _pinCtrl.text.trim(),
-          amount: (int.parse(widget.coins) / 1000).toString(),
-          cardCvv: _cvvCtrl.text.trim(),
-          coinValue: widget.coins,
-          expiryYear: year.toString(),
-          cardNumber: _cardCtrl.text.trim().replaceAll('-', ''),
-        );
+        if (widget.bookId != '') {
+          print('one');
+          await _myWalletController.doBookingPaymentApi(
+            expiryMonth: month.toString(),
+            cardPin: _pinCtrl.text.trim(),
+            amount: (int.parse(widget.coins)).toString(),
+            cardCvv: _cvvCtrl.text.trim(),
+            expiryYear: year.toString(),
+            cardNumber: _cardCtrl.text.trim().replaceAll('-', ''),
+          );
+        } else if ((widget.offerId ?? '') != '') {
+
+
+          print('Check this open');
+          await _myWalletController.doBookingPaymentApi(
+            expiryMonth: month.toString(),
+            cardPin: _pinCtrl.text.trim(),
+            amount: (int.parse(widget.coins)).toString(),
+            cardCvv: _cvvCtrl.text.trim(),
+            expiryYear: year.toString(),
+            cardNumber: _cardCtrl.text.trim().replaceAll('-', ''),
+          );
+        } else {
+          print('three');
+          await _myWalletController.doPaymentApi(
+            walletId: widget.walletId,
+            expiryMonth: month.toString(),
+            cardPin: _pinCtrl.text.trim(),
+            amount: (int.parse(widget.coins) / 1000).toString(),
+            cardCvv: _cvvCtrl.text.trim(),
+            coinValue: widget.coins,
+            expiryYear: year.toString(),
+            cardNumber: _cardCtrl.text.trim().replaceAll('-', ''),
+          );
+        }
+
         popToPreviousScreen(context: context);
         PaymentVerifyOtpBottomSheet.showPaymentVerifyOtpBottomSheet(
           context: context,
           paymentResponseModel: _myWalletController.paymentResponseModel,
+          bookingId: widget.bookId ?? '',
+          offerTime: widget.offerTime ?? '',
+          offerId: widget.offerId ?? '',
+          adOns: widget.adOns ?? '',
+          amount: widget.coins ?? '',
           onCancel: () {},
           onDone: () {
             popToPreviousScreen(context: context);
@@ -128,34 +170,35 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
       barrierDismissible: false, // ⟵ no tap-outside dismissal
       builder:
           (context) => WillPopScope(
-            // ⟵ blocks Android back button
-            onWillPop: () async => false,
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              title: const Text(
-                'Payment Success\nThank you on your payment submission',
-                textAlign: TextAlign.center,
-              ),
-              content: const Text(
-                'The receipt will now be reviewed by admin for approval.\n'
+        // ⟵ blocks Android back button
+        onWillPop: () async => false,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const Text(
+            'Payment Success\nThank you on your payment submission',
+            textAlign: TextAlign.center,
+          ),
+          content: const Text(
+            'The receipt will now be reviewed by admin for approval.\n'
                 'Please give admin 2–6 hours to review payments.',
-                textAlign: TextAlign.center,
-              ),
-              actionsAlignment: MainAxisAlignment.center,
-              actions: [
-                RoundedEdgedButton(
-                  buttonText: 'Great',
-                  leftMargin: 30,rightMargin: 30,
-                  onButtonClick: () {
-                    _myWalletController.getWalletDetails();
-                    Get.back();
-                    Get.back();
-                    Get.back();
-                  },
-                ),
-                /*ElevatedButton(
+            textAlign: TextAlign.center,
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            RoundedEdgedButton(
+              buttonText: 'Great',
+              leftMargin: 30,
+              rightMargin: 30,
+              onButtonClick: () {
+                _myWalletController.getWalletDetails();
+                Get.back();
+                Get.back();
+                Get.back();
+              },
+            ),
+            /*ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(90, 40),
               ),
@@ -168,9 +211,9 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
 
               child: const Text('Great'),
             ),*/
-              ],
-            ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -196,46 +239,50 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Do you have any coupon to use',
-              style: AppStyles.font700_16().copyWith(color: Colors.black),
-            ),
-            SizedBox(height: 20),
-            FormInputWithHint(
-              label: 'Coupon Code',
-              hintText: 'Enter coupon code',
-              controller: _verifyCoupon,
-            ),
-            SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () {
-                  if (_verifyCoupon.text.trim().isEmpty) {
-                    showError(
-                      title: 'Coupon',
-                      message: 'Please add coupon code',
-                    );
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Text(
-                    'Verify Coupon',
-                    style: AppStyles.font500_16().copyWith(color: Colors.white),
+            if (widget.walletId != "") ... [
+              Text(
+                'Do you have any coupon to use',
+                style: AppStyles.font700_16().copyWith(color: Colors.black),
+              ),
+              SizedBox(height: 20),
+              FormInputWithHint(
+                label: 'Coupon Code',
+                hintText: 'Enter coupon code',
+                controller: _verifyCoupon,
+              ),
+              SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    if (_verifyCoupon.text.trim().isEmpty) {
+                      showError(
+                        title: 'Coupon',
+                        message: 'Please add coupon code',
+                      );
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Text(
+                      'Verify Coupon',
+                      style: AppStyles.font500_16().copyWith(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Pay amount after converting coins into Naira ₦ ${int.parse(widget.coins) / 1000}',
-              style: AppStyles.font700_16().copyWith(color: Colors.green),
-            ),
+              SizedBox(height: 16),
+              Text(
+                'Pay amount after converting coins into Naira ₦ ${int.parse(widget.coins) / 1000}',
+                style: AppStyles.font700_16().copyWith(color: Colors.green),
+              ),
+            ],
+
+
             RadioListTile<bool>(
               value: true,
               // this tile’s value
@@ -270,11 +317,23 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
                       labelText: 'Card Number',
                       hintText: '0000-0000-0000-0000',
                       labelStyle: const TextStyle(color: Colors.black),
-                      border: kBlackBorder,
-                      enabledBorder: kBlackBorder,
-                      focusedBorder: kBlackBorder,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // default color
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // focus color
+                      ),
                       errorBorder: kBlackBorder,
                       focusedErrorBorder: kBlackBorder,
+
+                      filled: true, // enables background
+                      fillColor: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -293,11 +352,23 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
                             labelText: 'Expiry (MM/YY)',
                             hintText: 'MM/YY',
                             labelStyle: const TextStyle(color: Colors.black),
-                            border: kBlackBorder,
-                            enabledBorder: kBlackBorder,
-                            focusedBorder: kBlackBorder,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // default color
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // focus color
+                            ),
                             errorBorder: kBlackBorder,
                             focusedErrorBorder: kBlackBorder,
+
+                            filled: true, // enables background
+                            fillColor: Colors.white,
                           ),
                         ),
                       ),
@@ -316,12 +387,23 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
                             labelText: 'CVV',
                             hintText: '123',
                             labelStyle: TextStyle(color: Colors.black),
-                            border: kBlackBorder,
-
-                            enabledBorder: kBlackBorder,
-                            focusedBorder: kBlackBorder,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // default color
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // focus color
+                            ),
                             errorBorder: kBlackBorder,
                             focusedErrorBorder: kBlackBorder,
+
+                            filled: true, // enables background
+                            fillColor: Colors.white,
                           ),
                         ),
                       ),
@@ -342,11 +424,23 @@ class _PayCoinsPageState extends State<PayCoinsPage> with BaseClass {
                       labelText: 'Card PIN',
                       hintText: '1234',
                       labelStyle: const TextStyle(color: Colors.black),
-                      border: kBlackBorder,
-                      enabledBorder: kBlackBorder,
-                      focusedBorder: kBlackBorder,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // default color
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.black.withOpacity(0.2)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.black.withOpacity(0.2)), // focus color
+                      ),
                       errorBorder: kBlackBorder,
                       focusedErrorBorder: kBlackBorder,
+
+                      filled: true, // enables background
+                      fillColor: Colors.white,
                     ),
                   ),
                 ],

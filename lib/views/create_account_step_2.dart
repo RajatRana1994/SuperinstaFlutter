@@ -88,22 +88,22 @@ class _CreateAccountStep2State extends State<CreateAccountStep2>
                           );
                         },
                         child:
-                            _image == null
-                                ? Image(
-                                  image: AssetImage(AppImages.chooseImage),
+                        _image == null
+                            ? Image(
+                          image: AssetImage(AppImages.chooseImage),
 
-                                  height: 150,
-                                  width: 150,
-                                )
-                                : ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image(
-                                    image: FileImage(_image!),
-                                    fit: BoxFit.cover,
-                                    height: 150,
-                                    width: 150,
-                                  ),
-                                ),
+                          height: 150,
+                          width: 150,
+                        )
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image(
+                            image: FileImage(_image!),
+                            fit: BoxFit.cover,
+                            height: 150,
+                            width: 150,
+                          ),
+                        ),
                       ),
                       SizedBox(height: 28),
                       FormInputWithHint(
@@ -145,15 +145,15 @@ class _CreateAccountStep2State extends State<CreateAccountStep2>
                             freelancerSignUp.updatePasswordVisibility();
                           },
                           child:
-                              freelancerSignUp.getPasswordStatus
-                                  ? const Icon(
-                                    Icons.visibility_off_outlined,
-                                    color: AppColors.primaryColor,
-                                  )
-                                  : const Icon(
-                                    Icons.visibility,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          freelancerSignUp.getPasswordStatus
+                              ? const Icon(
+                            Icons.visibility_off_outlined,
+                            color: AppColors.primaryColor,
+                          )
+                              : const Icon(
+                            Icons.visibility,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                         controller: freelancerSignUp.passController,
                       ),
@@ -166,15 +166,15 @@ class _CreateAccountStep2State extends State<CreateAccountStep2>
                             freelancerSignUp.updateConfirmPasswordVisibility();
                           },
                           child:
-                              freelancerSignUp.getConfirmPasswordStatus
-                                  ? const Icon(
-                                    Icons.visibility_off_outlined,
-                                    color: AppColors.primaryColor,
-                                  )
-                                  : const Icon(
-                                    Icons.visibility,
-                                    color: AppColors.primaryColor,
-                                  ),
+                          freelancerSignUp.getConfirmPasswordStatus
+                              ? const Icon(
+                            Icons.visibility_off_outlined,
+                            color: AppColors.primaryColor,
+                          )
+                              : const Icon(
+                            Icons.visibility,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                         obscureText: freelancerSignUp.getConfirmPasswordStatus,
                         keyboardType: TextInputType.text,
@@ -321,13 +321,13 @@ class _CreateAccountStep2State extends State<CreateAccountStep2>
                               message: 'Please enter Country',
                             );
                           } else if (freelancerSignUp.passController.text
-                                  .trim() !=
+                              .trim() !=
                               freelancerSignUp.confirmPassController.text
                                   .trim()) {
                             showError(
                               title: 'Confirm Password',
                               message:
-                                  'Confirm Password and password does not match',
+                              'Confirm Password and password does not match',
                             );
                           } else {
                             try {

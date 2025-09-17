@@ -30,43 +30,43 @@ class _DebitedWalletWidgetState extends State<DebitedWalletWidget> {
       builder: (snapshot) {
         return _myWalletController.debitedWallet == null
             ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-            )
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
+          ),
+        )
             : _myWalletController.debitedWallet!.isEmpty
             ? Center(
-              child: Text('No Debit Wallet', style: AppStyles.font700_16()),
-            )
+          child: Text('No Debit Wallet', style: AppStyles.font700_16()),
+        )
             : Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16.0),
-                itemCount: _myWalletController.debitedWallet?.length ?? 0,
-                itemBuilder: (BuildContext context, int index) {
-                  return WalletWidget(
-                    title: '',
-                    status:
-                        _myWalletController.debitedWallet
-                            ?.elementAt(index)
-                            ?.status ??
-                        '',
-                    dateTime:
-                        _myWalletController.debitedWallet
-                            ?.elementAt(index)
-                            ?.created ??
-                        0,
-                    amount:
-                        _myWalletController.debitedWallet
-                            ?.elementAt(index)
-                            ?.amount
-                            .toString() ??
-                        '0',
-                  );
-                },
-              ),
-            );
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: _myWalletController.debitedWallet?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) {
+              return WalletWidget(
+                title: 'Sent to',
+                status:
+                _myWalletController.debitedWallet
+                    ?.elementAt(index)
+                    ?.status ??
+                    '',
+                dateTime:
+                _myWalletController.debitedWallet
+                    ?.elementAt(index)
+                    ?.created ??
+                    0,
+                amount:
+                _myWalletController.debitedWallet
+                    ?.elementAt(index)
+                    ?.amount
+                    .toString() ??
+                    '0',
+              );
+            },
+          ),
+        );
       },
     );
   }

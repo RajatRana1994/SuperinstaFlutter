@@ -33,25 +33,25 @@ class LastViewedVendors extends StatelessWidget {
         children: [
           profile.isNotEmpty
               ? ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                child: Image(
-                  image: NetworkImage(profile),
-                  height: 100,
-                  width: 170,
-                  fit: BoxFit.cover,
-                ),
-              )
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+            child: Image(
+              image: NetworkImage(profile),
+              height: 100,
+              width: 170,
+              fit: BoxFit.cover,
+            ),
+          )
               : Container(
-                decoration: const BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
-                height: 100,
-                width: 170,
-              ),
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            height: 100,
+            width: 170,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             child: Column(
@@ -70,14 +70,14 @@ class LastViewedVendors extends StatelessWidget {
                     Text(
                       rating,
                       style: AppStyles.font500_14().copyWith(
-                        color: Colors.black,
-                        fontSize: 12
+                          color: Colors.black,
+                          fontSize: 12
                       ),
                     ),
                     Text(
                       '($reviews Reviews)',
                       style: AppStyles.font500_14().copyWith(
-                        color: Colors.black,
+                          color: Colors.black,
                           fontSize: 12
                       ),
                     ),

@@ -60,14 +60,14 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
 
   final List<int> _numbers = List.generate(90, (i) => i + 1);
   int? _selectedNumber;
- // Map<String, dynamic> addOnList = {};
+  // Map<String, dynamic> addOnList = {};
   List<Map<String, dynamic>> addOnList = [];
   Future<void> _uploadImages() async {
     final localFiles =
-        _images
-            .where((img) => img.file != null)
-            .map((img) => img.file!)
-            .toList();
+    _images
+        .where((img) => img.file != null)
+        .map((img) => img.file!)
+        .toList();
     if (localFiles.isEmpty) return;
     print('UPLOAD');
     final dio = diox.Dio();
@@ -77,12 +77,12 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
       final formData = diox.FormData.fromMap({
         ...queryParams,
         'image':
-            localFiles.map((file) {
-              return diox.MultipartFile.fromFileSync(
-                file.path,
-                filename: file.path.split('/').last,
-              );
-            }).toList(),
+        localFiles.map((file) {
+          return diox.MultipartFile.fromFileSync(
+            file.path,
+            filename: file.path.split('/').last,
+          );
+        }).toList(),
       });
 
       print(queryParams);
@@ -118,7 +118,7 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
     super.initState();
     nameController.text = widget.offerDetailsModelData?.name ?? '';
     deliveryController.text =
-        '${widget.offerDetailsModelData?.deliveryTime.toString() ?? '0'} days';
+    '${widget.offerDetailsModelData?.deliveryTime.toString() ?? '0'} days';
     priceController.text = widget.offerDetailsModelData?.price.toString() ?? '';
     descriptionController.text =
         widget.offerDetailsModelData?.description ?? '';
@@ -403,8 +403,8 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                         children: [
                           Text(
                             widget.offerDetailsModelData?.adOn
-                                    ?.elementAt(index)
-                                    ?.title ??
+                                ?.elementAt(index)
+                                ?.title ??
                                 '',
                             style: AppStyles.font500_16().copyWith(
                               color: Colors.black,
@@ -414,8 +414,8 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                           const SizedBox(height: 2),
                           Text(
                             widget.offerDetailsModelData?.adOn
-                                    ?.elementAt(index)
-                                    ?.workingDays ??
+                                ?.elementAt(index)
+                                ?.workingDays ??
                                 '',
                             style: AppStyles.font500_16().copyWith(
                               color: Colors.black,
@@ -435,8 +435,8 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                             SizedBox(width: 6),
                             Text(
                               widget.offerDetailsModelData?.adOn
-                                      ?.elementAt(index)
-                                      ?.price ??
+                                  ?.elementAt(index)
+                                  ?.price ??
                                   '',
                               style: AppStyles.font500_16().copyWith(
                                 color: Colors.black,
@@ -477,10 +477,10 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                   );
                 } else {
                   final localFiles =
-                      _images
-                          .where((img) => img.file != null)
-                          .map((img) => img.file!)
-                          .toList();
+                  _images
+                      .where((img) => img.file != null)
+                      .map((img) => img.file!)
+                      .toList();
                   if (localFiles.isNotEmpty) {
                     queryParams.addAll({
                       'description': description,
@@ -496,11 +496,11 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                           .toList();
 
                       queryParams['adOn'] = jsonEncode(adOnList);;
-                      }
+                    }
                     if (removedId.isNotEmpty) {
                       queryParams.putIfAbsent(
                         'removeImageIds',
-                        () => removedId.join(','),
+                            () => removedId.join(','),
                       );
                     }
 
@@ -519,7 +519,7 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
                         deliveryTime: deliveryTime,
                         removedImageId: removedId,
                         offerId:
-                            widget.offerDetailsModelData?.id.toString() ?? '',
+                        widget.offerDetailsModelData?.id.toString() ?? '',
                         adOn: (widget.offerDetailsModelData?.adOn != null && widget.offerDetailsModelData!.adOn!.isNotEmpty)
                             ? widget.offerDetailsModelData!.adOn!
                             .whereType<OfferDetailsModelDataAdOn>() // filters out nulls
@@ -553,10 +553,10 @@ class GridImage {
   final int? id; // backend ID for network images
 
   GridImage({this.file, this.url, this.id})
-    : assert(
-        file != null || url != null,
-        'Either file or url must be non-null',
-      );
+      : assert(
+  file != null || url != null,
+  'Either file or url must be non-null',
+  );
 
   ImageProvider get provider =>
       file != null ? FileImage(file!) : NetworkImage(url!);

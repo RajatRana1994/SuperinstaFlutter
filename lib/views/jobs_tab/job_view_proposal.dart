@@ -14,7 +14,7 @@ import '../../utils/app_styles.dart';
 class JobViewProposal extends StatefulWidget {
   final JobDetailsModelDataJobProposals proposal;
   const JobViewProposal({Key? key, required this.proposal}) : super(key: key);
- // const JobViewProposal({super.key});
+  // const JobViewProposal({super.key});
 
 
   @override
@@ -30,7 +30,7 @@ class _JobViewProposalState extends State<JobViewProposal> {
     final serviceFee = numValue * percent;
     return serviceFee.toStringAsFixed(2);
   }
-  
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.greyBackground,

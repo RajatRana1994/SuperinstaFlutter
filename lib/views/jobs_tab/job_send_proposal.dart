@@ -436,7 +436,7 @@ class _SendProposalState extends State<SendProposal> with BaseClass {
                   buttonText: 'Submit',
                   onButtonClick: () async {
                     jobTabController.uploadImages(
-                      widget.proposal.id.toString(), (_selectedType == PaymentType.project) ? '2' : '1', milestones
+                        widget.proposal.id.toString(), (_selectedType == PaymentType.project) ? '2' : '1', milestones
                     );
                     // Add your submission logic here
                   },

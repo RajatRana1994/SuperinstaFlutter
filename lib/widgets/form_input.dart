@@ -29,25 +29,25 @@ class FormInput extends StatelessWidget {
 
   const FormInput(
       {Key? key,
-      required this.label,
-      this.obscureText = false,
-      this.keyboardType,
-      required this.prefixIcon,
-      this.editTextHeight = 54,
-      this.suffixIcon,
-      this.isEnabled = true,
-      this.isDense = false,
-      required this.controller,
-      this.suffixIconMinimumHeightWidth = 48,
-      this.maxLine = 1,
-      this.errorText,
-      this.formRadius = 8,
-      this.borderColor = AppColors.lightGrey,
-      /*required this.onChanged,*/
-      required this.focusNode,
-      this.initialValue,
-      required this.hintText,
-      this.textFieldHeight = 0})
+        required this.label,
+        this.obscureText = false,
+        this.keyboardType,
+        required this.prefixIcon,
+        this.editTextHeight = 54,
+        this.suffixIcon,
+        this.isEnabled = true,
+        this.isDense = false,
+        required this.controller,
+        this.suffixIconMinimumHeightWidth = 48,
+        this.maxLine = 1,
+        this.errorText,
+        this.formRadius = 8,
+        this.borderColor = AppColors.lightGrey,
+        /*required this.onChanged,*/
+        required this.focusNode,
+        this.initialValue,
+        required this.hintText,
+        this.textFieldHeight = 0})
       : super(key: key);
 
   @override

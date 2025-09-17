@@ -19,11 +19,11 @@ class CheckLoginStatusController extends GetxController {
       if (result.isLoggedIn == null || result.isLoggedIn == false) {
         //Get.offAll(() => const ChooseRolePage(isAskingLogin:true));
 
-          Get.offAll(() => HowItWorksPage/*WelcomePage*/());
+        Get.offAll(() => HowItWorksPage/*WelcomePage*/());
 
       } else {
 
-          Get.offAll(() => const HomePage());
+        Get.offAll(() => const HomePage());
 
 
       }
