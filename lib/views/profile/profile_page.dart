@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                SizedBox(height: 10),
+
                 Row(
                   children: [
                     Container(
@@ -275,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                   ],
 
 
-                SizedBox(height: 12),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -368,12 +368,12 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 10),
                 Divider(),
-                SizedBox(height: 12),
+                SizedBox(height: 8),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
                         ProfileWidget(
@@ -399,7 +399,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                         (StorageService().getUserData().isCustomer ?? true)
                             ? SizedBox()
                             : ProfileWidget(
-                          image: '',
+                          image: AppImages.my_offer,
                           title: 'My Working Timings',
                           onTap: () {
                             pushToNextScreen(
@@ -443,7 +443,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                         (StorageService().getUserData().isCustomer ?? true)
                             ? SizedBox()
                             : ProfileWidget(
-                          image: '',
+                          image: AppImages.feed,
                           title: 'My Feeds',
                           onTap: () {
                             pushToNextScreen(
@@ -471,7 +471,7 @@ class _ProfilePageState extends State<ProfilePage> with BaseClass {
                           onTap: () {},
                         )
                             : ProfileWidget(
-                          image: '',
+                          image: AppImages.my_offer,
                           title: 'My Sell/Purchased Offers',
                           onTap: () {},
                         ),

@@ -22,14 +22,14 @@ class ProfileWidget extends StatelessWidget {
         onTap();
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
-        padding: EdgeInsets.symmetric(vertical: 12),
+        margin: EdgeInsets.only(bottom: 0),
+        padding: EdgeInsets.symmetric(vertical: 14),
         child: Row(
           children: [
             image.isNotEmpty
                 ? Image(image: AssetImage(image), height: 24, width: 24)
                 : Container(height: 24, width: 24),
-            SizedBox(width: 10),
+            SizedBox(width: 18),
             Expanded(
               child: Text(
                 title,

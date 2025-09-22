@@ -10,6 +10,10 @@ import '../models/user_data/user_model.dart';
 import '../storage_services/local_stoage_service.dart';
 import '../utils/local_keys.dart';
 import '../views/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 class LoginController extends GetxController with BaseClass{
   TextEditingController emailController = TextEditingController();
@@ -33,13 +37,19 @@ class LoginController extends GetxController with BaseClass{
   Future<void> callLoginApi() async {
     try {
       showGetXCircularDialog();
+
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      print("🔥 FCM Token: $fcmToken");
+      if (fcmToken == null || fcmToken.isEmpty) {
+        fcmToken = "1234"; // fallback token
+      }
       final response = await SignUpRepository().callLoginApi(
         params: {
           "email": emailController.text.trim(),
           "password": passwordController.text.trim(),
           //userType:Customer
-          "deviceType": "1",
-          "deviceToken": "sdsdasdsadasdasdasdadasdsa",
+          "deviceType": "2",
+          "deviceToken": fcmToken,
         },
       );
       Get.back();

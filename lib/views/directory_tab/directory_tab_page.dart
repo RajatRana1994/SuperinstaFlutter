@@ -58,8 +58,10 @@ class _DirectoryTabPageState extends State<DirectoryTabPage> with BaseClass {
                 )
                     : GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
+
                   itemCount: snapshot.categoriesData?.length ?? 0,
                   shrinkWrap: true,
+
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // 2 columns
                     crossAxisSpacing: 10,
@@ -97,8 +99,8 @@ class _DirectoryTabPageState extends State<DirectoryTabPage> with BaseClass {
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            SizedBox(height: 26,),
                             Container(
                               alignment: Alignment.center,
                               height: 80,
@@ -110,11 +112,11 @@ class _DirectoryTabPageState extends State<DirectoryTabPage> with BaseClass {
                                       ?.image ??
                                       '',
                                 ),
-                                height: 50,
-                                width: 50,
+                                height: 80,
+                                width: 80,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            SizedBox(height: 5),
                             Text(
                               snapshot.categoriesData
                                   ?.elementAt(index)
@@ -155,6 +157,7 @@ class _DirectoryTabPageState extends State<DirectoryTabPage> with BaseClass {
                                 ),
                               ],
                             ),
+
                           ],
                         ),
                       ),

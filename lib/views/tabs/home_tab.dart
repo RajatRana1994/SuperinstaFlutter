@@ -75,7 +75,7 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                   ),
                   SizedBox(height: 15),
                   SizedBox(
-                    height: 180,
+                    height: 170,
                     child: ListView.builder(
                       itemCount:
                       snapshot
@@ -132,7 +132,7 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                       },
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 16),
                 ],
               )
                   : SizedBox(),
@@ -146,9 +146,9 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 16),
                   SizedBox(
-                    height: 150,
+                    height: 120,
                     child: ListView.builder(
                       itemCount:
                       snapshot
@@ -182,9 +182,9 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                             child: Column(
                               crossAxisAlignment:
                               CrossAxisAlignment.center,
-                              mainAxisAlignment:
-                              MainAxisAlignment.center,
+                              // mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                SizedBox(height: 16),
                                 Container(
                                   alignment: Alignment.center,
                                   height: 50,
@@ -198,8 +198,8 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                                           ?.image ??
                                           '',
                                     ),
-                                    height: 80,
-                                    width: 80,
+                                    height: 50,
+                                    width: 50,
                                   ),
                                 ),
                                 SizedBox(height: 16),
@@ -223,7 +223,7 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                       },
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 16),
                 ],
               )
                   : SizedBox(),
@@ -238,9 +238,9 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 16),
                   SizedBox(
-                    height: 200,
+                    height: 195,
                     child: ListView.builder(
                       itemCount:
                       snapshot
@@ -250,7 +250,7 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                           0,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
+                        return Padding(padding: EdgeInsets.only(bottom: 10) , child: GestureDetector(
                           onTap: () {
                             pushToNextScreen(
                               context: context,
@@ -298,11 +298,11 @@ class _HomeTabState extends State<HomeTab> with BaseClass {
                                 .toString() ??
                                 '0',
                           ),
-                        );
+                        ),);
                       },
                     ),
                   ),
-                  SizedBox(height: 30),
+                 // SizedBox(height: 30),
                 ],
               )
                   : SizedBox(),

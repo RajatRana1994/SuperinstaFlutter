@@ -22,7 +22,7 @@ class LastViewedVendors extends StatelessWidget {
     return Container(
       width: 170,
       margin: EdgeInsets.only(right: 12),
-      height: 200,
+      height: 195,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -39,7 +39,7 @@ class LastViewedVendors extends StatelessWidget {
             ),
             child: Image(
               image: NetworkImage(profile),
-              height: 100,
+              height: 96,
               width: 170,
               fit: BoxFit.cover,
             ),
@@ -49,11 +49,11 @@ class LastViewedVendors extends StatelessWidget {
               color: Colors.green,
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            height: 100,
+            height: 96,
             width: 170,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -63,7 +63,7 @@ class LastViewedVendors extends StatelessWidget {
                   maxLines: 1,
                   style: AppStyles.font700_16().copyWith(color: Colors.black),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 2),
                 Row(
                   children: [
                     const Icon(Icons.star, size: 14, color: Colors.amber),
@@ -83,7 +83,7 @@ class LastViewedVendors extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     const CircleAvatar(

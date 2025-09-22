@@ -10,6 +10,7 @@ import 'inline_video_player.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:instajobs/views/feed_tab/report_vc.dart';
 import '../vendor_details/vendor_details_page.dart';
+import 'package:instajobs/storage_services/local_stoage_service.dart';
 
 class FeedDetailVc extends StatefulWidget {
   final String feedId;
@@ -86,49 +87,55 @@ class _FeedDetailVcState extends State<FeedDetailVc> with BaseClass {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text("Feed Details"),
+            title: Text(
+            'Feed Details',
+            style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          ),
           actions: [
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert, color: Colors.orange, size: 30),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              onSelected: (value) {
-                if (value == "About account") {
-                  pushToNextScreen(
-                    context: context,
-                    destination: VendorDetailsPage(
+            if (StorageService().getUserData().userId != feedItem.userId?.toString()) ... [
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, color: Colors.orange, size: 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onSelected: (value) {
+                  if (value == "About account") {
+                    pushToNextScreen(
+                      context: context,
+                      destination: VendorDetailsPage(
                         feedItem.userId.toString(),
+                      ),
+                    );
+                    // Handle Edit
+                  } else if (value == "Report") {
+                    Get.bottomSheet(
+                      ReportVc(feedId: widget.feedId),
+                      isScrollControlled:
+                      true, // optional, useful for keyboard/form inputs
+                    );
+
+                    // Handle Report
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: "About account",
+                    child: ListTile(
+
+                      title: Text("About account"),
                     ),
-                  );
-                  // Handle Edit
-                } else if (value == "Report") {
-                  Get.bottomSheet(
-                    ReportVc(feedId: widget.feedId),
-                    isScrollControlled:
-                    true, // optional, useful for keyboard/form inputs
-                  );
-
-                  // Handle Report
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: "About account",
-                  child: ListTile(
-
-                    title: Text("About account"),
                   ),
-                ),
-                const PopupMenuItem(
-                  value: "Report",
-                  child: ListTile(
+                  const PopupMenuItem(
+                    value: "Report",
+                    child: ListTile(
 
-                    title: Text("Report"),
+                      title: Text("Report"),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ]
+
           ],
         ),
         body: SingleChildScrollView(

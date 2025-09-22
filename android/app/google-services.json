@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "196502708392",
+    "project_id": "superinstajobs-3ba5d",
+    "storage_bucket": "superinstajobs-3ba5d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196502708392:android:67a768b13d5e60ffde229d",
+        "android_client_info": {
+          "package_name": "com.app.superinstajobs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbmxXBhgMHxKzv-RRKbzHnvPMpSb_e4fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196502708392:android:1f4e0b6619cb2d3ede229d",
+        "android_client_info": {
+          "package_name": "com.insta.instajobs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbmxXBhgMHxKzv-RRKbzHnvPMpSb_e4fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

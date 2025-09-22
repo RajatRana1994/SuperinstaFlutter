@@ -34,7 +34,7 @@ class TopFreelancerWidget extends StatelessWidget {
       child: Container(
         width: 140,
         margin: EdgeInsets.only(right: 12),
-        height: 160,
+        height: 150,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),

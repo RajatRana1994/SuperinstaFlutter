@@ -2,10 +2,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:instajobs/controllers/feed_tab_controller.dart';
 import 'package:get/get.dart';
+import 'package:instajobs/utils/baseClass.dart';
 
 import '../../models/feed_tab_model.dart';
 import '../../utils/app_colors.dart';
 import 'inline_video_player.dart';
+import 'package:instajobs/views/feed_tab/feed_detail_vc.dart';
+import 'package:instajobs/storage_services/local_stoage_service.dart';
+import 'package:instajobs/views/feed_tab/report_vc.dart';
+import '../vendor_details/vendor_details_page.dart';
 
 class FeedTabPage extends StatefulWidget {
   const FeedTabPage({super.key});
@@ -14,7 +19,7 @@ class FeedTabPage extends StatefulWidget {
   State<FeedTabPage> createState() => _FeedTabPageState();
 }
 
-class _FeedTabPageState extends State<FeedTabPage> {
+class _FeedTabPageState extends State<FeedTabPage> with BaseClass {
   FeedTabController feedTabController = Get.put(FeedTabController());
   final Map<int, int> _carouselCurrent = {};
 
@@ -70,31 +75,70 @@ class _FeedTabPageState extends State<FeedTabPage> {
                 videoItem = null;
               }
 
-              return Card(
+
+              return GestureDetector(
+                onTap: () {
+                  feedTabController.feedDetail.value = null;
+                  int feedId = feedItem?.id ?? 0;
+                  pushToNextScreen(context: context, destination: FeedDetailVc(feedId: feedId.toString()));
+                },
+                child: Card(
                 elevation: 2,
                 color: Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            feedItem?.users?.profile ?? '',
-                          ),
-                        ),
-                      ),
-                      title: Text(feedItem?.users?.name ?? ''),
-
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.more_vert),
-                        color: Colors.black,
+                  ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        feedItem?.users?.profile ?? '',
                       ),
                     ),
-                    Padding(
+                  ),
+                  title: Text(feedItem?.users?.name ?? ''),
+                  trailing: (StorageService().getUserData().userId != feedItem?.userId?.toString())
+                      ? PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert, color: Colors.orange, size: 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    onSelected: (value) {
+                      if (value == "About account") {
+                        pushToNextScreen(
+                          context: context,
+                          destination: VendorDetailsPage(
+                            (feedItem?.userId ?? 0).toString(),
+                          ),
+                        );
+                      } else if (value == "Report") {
+                        Get.bottomSheet(
+                          ReportVc(feedId: (feedItem?.id ?? 0).toString()),
+                          isScrollControlled: true,
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: "About account",
+                        child: ListTile(
+                          title: Text("About account"),
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: "Report",
+                        child: ListTile(
+                          title: Text("Report"),
+                        ),
+                      ),
+                    ],
+                  )
+                      : null, // hide trailing if it's the same user
+                ),
+
+                  Padding(
                       padding: const EdgeInsets.only(
                         left: 12,
                         right: 12,
@@ -265,6 +309,7 @@ class _FeedTabPageState extends State<FeedTabPage> {
                     ),
                   ],
                 ),
+              ),
               );
             },
           );
