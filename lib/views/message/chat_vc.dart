@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:instajobs/storage_services/local_stoage_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import '../../utils/app_styles.dart';
 
 class ChatVc extends StatefulWidget {
   final String chatId;
@@ -139,13 +140,9 @@ class _ChatVcState extends State<ChatVc> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+        title:  Text(
           "Messages",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Column(

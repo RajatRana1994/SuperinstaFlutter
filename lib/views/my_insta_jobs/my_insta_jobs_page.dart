@@ -26,7 +26,7 @@ class _MyInstaJobsPageState extends State<MyInstaJobsPage> {
         centerTitle: false,
         title: Text(
           'My InstaJobs',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
 
       ),

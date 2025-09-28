@@ -104,7 +104,7 @@ class _CreateAccountStep3State extends State<CreateAccountStep3>
         centerTitle: true,
         title: Text(
           'Create Account',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Column(

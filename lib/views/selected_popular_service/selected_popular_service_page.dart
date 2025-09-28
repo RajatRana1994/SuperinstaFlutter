@@ -39,7 +39,7 @@ class _SelectedPopularServicePageState extends State<SelectedPopularServicePage>
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(widget.selectedCategory?.name ?? ''),
+        title: Text(widget.selectedCategory?.name ?? '', style:  AppStyles.fontInkika().copyWith(fontSize: 20),),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
@@ -63,7 +63,7 @@ class _SelectedPopularServicePageState extends State<SelectedPopularServicePage>
                             subCategoriesData:
                             homeTabController.subCategoriesData,
                             index: 0,
-
+                            comeFrom: 'all',
                             caategoryId: widget.selectedCategory?.id.toString() ?? '',
                           ),
                         );
@@ -101,14 +101,16 @@ class _SelectedPopularServicePageState extends State<SelectedPopularServicePage>
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
+                                print(index);
                                 pushToNextScreen(
                                   context: context,
                                   destination: PopularServiceDetailsPage(
                                     subCategoriesData:
                                     homeTabController.subCategoriesData,
                                     index: index,
-
+                                    comeFrom: 'subcategory',
                                     caategoryId: widget.selectedCategory?.id.toString() ?? '',
+
                                   ),
                                 );
                               },

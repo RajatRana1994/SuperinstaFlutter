@@ -109,7 +109,7 @@ class _AddOfferPageState extends State<AddOfferPage> with BaseClass {
         title: Text(
           'Add Offer',
 
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

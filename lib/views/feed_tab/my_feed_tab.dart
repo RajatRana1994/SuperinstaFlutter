@@ -53,7 +53,7 @@ class _MyFeedTabState extends State<MyFeedTab> with BaseClass {
         ],
         title: Text(
           'My Feeds',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<FeedTabController>(

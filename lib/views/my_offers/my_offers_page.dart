@@ -49,7 +49,7 @@ class _MyOffersPageState extends State<MyOffersPage> with BaseClass {
         ],
         title: Text(
           'My offers',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Column(

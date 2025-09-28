@@ -89,7 +89,7 @@ class _FeedDetailVcState extends State<FeedDetailVc> with BaseClass {
         appBar: AppBar(
             title: Text(
             'Feed Details',
-            style: AppStyles.fontInkika().copyWith(fontSize: 24),
+            style: AppStyles.fontInkika().copyWith(fontSize: 20),
           ),
           actions: [
             if (StorageService().getUserData().userId != feedItem.userId?.toString()) ... [

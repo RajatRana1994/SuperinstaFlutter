@@ -29,7 +29,7 @@ class _BuyCoinsPageState extends State<BuyCoinsPage> with BaseClass {
         centerTitle: false,
         title: Text(
           'Buy Coins',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

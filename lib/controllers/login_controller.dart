@@ -38,18 +38,18 @@ class LoginController extends GetxController with BaseClass{
     try {
       showGetXCircularDialog();
 
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
-      print("🔥 FCM Token: $fcmToken");
-      if (fcmToken == null || fcmToken.isEmpty) {
-        fcmToken = "1234"; // fallback token
-      }
+      // String? fcmToken = await FirebaseMessaging.instance.getToken();
+      // print("🔥 FCM Token: $fcmToken");
+      // if (fcmToken == null || fcmToken.isEmpty) {
+      //   fcmToken = "1234"; // fallback token
+      // }
       final response = await SignUpRepository().callLoginApi(
         params: {
           "email": emailController.text.trim(),
           "password": passwordController.text.trim(),
           //userType:Customer
           "deviceType": "2",
-          "deviceToken": fcmToken,
+          "deviceToken": 'fcmToken',
         },
       );
       Get.back();

@@ -38,7 +38,7 @@ class _NotificationPageState extends State<NotificationPage> with BaseClass {
         centerTitle: false,
         title: Text(
           'Notifications',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<NotificationController>(

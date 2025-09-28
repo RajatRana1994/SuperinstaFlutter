@@ -107,14 +107,27 @@ class _HowItWorksPageState extends State<HowItWorksPage> with BaseClass{
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: RoundedEdgedButton(
                         onButtonClick: () {
-                          pushReplaceAndClearStack(context: context, destination: WelcomePage());
+                          if (index == onboardingData.length - 1) {
+                            // Last slide → Navigate
+                            pushReplaceAndClearStack(
+                              context: context,
+                              destination: WelcomePage(),
+                            );
+                          } else {
+                            // Not last slide → Move to next page
+                            _controller.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          }
+
                           // Navigate or perform action
                         },
                         borderRadius: 40,
                         leftMargin: 70,
                         rightMargin: 70,
                         height: 40,
-                        buttonText: 'Get Started',
+                        buttonText:  index == 2 ? 'Get Started' : 'Next',
                       ),
                     ),
                   ],

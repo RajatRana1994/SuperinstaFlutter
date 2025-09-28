@@ -136,7 +136,7 @@ class _MyProfilePageState extends State<MyProfilePage> with BaseClass {
         centerTitle: false,
         title: Text(
           'My profile',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

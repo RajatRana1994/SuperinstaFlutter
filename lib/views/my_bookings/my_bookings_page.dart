@@ -37,10 +37,10 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       appBar: AppBar(
         backgroundColor: AppColors.bgColor,
         surfaceTintColor: Colors.transparent,
-        centerTitle: false,
+        centerTitle: true,
         title: Text(
           'My Bookings',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<ProfileController>(
@@ -59,12 +59,12 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           setState(() {});
                         },
                         child: Container(
-                          height: 52,
+                          height: 40,
                           decoration: BoxDecoration(
                             color:
                             selectedIndex == 0
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                                ? Color(0xFFEA8803)
+                                : Color(0xFFFFEADF),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -73,25 +73,25 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               children: [
                                 Text(
                                   'Pending',
-                                  style: AppStyles.font400_12().copyWith(
+                                  style: AppStyles.font700_12().copyWith(
                                     color:
                                     selectedIndex == 0
                                         ? Colors.white
-                                        : Colors.black,
+                                        : Color(0xFF848687),
                                   ),
                                 ),
-                                SizedBox(height: 2),
-                                Text(
-                                  controller.pendingTotal == -1
-                                      ? ''
-                                      : controller.pendingTotal.toString(),
-                                  style: AppStyles.font400_12().copyWith(
-                                    color:
-                                    selectedIndex == 0
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
+                                // SizedBox(height: 2),
+                                // Text(
+                                //   controller.pendingTotal == -1
+                                //       ? ''
+                                //       : controller.pendingTotal.toString(),
+                                //   style: AppStyles.font400_12().copyWith(
+                                //     color:
+                                //     selectedIndex == 0
+                                //         ? Colors.white
+                                //         : Colors.black,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -106,12 +106,12 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           setState(() {});
                         },
                         child: Container(
-                          height: 52,
+                          height: 40,
                           decoration: BoxDecoration(
                             color:
                             selectedIndex == 1
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                                ? Color(0xFFEA8803)
+                                : Color(0xFFFFEADF),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -120,25 +120,25 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               children: [
                                 Text(
                                   'In Progress',
-                                  style: AppStyles.font400_12().copyWith(
+                                  style: AppStyles.font700_12().copyWith(
                                     color:
                                     selectedIndex == 1
                                         ? Colors.white
-                                        : Colors.black,
+                                        : Color(0xFF848687),
                                   ),
                                 ),
-                                SizedBox(height: 2),
-                                Text(
-                                  controller.inProgressTotal == -1
-                                      ? ''
-                                      : controller.inProgressTotal.toString(),
-                                  style: AppStyles.font400_12().copyWith(
-                                    color:
-                                    selectedIndex == 1
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
+                                // SizedBox(height: 2),
+                                // Text(
+                                //   controller.inProgressTotal == -1
+                                //       ? ''
+                                //       : controller.inProgressTotal.toString(),
+                                //   style: AppStyles.font400_12().copyWith(
+                                //     color:
+                                //     selectedIndex == 1
+                                //         ? Colors.white
+                                //         : Colors.black,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -153,12 +153,12 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           setState(() {});
                         },
                         child: Container(
-                          height: 52,
+                          height: 40,
                           decoration: BoxDecoration(
                             color:
                             selectedIndex == 2
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                                ? Color(0xFFEA8803)
+                                : Color(0xFFFFEADF),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -167,25 +167,25 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               children: [
                                 Text(
                                   'Cancelled',
-                                  style: AppStyles.font400_12().copyWith(
+                                  style: AppStyles.font700_12().copyWith(
                                     color:
                                     selectedIndex == 2
                                         ? Colors.white
-                                        : Colors.black,
+                                        : Color(0xFF848687),
                                   ),
                                 ),
-                                SizedBox(height: 2),
-                                Text(
-                                  controller.cancelledTotal == -1
-                                      ? ''
-                                      : controller.cancelledTotal.toString(),
-                                  style: AppStyles.font400_12().copyWith(
-                                    color:
-                                    selectedIndex == 2
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
+                                // SizedBox(height: 2),
+                                // Text(
+                                //   controller.cancelledTotal == -1
+                                //       ? ''
+                                //       : controller.cancelledTotal.toString(),
+                                //   style: AppStyles.font400_12().copyWith(
+                                //     color:
+                                //     selectedIndex == 2
+                                //         ? Colors.white
+                                //         : Colors.black,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -200,12 +200,12 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           setState(() {});
                         },
                         child: Container(
-                          height: 52,
+                          height: 40,
                           decoration: BoxDecoration(
                             color:
                             selectedIndex == 3
-                                ? Colors.orange
-                                : Colors.orange.withOpacity(0.3),
+                                ? Color(0xFFEA8803)
+                                : Color(0xFFFFEADF),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -214,25 +214,25 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               children: [
                                 Text(
                                   'Completed',
-                                  style: AppStyles.font400_12().copyWith(
+                                  style: AppStyles.font700_12().copyWith(
                                     color:
                                     selectedIndex == 3
                                         ? Colors.white
-                                        : Colors.black,
+                                        : Color(0xFF848687),
                                   ),
                                 ),
-                                SizedBox(height: 2),
-                                Text(
-                                  controller.completedTotal == -1
-                                      ? ''
-                                      : controller.completedTotal.toString(),
-                                  style: AppStyles.font400_12().copyWith(
-                                    color:
-                                    selectedIndex == 3
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
+                                // SizedBox(height: 2),
+                                // Text(
+                                //   controller.completedTotal == -1
+                                //       ? ''
+                                //       : controller.completedTotal.toString(),
+                                //   style: AppStyles.font400_12().copyWith(
+                                //     color:
+                                //     selectedIndex == 3
+                                //         ? Colors.white
+                                //         : Colors.black,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),

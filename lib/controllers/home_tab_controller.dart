@@ -28,8 +28,8 @@ class HomeTabController extends GetxController with BaseClass {
   final HomeTabRepository _homeTabRepository = HomeTabRepository();
 
   int currentPage = 1;
-  bool isLoading = false;
-  bool hasMore = true;
+  bool isLoadingMore = false;
+  bool hasMoreData = true;
 
   Future<void> getHomeData() async {
     try {
@@ -64,21 +64,76 @@ class HomeTabController extends GetxController with BaseClass {
     }
   }
 
-  Future<void> getUsersPopularServices(String itemId, String subCategory, String page, {bool isLoadMore = false}) async {
+
+  Future<void> loadInitial(String itemId, String subCategory) async {
+    currentPage = 1;
+    hasMoreData = true;
+    await getUsersPopularServices(itemId, subCategory, currentPage.toString());
+  }
+
+  Future<void> loadMore(String itemId, String subCategory) async {
+    if (isLoadingMore || !hasMoreData) return;
+
+    isLoadingMore = true;
+    currentPage++;
+
+    await getUsersPopularServices(
+      itemId,
+      subCategory,
+      currentPage.toString(),
+      isLoadMore: true,
+    );
+
+    // If API returned no data, mark no more
+    if ((popularServiceDetailsModel?.isEmpty ?? true)) {
+      hasMoreData = false;
+    }
+
+    isLoadingMore = false;
+  }
+
+  Future<void> getUsersPopularServices(
+      String itemId,
+      String subCategory,
+      String page, {
+        bool isLoadMore = false,
+      }) async {
+    print(itemId);
+
     try {
-      popularServiceDetailsModel = null;
-      final response = await _homeTabRepository.getUserPopularServices(itemId, subCategory, page);
+      if (!isLoadMore) {
+        print('keshav');
+        popularServiceDetailsModel = null; // fresh call
+        update();
+      }
+      print('keshav kumar');
+      final response = await _homeTabRepository.getUserPopularServices(
+        itemId,
+        subCategory,
+        page,
+      );
+
       if (response.isSuccess) {
-        popularServiceDetailsModel = response.data?.data?.data??[];
+        if (isLoadMore) {
+          // Append data
+          popularServiceDetailsModel?.addAll(response.data?.data?.data ?? []);
+        } else {
+          // Fresh load
+          popularServiceDetailsModel = response.data?.data?.data ?? [];
+        }
       } else {
-        popularServiceDetailsModel = [];
+        if (!isLoadMore) {
+          popularServiceDetailsModel = [];
+        }
         throw response.message.toString();
       }
+
       update();
     } catch (e) {
       throw e.toString();
     }
   }
+
 
   Future<void> addRemoveFacVendor(String vendorId, int index) async {
     try {

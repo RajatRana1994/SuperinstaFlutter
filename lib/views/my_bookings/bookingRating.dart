@@ -29,7 +29,7 @@ class _BookingratingState extends State<Bookingrating> {
         centerTitle: false,
         title: Text(
           'Add Rating & Review',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

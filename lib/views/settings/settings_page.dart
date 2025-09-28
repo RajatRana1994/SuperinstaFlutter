@@ -30,7 +30,7 @@ class _SettingsPageState extends State<SettingsPage> with BaseClass {
         centerTitle: false,
         title: Text(
           'Settings',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Column(

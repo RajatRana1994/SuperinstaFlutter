@@ -62,11 +62,7 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
         backgroundColor: AppColors.white,
         title: Text(
           'Job Details',
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
         centerTitle: false,
       ),
@@ -266,7 +262,7 @@ class _JobDetailsPageState extends State<JobDetailsPage> with BaseClass {
                             Icon(Icons.flag, color: AppColors.orange),
                             Text(
                               'Flag an inappropriate client',
-                              style: AppStyles.font500_14().copyWith(
+                              style: AppStyles.font500_12().copyWith(
                                 color: AppColors.orange,
                               ),
                             ),

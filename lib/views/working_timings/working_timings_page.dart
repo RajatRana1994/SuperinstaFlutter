@@ -51,7 +51,7 @@ class _WorkingTimingsPageState extends State<WorkingTimingsPage> {
         centerTitle: false,
         title: Text(
           'Working Days and Time',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+        style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<ProfileController>(

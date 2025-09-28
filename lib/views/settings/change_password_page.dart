@@ -35,7 +35,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage>
         centerTitle: false,
         title: Text(
           'Change Password',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

@@ -49,7 +49,7 @@ class _AddAddonsPageState extends State<AddAddonsPage> with BaseClass {
 
         title: Text(
           'Add Addon',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

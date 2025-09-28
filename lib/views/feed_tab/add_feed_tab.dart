@@ -106,7 +106,7 @@ class _AddFeedTabState extends State<AddFeedTab> with BaseClass {
         centerTitle: false,
         title: Text(
           'Add Feed',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

@@ -37,4 +37,6 @@ class AppImages {
   static const String icHelp =  "${assetsPath}ic_help.png";
   static const String icAbout = "${assetsPath}ic_about.png";
   static const String icLogout = "${assetsPath}ic_logout.png";
+
+  static const String icChat = "${assetsPath}ic_chat.png";
 }

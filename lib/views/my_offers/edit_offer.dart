@@ -150,7 +150,7 @@ class _EditOfferState extends State<EditOffer> with BaseClass {
 
         title: Text(
           'Edit Offer',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: SingleChildScrollView(

@@ -51,7 +51,7 @@ class _CreateAccountStepOneState extends State<CreateAccountStepOne>
         centerTitle: true,
         title: Text(
           'Create Account',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Column(

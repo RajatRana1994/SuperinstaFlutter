@@ -15,11 +15,13 @@ class PopularServiceDetailsPage extends StatefulWidget {
   final List<SubCategoryModelDataSubCategories?>? subCategoriesData;
   final int index;
   final String caategoryId;
+  final String comeFrom;
 
   const PopularServiceDetailsPage({
     super.key,
     required this.subCategoriesData,
     required this.index,
+    required this.comeFrom,
     required this.caategoryId,
   });
 
@@ -40,15 +42,20 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
     selectedIndex = widget.index;
 
     final subCategoryId =
-    (widget.index == 0)
+    (widget.comeFrom == 'all')
         ? '' // send empty for "All"
         : (widget.subCategoriesData?[selectedIndex]?.id ?? 0).toString();
 
-    homeTabController.getUsersPopularServices(
-      widget.caategoryId,
-      subCategoryId,
-      '1',
-    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      homeTabController.loadInitial(widget.caategoryId, subCategoryId);
+    });
+ //   homeTabController.loadInitial(widget.caategoryId, subCategoryId);
+    // homeTabController.getUsersPopularServices(
+    //   widget.caategoryId,
+    //   subCategoryId,
+    //   '1',
+    // );
     if (subCategoryId != '') {
       selectedIndex = selectedIndex + 1;
     }
@@ -62,6 +69,7 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
         backgroundColor: Colors.white,
         title: Text(
           widget.subCategoriesData?.elementAt(widget.index)?.name ?? '',
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Padding(
@@ -98,11 +106,15 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
                     onTap: () {
                       selectedIndex = index;
                       setState(() {});
-                      homeTabController.getUsersPopularServices(
-                        widget.caategoryId,
-                        categoryId,
-                        '1',
-                      );
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        homeTabController.loadInitial(widget.caategoryId, categoryId);
+                      });
+
+                      // homeTabController.getUsersPopularServices(
+                      //   widget.caategoryId,
+                      //   categoryId,
+                      //   '1',
+                      // );
                     },
                     child: Center(
                       child: Container(
@@ -151,293 +163,324 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
                   ),
                 )
                     : Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount:
-                    snapshot.popularServiceDetailsModel?.length ?? 0,
-                    shrinkWrap: true,
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (!homeTabController.isLoadingMore &&
+                          homeTabController.hasMoreData &&
+                          scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                        // Reached bottom
+                        homeTabController.loadMore(
+                          widget.caategoryId,
+                          selectedIndex == 0
+                              ? ''
+                              : widget.subCategoriesData
+                              ?.elementAt(selectedIndex - 1)
+                              ?.id
+                              .toString() ??
+                              '',
+                        );
+                      }
+                      return false;
+                    },
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount:
+                      snapshot.popularServiceDetailsModel?.length ?? 0,
+                      shrinkWrap: true,
 
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          pushToNextScreen(
-                            context: context,
-                            destination: VendorDetailsPage(
-                              snapshot.popularServiceDetailsModel
-                                  ?.elementAt(index)
-                                  ?.users
-                                  ?.id
-                                  .toString() ??
-                                  '',
-                            ),
-                          );
-                        },
-                        child: Container(
-                          //height: 170,
-                          margin: EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Color(0xffEBEBEB),
-                              width: 2,
-                            ),
-                          ),
-
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      bottomLeft: Radius.circular(16),
-                                    ),
-                                    child: Container(
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        //color: Colors.green.shade500,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          bottomLeft: Radius.circular(16),
-                                        ),
-                                      ),
-                                      width: 120,
-                                      child: Image(
-                                        image: AssetImage(AppImages.icon),
-                                        //    height: 150,
-                                        width: 120,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 8,
-                                    bottom: 8,
-                                    child: Container(
-                                      height: 20,
-                                      width: 20,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.orange,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.check,
-                                          color: AppColors.white,
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 8,
-                                    left: 8,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(
-                                          0.7,
-                                        ),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: IconButton(
-                                          icon: Icon(
-                                            ((snapshot.popularServiceDetailsModel
-                                                ?.elementAt(
-                                              index,
-                                            )
-                                                ?.users
-                                                ?.favVendor ??
-                                                0) ==
-                                                0)
-                                                ? Icons.favorite_border
-                                                : Icons.favorite,
-                                            color: Colors.red,
-                                            size: 18, // icon visual size
-                                          ),
-                                          onPressed: () {
-                                            var verdorId =
-                                                snapshot
-                                                    .popularServiceDetailsModel
-                                                    ?.elementAt(index)
-                                                    ?.users
-                                                    ?.id ??
-                                                    0;
-
-                                            homeTabController
-                                                .addRemoveFacVendor(
-                                              verdorId.toString(),
-                                              index,
-                                            );
-                                            // profileController.removeVenderToFav(snapshot.favFreelancers
-                                            //     ?.elementAt(index)
-                                            //     ?.vendorId
-                                            //     .toString() ??
-                                            //     '', index);
-                                          },
-                                          padding:
-                                          EdgeInsets
-                                              .zero, // remove default padding
-                                          constraints:
-                                          BoxConstraints(), // remove default size constraints
-                                          splashRadius:
-                                          16, // splash radius for tap feedback
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            pushToNextScreen(
+                              context: context,
+                              destination: VendorDetailsPage(
+                                snapshot.popularServiceDetailsModel
+                                    ?.elementAt(index)
+                                    ?.users
+                                    ?.id
+                                    .toString() ??
+                                    '',
                               ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                            );
+                          },
+                          child: Container(
+                            //height: 170,
+                            margin: EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Color(0xffEBEBEB),
+                                width: 2,
+                              ),
+                            ),
+
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Stack(
                                   children: [
-                                    Text(
-                                      snapshot.popularServiceDetailsModel
-                                          ?.elementAt(index)
-                                          ?.users
-                                          ?.name ??
-                                          '',
-                                      textAlign: TextAlign.start,
-                                      maxLines: 1,
-                                      style: AppStyles.font400_12()
-                                          .copyWith(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        bottomLeft: Radius.circular(16),
                                       ),
-                                    ),
-                                    SizedBox(height: 2),
-                                    getItemWidget(
-                                      icon: Icon(
-                                        Icons.phone,
-                                        color: AppColors.orange,
-                                        size: 14,
-                                      ),
-                                      textColor: Colors.blue,
-                                      title:
-                                      snapshot
-                                          .popularServiceDetailsModel
-                                          ?.elementAt(index)
-                                          ?.users
-                                          ?.phone ??
-                                          '',
-                                    ),
-                                    SizedBox(height: 2),
-                                    getItemWidget(
-                                      icon: Icon(
-                                        Icons.add_location_alt_sharp,
-                                        color: AppColors.orange,
-                                        size: 14,
-                                      ),
-                                      title:
-                                      '${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.country ?? ''},${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.city ?? ''}${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.state ?? ''}',
-                                    ),
-                                    SizedBox(height: 2),
-                                    getItemWidget(
-                                      icon: Icon(
-                                        Icons.star,
-                                        color: AppColors.orange,
-                                        size: 14,
-                                      ),
-                                      title:
-                                      snapshot
-                                          .popularServiceDetailsModel
-                                          ?.elementAt(index)
-                                          ?.users
-                                          ?.overallRating ??
-                                          '',
-                                    ),
-                                    SizedBox(height: 2),
-                                    Row(
-                                      children: [
-                                        GetCurrencyWidget(),
-                                        SizedBox(width: 2),
-                                        getItemWidget(
-                                          icon: Text(
-                                            'Hourly Price:',
-                                            style: AppStyles.font600_12()
-                                                .copyWith(
-                                              color: Colors.black,
-                                            ),
+                                      child: Container(
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          //color: Colors.green.shade500,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            bottomLeft: Radius.circular(16),
                                           ),
-                                          title:
-                                          snapshot
-                                              .popularServiceDetailsModel
+                                        ),
+                                        width: 120,
+                                        child: Image.network(
+                                          snapshot.popularServiceDetailsModel
                                               ?.elementAt(index)
                                               ?.users
-                                              ?.hourlyPrice
-                                              .toString() ??
+                                              ?.profile ??
                                               '',
+                                          width: 120,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Image.asset(
+                                              AppImages.icon, // your local dummy asset
+                                              width: 120,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                    SizedBox(height: 2),
-                                    Row(
-                                      children: [
-                                        GetCurrencyWidget(),
-                                        SizedBox(width: 2),
-                                        getItemWidget(
-                                          icon: Text(
-                                            'Daily Price:',
-                                            style: AppStyles.font600_12()
-                                                .copyWith(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          title:
-                                          snapshot
-                                              .popularServiceDetailsModel
-                                              ?.elementAt(index)
-                                              ?.users
-                                              ?.dailyPrice
-                                              .toString() ??
-                                              '',
+                                    Positioned(
+                                      left: 8,
+                                      bottom: 8,
+                                      child: Container(
+                                        height: 20,
+                                        width: 20,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.orange,
+                                          shape: BoxShape.circle,
                                         ),
-                                      ],
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.check,
+                                            color: AppColors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    SizedBox(height: 2),
-                                    Row(
-                                      children: [
-                                        GetCurrencyWidget(),
-                                        SizedBox(width: 2),
-                                        getItemWidget(
-                                          icon: Text(
-                                            'Offers From:',
-                                            style: AppStyles.font600_12()
-                                                .copyWith(
-                                              color: Colors.black,
-                                            ),
+                                    Positioned(
+                                      top: 8,
+                                      left: 8,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(
+                                            0.7,
                                           ),
-                                          title:
-                                          snapshot
-                                              .popularServiceDetailsModel
-                                              ?.elementAt(index)
-                                              ?.users
-                                              ?.totalJobs
-                                              .toString() ??
-                                              '',
+                                          shape: BoxShape.circle,
                                         ),
-                                      ],
+                                        child: SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              ((snapshot.popularServiceDetailsModel
+                                                  ?.elementAt(
+                                                index,
+                                              )
+                                                  ?.users
+                                                  ?.favVendor ??
+                                                  0) ==
+                                                  0)
+                                                  ? Icons.favorite_border
+                                                  : Icons.favorite,
+                                              color: Colors.red,
+                                              size: 18, // icon visual size
+                                            ),
+                                            onPressed: () {
+                                              var verdorId =
+                                                  snapshot
+                                                      .popularServiceDetailsModel
+                                                      ?.elementAt(index)
+                                                      ?.users
+                                                      ?.id ??
+                                                      0;
+
+                                              homeTabController
+                                                  .addRemoveFacVendor(
+                                                verdorId.toString(),
+                                                index,
+                                              );
+                                              // profileController.removeVenderToFav(snapshot.favFreelancers
+                                              //     ?.elementAt(index)
+                                              //     ?.vendorId
+                                              //     .toString() ??
+                                              //     '', index);
+                                            },
+                                            padding:
+                                            EdgeInsets
+                                                .zero, // remove default padding
+                                            constraints:
+                                            BoxConstraints(), // remove default size constraints
+                                            splashRadius:
+                                            16, // splash radius for tap feedback
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        snapshot.popularServiceDetailsModel
+                                            ?.elementAt(index)
+                                            ?.users
+                                            ?.name ??
+                                            '',
+                                        textAlign: TextAlign.start,
+                                        maxLines: 1,
+                                        style: AppStyles.font400_12()
+                                            .copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2),
+                                      getItemWidget(
+                                        icon: Icon(
+                                          Icons.phone,
+                                          color: AppColors.orange,
+                                          size: 14,
+                                        ),
+                                        textColor: Colors.blue,
+                                        title:
+                                        snapshot
+                                            .popularServiceDetailsModel
+                                            ?.elementAt(index)
+                                            ?.users
+                                            ?.phone ??
+                                            '',
+                                      ),
+                                      SizedBox(height: 2),
+                                      getItemWidget(
+                                        icon: Icon(
+                                          Icons.add_location_alt_sharp,
+                                          color: AppColors.orange,
+                                          size: 14,
+                                        ),
+                                        title:
+                                        '${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.country ?? ''},${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.city ?? ''}${snapshot.popularServiceDetailsModel?.elementAt(index)?.users?.state ?? ''}',
+                                      ),
+                                      SizedBox(height: 2),
+                                      getItemWidget(
+                                        icon: Icon(
+                                          Icons.star,
+                                          color: AppColors.orange,
+                                          size: 14,
+                                        ),
+                                        title:
+                                        snapshot
+                                            .popularServiceDetailsModel
+                                            ?.elementAt(index)
+                                            ?.users
+                                            ?.overallRating ??
+                                            '',
+                                      ),
+                                      SizedBox(height: 2),
+                                      Row(
+                                        children: [
+                                          GetCurrencyWidget(),
+                                          SizedBox(width: 2),
+                                          getItemWidget(
+                                            icon: Text(
+                                              'Hourly Price:',
+                                              style: AppStyles.font600_12()
+                                                  .copyWith(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            title:
+                                            snapshot
+                                                .popularServiceDetailsModel
+                                                ?.elementAt(index)
+                                                ?.users
+                                                ?.hourlyPrice
+                                                .toString() ??
+                                                '',
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 2),
+                                      Row(
+                                        children: [
+                                          GetCurrencyWidget(),
+                                          SizedBox(width: 2),
+                                          getItemWidget(
+                                            icon: Text(
+                                              'Daily Price:',
+                                              style: AppStyles.font600_12()
+                                                  .copyWith(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            title:
+                                            snapshot
+                                                .popularServiceDetailsModel
+                                                ?.elementAt(index)
+                                                ?.users
+                                                ?.dailyPrice
+                                                .toString() ??
+                                                '',
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 2),
+                                      Row(
+                                        children: [
+                                          GetCurrencyWidget(),
+                                          SizedBox(width: 2),
+                                          getItemWidget(
+                                            icon: Text(
+                                              'Offers From:',
+                                              style: AppStyles.font600_12()
+                                                  .copyWith(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            title:
+                                            snapshot
+                                                .popularServiceDetailsModel
+                                                ?.elementAt(index)
+                                                ?.users
+                                                ?.totalJobs
+                                                .toString() ??
+                                                '',
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 );
+
               },
             ),
           ],
@@ -468,3 +511,8 @@ class _PopularServiceDetailsPageState extends State<PopularServiceDetailsPage>
     );
   }
 }
+
+
+/*
+
+ */

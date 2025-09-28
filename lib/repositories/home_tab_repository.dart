@@ -28,8 +28,8 @@ class HomeTabRepository {
   }
   Future<ApiResponse<PopularServiceDetailsMoel>> getUserPopularServices(String itemId, String subCategoryId, String page) async {
     final path = subCategoryId.isEmpty
-        ? 'users/$itemId/?page=1'
-        : 'users/$itemId/$subCategoryId/?page=1';
+        ? 'users/$itemId/?page=$page'
+        : 'users/$itemId/$subCategoryId/?page=$page';
 
     return await _networkService.get<PopularServiceDetailsMoel>(
       path: path,

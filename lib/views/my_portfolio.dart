@@ -36,7 +36,7 @@ class _MyPortfolioPageState extends State<MyPortfolioPage> with BaseClass {
         centerTitle: false,
         title: Text(
           'My Portfolio',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
         actions: [
           IconButton(

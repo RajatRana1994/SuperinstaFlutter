@@ -49,7 +49,7 @@ class _OfferDetailsPageState extends State<OfferDetailsPage> with BaseClass {
         surfaceTintColor: Colors.transparent,
         title: Text(
           'Offer Details',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
         actions: [
           widget.isEdit

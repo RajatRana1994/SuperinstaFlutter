@@ -58,7 +58,7 @@ class _CustomerSignUpState extends State<CustomerSignUp> with BaseClass {
         centerTitle: true,
         title: Text(
           'Create Customer Account',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<SignUpCustomerController>(

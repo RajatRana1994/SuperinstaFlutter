@@ -30,10 +30,32 @@ class _FeedTabPageState extends State<FeedTabPage> with BaseClass {
     feedTabController.getFeedData();
   }
 
+  String getTimeAgoText(int? timestamp) {
+    if (timestamp == null) return 'Posted recently';
+
+    final createdDate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    final diff = DateTime.now().difference(createdDate);
+
+    if (diff.inDays >= 30) {
+      final months = (diff.inDays / 30).floor();
+      return '$months month${months > 1 ? 's' : ''} ago';
+    } else if (diff.inDays >= 1) {
+      return '${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago';
+    } else if (diff.inHours >= 1) {
+      return '${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago';
+    } else if (diff.inMinutes >= 1) {
+      return '${diff.inMinutes} minute${diff.inMinutes > 1 ? 's' : ''} ago';
+    } else if (diff.inSeconds >= 1) {
+      return '${diff.inSeconds} second${diff.inSeconds > 1 ? 's' : ''} ago';
+    } else {
+      return 'just now';
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bgColor,
 
       body: GetBuilder<FeedTabController>(
         init: feedTabController,
@@ -83,8 +105,8 @@ class _FeedTabPageState extends State<FeedTabPage> with BaseClass {
                   pushToNextScreen(context: context, destination: FeedDetailVc(feedId: feedId.toString()));
                 },
                 child: Card(
-                elevation: 2,
-                color: Colors.white,
+                elevation: 0,
+                color: AppColors.bgColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -98,10 +120,11 @@ class _FeedTabPageState extends State<FeedTabPage> with BaseClass {
                       ),
                     ),
                   ),
-                  title: Text(feedItem?.users?.name ?? ''),
-                  trailing: (StorageService().getUserData().userId != feedItem?.userId?.toString())
+                  title: Text(feedItem?.users?.name ?? '', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),),
+                  subtitle: Text(getTimeAgoText(feedItem?.created ?? 0)),
+                    trailing: (StorageService().getUserData().userId != feedItem?.userId?.toString())
                       ? PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert, color: Colors.orange, size: 30),
+                    icon: const Icon(Icons.more_vert, color: Colors.black, size: 30),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -140,127 +163,117 @@ class _FeedTabPageState extends State<FeedTabPage> with BaseClass {
 
                   Padding(
                       padding: const EdgeInsets.only(
+                        top: 0,
                         left: 12,
                         right: 12,
-                        bottom: 12,
+                        bottom: 10,
                       ),
-                      child: Text(feedItem?.description ?? ''),
+                      child: Text(feedItem?.description ?? '', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),),
                     ),
 
                     /// Inline Video Player
+
+
                     if (videoItem != null)
-                      AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: InlineVideoPlayer(videoUrl: videoItem.video!),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12), // 12px left & right
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: InlineVideoPlayer(videoUrl: videoItem.video!),
+                        ),
                       )
                     else
-                      Column(
-                        children: [
-                          CarouselSlider.builder(
-                            itemCount: feedImages.isNotEmpty ? feedImages.length : 1,
-                            itemBuilder: (context, imgIndex, realIdx) {
-                              if (feedImages.isEmpty) {
-                                // Show a placeholder image when feedImages is empty
-                                return Container(
-                                  color: Colors.grey[300],
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 250,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.image_not_supported,
-                                      color: Colors.white70,
-                                      size: 40,
-                                    ),
-                                  ),
-                                );
-                              }
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12), // 12px left & right
+                        child: Column(
+                          children: [
+                            CarouselSlider.builder(
+                              itemCount: feedImages.isNotEmpty ? feedImages.length : 1,
+                              itemBuilder: (context, imgIndex, realIdx) {
+                                final imageUrl = feedImages.isNotEmpty
+                                    ? feedImages[imgIndex].images
+                                    : null;
 
-                              final imageUrl = feedImages[imgIndex].images;
-                              if (imageUrl == null || imageUrl.isEmpty) {
-                                return Container(
-                                  color: Colors.grey[300],
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 250,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.image_not_supported,
-                                      color: Colors.white70,
-                                      size: 40,
-                                    ),
-                                  ),
-                                );
-                              }
-
-                              return Image.network(
-                                imageUrl,
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: 250,
-                                loadingBuilder: (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
+                                if (imageUrl == null || imageUrl.isEmpty) {
                                   return Container(
-                                    color: Colors.grey[200],
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 250,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.green,
-                                    width: MediaQuery.of(context).size.width,
+                                    color: Colors.grey[300],
+                                    width: double.infinity,
                                     height: 250,
                                     child: const Center(
                                       child: Icon(
-                                        Icons.broken_image,
-                                        color: Colors.white,
+                                        Icons.image_not_supported,
+                                        color: Colors.white70,
                                         size: 40,
                                       ),
                                     ),
                                   );
-                                },
-                              );
-                            },
-                            options: CarouselOptions(
-                              height: 250,
-                              viewportFraction: 1.0,
-                              onPageChanged: (pos, reason) {
-                                setState(() {
-                                  _carouselCurrent[index] = pos;
-                                });
+                                }
+
+                                return Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 250,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      width: double.infinity,
+                                      height: 250,
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.green,
+                                      width: double.infinity,
+                                      height: 250,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          color: Colors.white,
+                                          size: 40,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
                               },
+                              options: CarouselOptions(
+                                height: 250,
+                                viewportFraction: 1.0,
+                                onPageChanged: (pos, reason) {
+                                  setState(() {
+                                    _carouselCurrent[index] = pos;
+                                  });
+                                },
+                              ),
                             ),
-                          ),
 
-
-
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:
-                            feedImages.asMap().entries.map((entry) {
-                              final currentIndex =
-                                  _carouselCurrent[index] ?? 0;
-                              return Container(
-                                width: 8.0,
-                                height: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 4.0,
-                                ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color:
-                                  currentIndex == entry.key
-                                      ? AppColors.primaryColor
-                                      : Colors.grey,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: feedImages.asMap().entries.map((entry) {
+                                final currentIndex = _carouselCurrent[index] ?? 0;
+                                return Container(
+                                  width: 8.0,
+                                  height: 8.0,
+                                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: currentIndex == entry.key
+                                        ? AppColors.primaryColor
+                                        : Colors.grey,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
                       ),
+
 
                     Padding(
                       padding: const EdgeInsets.only(left: 12, right: 12),

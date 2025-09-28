@@ -46,7 +46,7 @@ class _MyWalletPageState extends State<MyWalletPage> with BaseClass {
         centerTitle: false,
         title: Text(
           'My Wallet',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<MyWalletController>(

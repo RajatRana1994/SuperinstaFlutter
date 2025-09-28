@@ -6,6 +6,7 @@ import 'package:instajobs/views/message/chat_vc.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_styles.dart';
 import 'package:instajobs/storage_services/local_stoage_service.dart';
+import '../../utils/app_styles.dart';
 
 class Inbox extends StatefulWidget {
   const Inbox({super.key});
@@ -53,13 +54,10 @@ class _InboxState extends State<Inbox> with BaseClass {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+
+        title:  Text(
           "Messages",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: Obx(() {

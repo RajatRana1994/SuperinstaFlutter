@@ -3,6 +3,7 @@ import 'package:instajobs/utils/app_colors.dart';
 import 'package:instajobs/widgets/currency_widget.dart';
 import 'package:instajobs/widgets/rounded_edged_button.dart';
 import 'package:intl/intl.dart';
+import 'package:instajobs/utils/app_images.dart';
 
 class BookingCard extends StatelessWidget {
   const BookingCard({
@@ -113,8 +114,8 @@ class BookingCard extends StatelessWidget {
                             decoration: BoxDecoration(
                               color:
                               status == 4
-                                  ? Colors.green
-                                  : Colors.amber, // tweak per status
+                                  ? Color(0xFF1FAC81)
+                                  : Color(0xFFFBBF00), // tweak per status
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
@@ -123,6 +124,7 @@ class BookingCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.labelLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
+                                fontSize: 12,
                                 color: Colors.white,
                               ),
                             ),
@@ -131,14 +133,14 @@ class BookingCard extends StatelessWidget {
                       ),
 
                       // address label
-                      Text(
-                        addressLabel,
-                        maxLines: 1, // ‼️ keep to 1 line
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
+                      // Text(
+                      //   addressLabel,
+                      //   maxLines: 1, // ‼️ keep to 1 line
+                      //   overflow: TextOverflow.ellipsis,
+                      //   style: theme.textTheme.bodySmall?.copyWith(
+                      //     color: Colors.grey.shade700,
+                      //   ),
+                      // ),
 
                       const SizedBox(height: 4),
 
@@ -218,7 +220,7 @@ class BookingCard extends StatelessWidget {
                         maxLines: 1, // ‼️ keep to 1 line
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey.shade800,
+                          color: Color(0xFF2D2B2B),
                           fontSize: 12,
                         ),
                       ),
@@ -233,27 +235,43 @@ class BookingCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Text('View Detail / Add Ons'),
+                        child: Text('View Detail / Add Ons', style: TextStyle(color: Color(0xFFEA8803), fontSize: 12, fontWeight: FontWeight.w700),),
                       ),
                     ),
                   ],
                 ),
 
                 // services list
-                Text(
-                  '$serviceCategory - ${services.join(', ')}',
-                  maxLines: 1, // ‼️ keep to 1 line
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.teal,
-                    height: 1.2,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '$serviceCategory', // service category
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFF828282), // gray color
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          height: 1.2,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' - ${services.join(', ')}', // services list
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.black, // black color
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          height: 1.2,
+                        ),
+                      ),
+                    ],
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
+
 
                 const SizedBox(height: 4),
                 // note
@@ -268,7 +286,7 @@ class BookingCard extends StatelessWidget {
                       const TextSpan(
                         text: 'Note - ',
 
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF828282)),
                       ),
                       TextSpan(text: note),
                     ],
@@ -280,9 +298,11 @@ class BookingCard extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: onChat,
-                  icon: const Icon(Icons.chat_bubble_outline),
-                  color: Colors.grey.shade700,
-                  iconSize: 32,
+                  icon: Image.asset(
+                    AppImages.icChat,
+                    width: 32,
+                    height: 32,
+                  ),
                 ),
                 Spacer(),
 
@@ -462,14 +482,15 @@ class BookingCard extends StatelessWidget {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.orange,
+                          color: Color(0xFFEA8803),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           'Give Rating',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),

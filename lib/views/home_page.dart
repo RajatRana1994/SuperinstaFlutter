@@ -3,6 +3,7 @@ import 'package:instajobs/utils/app_images.dart';
 import 'package:instajobs/utils/baseClass.dart';
 import 'package:instajobs/views/directory_tab/directory_tab_page.dart';
 import 'package:instajobs/views/market_tab/market_tab_page.dart';
+import 'package:instajobs/views/message/inbox.dart';
 import 'package:instajobs/views/profile/profile_page.dart';
 import 'package:instajobs/views/tabs/home_tab.dart';
 
@@ -51,7 +52,10 @@ class _HomePageState extends State<HomePage> with BaseClass {
         backgroundColor: Colors.white,
 
         actions: [
-          IconButton(icon: Icon(Icons.chat), onPressed: () {}),
+          IconButton(icon: Icon(Icons.chat), onPressed: () {
+            pushToNextScreen(context: context, destination: Inbox());
+
+          }),
           IconButton(icon: Icon(Icons.notifications), onPressed: () {
             pushToNextScreen(context: context, destination: NotificationPage());
           }),

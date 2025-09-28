@@ -68,7 +68,7 @@ class _AddPortfolioPageState extends State<AddPortfolioPage> with BaseClass {
         centerTitle: false,
         title: Text(
           widget.isEditPortfolio ? 'Update Portfolio' : 'Add Portfolio',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
         actions: [],
       ),

@@ -58,7 +58,7 @@ class _PostCustomerJobPageState extends State<PostCustomerJobPage>
 
         title: Text(
           'Post a Job',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<PostJobController>(

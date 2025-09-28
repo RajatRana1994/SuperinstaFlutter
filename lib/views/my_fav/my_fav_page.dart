@@ -26,7 +26,7 @@ class _MyFavPageState extends State<MyFavPage> {
         centerTitle: false,
         title: Text(
           'My Favourites',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
 
       ),

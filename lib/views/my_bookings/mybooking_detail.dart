@@ -49,7 +49,7 @@ class _MybookingDetailState extends State<MybookingDetail> with BaseClass {
         centerTitle: false,
         title: Text(
           'Booking Detail',
-          style: AppStyles.fontInkika().copyWith(fontSize: 24),
+          style: AppStyles.fontInkika().copyWith(fontSize: 20),
         ),
       ),
       body: GetBuilder<ProfileController>(
